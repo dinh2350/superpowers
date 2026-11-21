@@ -40,6 +40,8 @@ set -euo pipefail
 
 here=$(cd "$(dirname "$0")" && pwd)
 sdd="$here/../../subagent-driven-development/scripts"
+# Plan lines may call the helpers that live beside this script (changed-only).
+export PATH="$here:$PATH"
 
 check=false
 if [ "${1:-}" = "--check" ]; then

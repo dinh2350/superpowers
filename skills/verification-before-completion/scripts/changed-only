@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+# Run a command that reports findings as "path(line,col): ..." or
+# "path:line:col: ...", and pass when none of them is in a file this plan
+# changed. For a gate a tool cannot narrow to a file list (tsc ignores
+# tsconfig when given files), on a repo whose baseline is already red.
+#
+# Usage: changed-only BASE -- COMMAND [ARGS...]
+#   BASE   the commit the plan started from; "changed" is BASE...HEAD, with
+#          added, copied, modified and renamed files (deleted ones are gone).
+# Run from the repository root, where the paths in the findings start.
+# Exit: 0 no finding in a changed file, or no changed file at all;
+#       1 at least one finding in a changed file;
+#       the command's own status when it failed without printing a finding
+#       (a crash, a missing tool): that is a failure, never a clean run;
+#       2 for a usage problem.
+set -uo pipefail
+
+if [ $# -lt 3 ] || [ "$2" != "--" ]; then
+  echo "usage: changed-only BASE -- COMMAND [ARGS...]" >&2
+  exit 2
+fi
+base=$1
+shift 2
+
+if ! git rev-parse --verify -q "$base^{commit}" > /dev/null; then
+  echo "changed-only: '$base' is not a commit in this repository" >&2
+  exit 2
+fi
+
+files=$(git diff --name-only --diff-filter=ACMR "$base"...HEAD)
+if [ -z "$files" ]; then
+  echo "changed-only: no file changed since $base; nothing to check"
+  exit 0
+fi
+
+rc=0
+out=$("$@" 2>&1) || rc=$?
+printf '%s\n' "$out"
+[ "$rc" -ne 0 ] || exit 0
+
+# A finding line starts with a path, then "(line" or ":line". The path holds no
+# space, colon or parenthesis. Count every finding; print those in changed files.
+rc_awk=0
+# The list goes in through the environment: awk -v rejects a newline on macOS.
+hits=$(printf '%s\n' "$out" | CHANGED_FILES="$files" awk '
+  BEGIN {
+    n = split(ENVIRON["CHANGED_FILES"], list, "\n")
+    for (i = 1; i <= n; i++) if (list[i] != "") changed[list[i]] = 1
+  }
+  match($0, /^[^[:space:]():]+[(:][0-9]+/) {
+    path = substr($0, 1, RLENGTH)
+    sub(/[(:][0-9]+$/, "", path)
+    sub(/^\.\//, "", path)
+    seen++
+    if (path in changed) print $0
+  }
+  END { if (!seen) exit 3 }
+') || rc_awk=$?
+
+if [ "$rc_awk" -ne 0 ] && [ "$rc_awk" -ne 3 ]; then
+  echo "changed-only: could not read the command's output (awk exited $rc_awk). Failing rather than passing unchecked." >&2
+  exit 2
+fi
+if [ "$rc_awk" -eq 3 ]; then
+  echo "changed-only: the command exited $rc and printed no finding with a file and line. That is a failure of the tool, not a clean run." >&2
+  exit "$rc"
+fi
+if [ -n "$hits" ]; then
+  echo "changed-only: findings in files this plan changed:" >&2
+  printf '%s\n' "$hits" >&2
+  exit 1
+fi
+echo "changed-only: the command exited $rc, and every finding is in a file this plan did not change"
+exit 0
