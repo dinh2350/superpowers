@@ -1,4 +1,4 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link rel="stylesheet" href="../assets/sidebar.css"><script src="../assets/sidebar.js"></script></head><body>
 <title>Luồng Brainstorming Mới</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap">
@@ -107,9 +107,9 @@
 
 <div class="wrap">
   <header>
-    <span class="chip-status">Đề xuất, chưa áp dụng vào skill</span>
+    <span class="chip-status">Đã áp dụng vào skill brainstorming</span>
     <h1>Luồng Brainstorming Mới</h1>
-    <p class="lead">Sau khi gộp research-before-brainstorming vào brainstorming, AI tự tra những gì tra được, báo lại kèm bằng chứng, và chỉ hỏi bạn phần chỉ bạn quyết được.</p>
+    <p class="lead">research-before-brainstorming đã được gộp vào brainstorming. Giờ AI tự tra những gì tra được, báo lại kèm bằng chứng, và chỉ hỏi bạn phần chỉ bạn quyết được.</p>
   </header>
 
   <section>
@@ -209,8 +209,8 @@
 
           <rect class="box" x="20" y="542" width="230" height="76" rx="8"/>
           <text class="tb" x="135" y="566" text-anchor="middle">Hướng tiếp cận, design doc</text>
-          <text class="ts" x="135" y="586" text-anchor="middle">có thêm mục: quyết định của AI</text>
-          <text class="ts" x="135" y="604" text-anchor="middle">bạn duyệt, rồi viết plan</text>
+          <text class="ts" x="135" y="586" text-anchor="middle">bạn chọn hướng, AI viết design doc</text>
+          <text class="ts" x="135" y="604" text-anchor="middle">bạn duyệt rồi mới viết plan</text>
         </svg>
         <figcaption>Yêu cầu chỉ ra chỗ để nhìn thì AI tra định hướng trước, chưa thì hỏi một câu mở trước. Sau đó tra và hỏi xen kẽ: mỗi câu trả lời của bạn có thể mở thêm việc cần tra.</figcaption>
       </figure>
@@ -289,7 +289,77 @@
             <li>Khách B2B có được hủy đơn sau khi giao không?</li>
           </ul>
         </div>
-        <p class="note">Trong tin nhắn thật, mỗi mục gạch chân là một link. Nó mở thẳng file và dòng, trang docs đúng version, hoặc hàng bằng chứng trong research brief nếu nguồn là query hay logs. Với yêu cầu chưa chỉ ra chỗ để nhìn, như "làm website cho tiệm bánh", tin nhắn đầu chỉ có một câu hỏi mở và chưa có báo cáo.</p>
+        <p class="note">Trong tin nhắn thật, mỗi mục gạch chân là một link. Nó mở thẳng file và dòng, hoặc trang docs đúng version. Query và log không có link, nên AI ghi luôn câu query hoặc bộ lọc, khoảng thời gian và kết quả trả về. Với yêu cầu chưa chỉ ra chỗ để nhìn, như "làm website cho tiệm bánh", tin nhắn đầu chỉ có một câu hỏi mở và chưa có báo cáo.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Từ lúc hiểu xong đến lúc được code</h2>
+    <div class="split">
+      <figure>
+        <svg viewBox="0 0 480 550" role="img" aria-label="Sau khi đủ hiểu: AI đưa 2 đến 3 hướng tiếp cận và bạn chọn một, chia cỡ việc, viết design doc HTML, chạy builder check nếu là project, bạn duyệt design doc, rồi mới tới writing-plans.">
+          <defs>
+            <marker id="ah-doc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker>
+          </defs>
+
+          <rect class="box" x="20" y="10" width="220" height="50" rx="8"/>
+          <text class="tb" x="130" y="40" text-anchor="middle">Đủ hiểu bạn muốn gì</text>
+          <text class="ts" x="256" y="40">sau vài vòng tra và hỏi xen kẽ</text>
+          <line class="ln" x1="130" y1="60" x2="130" y2="90" marker-end="url(#ah-doc)"/>
+
+          <rect class="box human" x="20" y="90" width="220" height="50" rx="8"/>
+          <text class="tb" x="130" y="120" text-anchor="middle">Đưa 2–3 hướng tiếp cận</text>
+          <text class="ts" x="256" y="112">một tin nhắn riêng, nói rõ đánh đổi</text>
+          <text class="ts" x="256" y="128">AI đề xuất một hướng, bạn chọn</text>
+          <line class="ln" x1="130" y1="140" x2="130" y2="170" marker-end="url(#ah-doc)"/>
+
+          <rect class="box" x="20" y="170" width="220" height="50" rx="8"/>
+          <text class="tb" x="130" y="200" text-anchor="middle">Chia cỡ việc</text>
+          <text class="ts" x="256" y="184">nhỏ: design doc ngắn</text>
+          <text class="ts" x="256" y="200">project: design doc đầy đủ</text>
+          <text class="ts" x="256" y="216">bạn có thể đổi cỡ</text>
+          <line class="ln" x1="130" y1="220" x2="130" y2="250" marker-end="url(#ah-doc)"/>
+
+          <rect class="box" x="20" y="250" width="220" height="50" rx="8"/>
+          <text class="tb" x="130" y="280" text-anchor="middle">Viết design doc (HTML)</text>
+          <text class="ts" x="256" y="264">mở được trong trình duyệt</text>
+          <text class="ts" x="256" y="280">mục xác nhận / tự quyết có link</text>
+          <text class="ts" x="256" y="296">trỏ tới phần Evidence</text>
+          <line class="ln" x1="130" y1="300" x2="130" y2="330" marker-end="url(#ah-doc)"/>
+
+          <rect class="box dash" x="20" y="330" width="220" height="50" rx="8"/>
+          <text class="tb" x="130" y="360" text-anchor="middle">Builder check</text>
+          <text class="ts" x="256" y="344">chỉ với project: một subagent</text>
+          <text class="ts" x="256" y="360">đọc doc như người sẽ xây</text>
+          <text class="ts" x="256" y="376">AI hỏi bạn tối đa một lượt</text>
+          <line class="ln" x1="130" y1="380" x2="130" y2="410" marker-end="url(#ah-doc)"/>
+
+          <rect class="box human" x="20" y="410" width="220" height="50" rx="8"/>
+          <text class="tb" x="130" y="440" text-anchor="middle">Bạn duyệt design doc</text>
+          <text class="ts" x="256" y="432">chưa duyệt = chưa code</text>
+          <text class="ts" x="256" y="448">(kể cả scaffold, cài dependency)</text>
+          <line class="ln" x1="130" y1="460" x2="130" y2="490" marker-end="url(#ah-doc)"/>
+
+          <rect class="box" x="20" y="490" width="220" height="50" rx="8"/>
+          <text class="tb" x="130" y="520" text-anchor="middle">writing-plans</text>
+          <text class="ts" x="256" y="520">bước kế tiếp, không skill nào khác</text>
+        </svg>
+        <figcaption>Nét đứt là bước chỉ có với project. Thay đổi nhỏ bỏ qua builder check và đi thẳng tới bạn.</figcaption>
+      </figure>
+
+      <div class="report">
+        <h3>Design doc gồm những gì</h3>
+        <div class="group">
+          <ul>
+            <li><b>Summary:</b> khoảng 120 từ, ý chính trước: xây gì, vì sao, và một điều cần để ý.</li>
+            <li><b>Overview:</b> diagram trước và sau của thứ thay đổi. Bỏ qua nếu một câu đã đủ.</li>
+            <li><b>For your review:</b> Confirmed, My call, và điều bạn đã quyết. Mỗi mục link tới Evidence.</li>
+            <li><b>The design:</b> ý định và lý do; goals, non-goals, anti-goals; ràng buộc; các hướng tiếp cận và hướng đã chọn; cách kiểm chứng; phần để builder tự quyết.</li>
+            <li><b>Evidence:</b> mỗi phát hiện có tên dễ hiểu, nguồn (link đã mở, hoặc query kèm ngày và kết quả) và câu trích làm bằng chứng.</li>
+          </ul>
+        </div>
+        <p class="note">Cách kiểm chứng gồm vài kịch bản bạn sẽ thấy chạy được, và loại test (unit, integration, e2e) chứng minh nó. Một subagent khác viết test từ chính doc này, không từ code, nên test kiểm đúng điều bạn yêu cầu. Doc lưu ở <span class="src">docs/superpowers/specs/</span> và được commit.</p>
       </div>
     </div>
   </section>
@@ -299,7 +369,9 @@
     <div class="todo">
       <div><b>Đọc nhanh</b><span>Khối "Tôi tự quyết": thấy sai thì nói. Không phản đối thì AI đi tiếp.</span></div>
       <div><b>Bấm link khi nghi ngờ</b><span>Link đưa bạn tới bằng chứng gốc, không cần tin lời AI.</span></div>
-      <div><b>Duyệt design doc</b><span>Doc có mục "Quyết định do AI đưa ra". Duyệt doc là chấp nhận hoặc ghi đè các quyết định đó.</span></div>
+      <div><b>Chọn hướng tiếp cận</b><span>AI đưa 2–3 hướng trong một tin riêng, kèm đánh đổi và đề xuất. Nếu bạn đã giao phần cách làm cho AI, nó nói rõ là sẽ theo hướng nó đề xuất.</span></div>
+      <div><b>Duyệt design doc</b><span>Mục "For your review" gom Confirmed, My call và điều bạn đã quyết. Duyệt doc là chấp nhận hoặc ghi đè các My call đó. Chưa duyệt thì chưa có dòng code nào.</span></div>
+      <div><b>Bỏ qua hỏi đáp nếu muốn</b><span>Nói "cứ làm đi". Skill dừng lại, AI nêu trong một dòng các lựa chọn lớn về cách làm (nền tảng, ngôn ngữ) rồi làm theo workflow thường.</span></div>
     </div>
     <p class="limits">Giới hạn: AI vẫn có thể tự quyết sai, và link bằng chứng là để bạn phát hiện điều đó. Nếu session không có tool cho một nguồn nào đó, câu liên quan chuyển thành câu hỏi cho bạn.</p>
   </section>

@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Superpowers Explainer</title>
+<link rel="stylesheet" href="assets/sidebar.css">
+<script src="assets/sidebar.js"></script>
 <style>
   :root {
     --bg: #f7f6f2;
@@ -141,6 +143,7 @@
   .card header { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 10px; }
   .badge { display: inline-grid; place-items: center; min-width: 26px; height: 26px; padding: 0 6px; border-radius: 13px; background: var(--accent); color: #fff; font-weight: 700; font-size: 13px; }
   .card h4 { margin: 0; font: 700 15px ui-monospace, Menlo, Consolas, monospace; word-break: break-word; }
+  .card.plain h4 { font: 700 15px/1.3 system-ui, -apple-system, "Segoe UI", sans-serif; }
   .tag { font-size: 11.5px; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--code-bg); color: var(--muted); }
   .tag.new { background: var(--new-soft); color: var(--new); }
   .row { margin: 0 0 9px; font-size: 14.5px; }
@@ -148,7 +151,19 @@
   .row.pain { background: var(--pain-soft); border-radius: 8px; padding: 7px 10px; }
   .row.pain b { color: var(--pain); }
   .back { font-size: 12.5px; text-decoration: none; color: var(--muted); display: inline-block; margin-top: 2px; }
+  .back + .back { margin-left: 14px; }
   .back:hover { color: var(--accent); }
+
+  /* tables (MCP section) */
+  .tbl-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; }
+  table.tbl { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 520px; }
+  .tbl th, .tbl td { text-align: left; vertical-align: top; padding: 8px 14px; border-bottom: 1px solid var(--line); }
+  .tbl th { font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .tbl tr:last-child td { border-bottom: 0; }
+  .tbl tr.grp td { background: var(--accent-soft); color: var(--accent); font-weight: 700; font-size: 12.5px; letter-spacing: .04em; }
+  .tbl.servers td:first-child { white-space: nowrap; }
+  .tbl td.num { color: var(--muted); }
+  .tbl-note { margin: 8px 4px 0; font-size: 13px; color: var(--muted); }
 
   footer { margin: 48px 0 64px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13.5px; }
 
@@ -175,6 +190,7 @@
     <a href="#diagram">1 · Diagram</a>
     <a href="#usage">2 · Cách dùng</a>
     <a href="#skills">3 · Skill</a>
+    <a href="#mcp">4 · MCP</a>
   </div>
 </nav>
 
@@ -183,7 +199,8 @@
     <h1>Superpowers</h1>
     <p>Bộ skill ép coding agent làm việc như một kỹ sư có kỷ luật: hỏi cho rõ, lên plan, test trước, và chỉ nói “xong” khi đã chứng minh được.</p>
     <div class="chips">
-      <span class="chip"><b>17</b> skill</span>
+      <span class="chip"><b>16</b> skill</span>
+      <span class="chip"><b>15</b> MCP server có sẵn config</span>
       <span class="chip">Tự kích hoạt, không cần gõ lệnh</span>
       <span class="chip">Click vào node trong diagram để xem chi tiết</span>
     </div>
@@ -207,10 +224,8 @@
           </defs>
 
           <!-- arrows (drawn first, nodes on top) -->
-          <path class="arrow" d="M280 68 V90 H139 V112"/>
-          <path class="arrow" d="M280 90 H421 V112"/>
-          <path class="arrow" d="M264 139 H294"/>
-          <path class="arrow" d="M421 166 V182 H280 V198"/>
+          <path class="arrow" d="M280 68 V112"/>
+          <path class="arrow" d="M280 166 V198"/>
           <path class="arrow" d="M280 252 V284"/>
           <path class="arrow" d="M280 338 V354 H139 V370"/>
           <path class="arrow" d="M280 354 H421 V370"/>
@@ -247,85 +262,77 @@
           </a>
 
           <!-- 1 -->
-          <a class="node opt new" href="#s-research-before-brainstorming" aria-label="research-before-brainstorming">
-            <rect x="14" y="112" width="250" height="54" rx="10"/>
-            <text class="name" x="28" y="135">research-before-brainstorming</text>
-            <text class="sub" x="28" y="153">Tự tra trước khi hỏi bạn</text>
-            <g class="num"><circle cx="14" cy="112" r="10"/><text x="14" y="115.5">1</text></g>
+          <a class="node new" href="#s-brainstorming" aria-label="brainstorming">
+            <rect x="130" y="112" width="300" height="54" rx="10"/>
+            <text class="name" x="144" y="135">brainstorming</text>
+            <text class="sub" x="144" y="153">Tự tra trước, chỉ hỏi phần bạn quyết</text>
+            <g class="num"><circle cx="130" cy="112" r="10"/><text x="130" y="115.5">1</text></g>
           </a>
 
           <!-- 2 -->
-          <a class="node" href="#s-brainstorming" aria-label="brainstorming">
-            <rect x="296" y="112" width="250" height="54" rx="10"/>
-            <text class="name" x="310" y="135">brainstorming</text>
-            <text class="sub" x="310" y="153">Hỏi ra thứ bạn thật sự cần</text>
-            <g class="num"><circle cx="296" cy="112" r="10"/><text x="296" y="115.5">2</text></g>
-          </a>
-
-          <!-- 3 -->
           <a class="node" href="#s-using-git-worktrees" aria-label="using-git-worktrees">
             <rect x="130" y="198" width="300" height="54" rx="10"/>
             <text class="name" x="144" y="221">using-git-worktrees</text>
             <text class="sub" x="144" y="239">Làm trên nhánh cô lập, an toàn</text>
-            <g class="num"><circle cx="130" cy="198" r="10"/><text x="130" y="201.5">3</text></g>
+            <g class="num"><circle cx="130" cy="198" r="10"/><text x="130" y="201.5">2</text></g>
           </a>
 
-          <!-- 4 -->
+          <!-- 3 -->
           <a class="node" href="#s-writing-plans" aria-label="writing-plans">
             <rect x="130" y="284" width="300" height="54" rx="10"/>
             <text class="name" x="144" y="307">writing-plans</text>
             <text class="sub" x="144" y="325">Chia việc thành task 2–5 phút</text>
-            <g class="num"><circle cx="130" cy="284" r="10"/><text x="130" y="287.5">4</text></g>
+            <g class="num"><circle cx="130" cy="284" r="10"/><text x="130" y="287.5">3</text></g>
           </a>
 
-          <!-- 5 -->
+          <!-- 4 -->
           <a class="node" href="#s-subagent-driven-development" aria-label="subagent-driven-development">
             <rect x="14" y="370" width="250" height="54" rx="10"/>
             <text class="name" x="28" y="393">subagent-driven-development</text>
             <text class="sub" x="28" y="411">1 subagent/task · review từng task</text>
-            <g class="num"><circle cx="14" cy="370" r="10"/><text x="14" y="373.5">5</text></g>
+            <g class="num"><circle cx="14" cy="370" r="10"/><text x="14" y="373.5">4</text></g>
           </a>
           <a class="node" href="#s-executing-plans" aria-label="executing-plans">
             <rect x="296" y="370" width="250" height="54" rx="10"/>
             <text class="name" x="310" y="393">executing-plans</text>
             <text class="sub" x="310" y="411">Tự làm một mạch · rẻ hơn</text>
-            <g class="num"><circle cx="296" cy="370" r="10"/><text x="296" y="373.5">5</text></g>
+            <g class="num"><circle cx="296" cy="370" r="10"/><text x="296" y="373.5">4</text></g>
           </a>
 
-          <!-- 6, 7 -->
+          <!-- 5, 6 -->
           <a class="node" href="#s-test-driven-development" aria-label="test-driven-development">
             <rect x="28" y="490" width="240" height="54" rx="10"/>
             <text class="name" x="42" y="513">test-driven-development</text>
             <text class="sub" x="42" y="531">Test fail trước, rồi mới code</text>
-            <g class="num"><circle cx="28" cy="490" r="10"/><text x="28" y="493.5">6</text></g>
+            <g class="num"><circle cx="28" cy="490" r="10"/><text x="28" y="493.5">5</text></g>
           </a>
           <a class="node" href="#s-requesting-code-review" aria-label="requesting-code-review">
             <rect x="292" y="490" width="240" height="54" rx="10"/>
             <text class="name" x="306" y="513">requesting-code-review</text>
             <text class="sub" x="306" y="531">Review sau mỗi task</text>
-            <g class="num"><circle cx="292" cy="490" r="10"/><text x="292" y="493.5">7</text></g>
+            <g class="num"><circle cx="292" cy="490" r="10"/><text x="292" y="493.5">6</text></g>
           </a>
 
-          <!-- 8, 9 -->
+          <!-- 7, 8 -->
           <a class="node" href="#s-verification-before-completion" aria-label="verification-before-completion">
             <rect x="14" y="600" width="250" height="54" rx="10"/>
             <text class="name" x="28" y="623">verification-before-completion</text>
             <text class="sub" x="28" y="641">Chạy lệnh thật rồi mới báo xong</text>
-            <g class="num"><circle cx="14" cy="600" r="10"/><text x="14" y="603.5">8</text></g>
+            <g class="num"><circle cx="14" cy="600" r="10"/><text x="14" y="603.5">7</text></g>
           </a>
           <a class="node new" href="#s-verifying-ai-generated-code" aria-label="verifying-ai-generated-code">
             <rect x="296" y="600" width="250" height="54" rx="10"/>
             <text class="name" x="310" y="623">verifying-ai-generated-code</text>
             <text class="sub" x="310" y="641">Test độc lập + bằng chứng thật</text>
-            <g class="num"><circle cx="296" cy="600" r="10"/><text x="296" y="603.5">9</text></g>
+            <g class="num"><circle cx="296" cy="600" r="10"/><text x="296" y="603.5">8</text></g>
           </a>
 
-          <!-- 10 -->
+          <!-- 9 -->
           <a class="node" href="#s-finishing-a-development-branch" aria-label="finishing-a-development-branch">
             <rect x="130" y="686" width="300" height="54" rx="10"/>
             <text class="name" x="144" y="709">finishing-a-development-branch</text>
             <text class="sub" x="144" y="727">Test xanh → merge / mở PR / giữ nhánh</text>
-            <g class="num"><circle cx="130" cy="686" r="10"/><text x="130" y="689.5">10</text></g>
+            <g class="num"><circle cx="130" cy="686" r="10"/><text x="130" y="689.5">9</text></g>
           </a>
 
           <!-- on demand -->
@@ -360,7 +367,7 @@
         <div class="legend">
           <span><i></i>Trong luồng chính</span>
           <span><i class="dash"></i>Nét đứt: tuỳ chọn</span>
-          <span><i class="new"></i>Viền xanh: skill mới</span>
+          <span><i class="new"></i>Viền xanh: mới hoặc vừa nâng cấp</span>
         </div>
       </div>
 
@@ -374,7 +381,11 @@
         </div>
         <div class="pain-item">
           <q>Hỏi bạn những thứ mà tool tự tra được</q>
-          <div class="fix"><a class="skill-link" href="#s-research-before-brainstorming">research-before-brainstorming</a></div>
+          <div class="fix"><a class="skill-link" href="#s-brainstorming">brainstorming</a> tự tra code, docs, DB, log trước, báo lại kèm link bằng chứng</div>
+        </div>
+        <div class="pain-item">
+          <q>Muốn agent tra docs, DB, log nhưng chưa nối tool</q>
+          <div class="fix"><a class="skill-link" href="#mcp">mcp/</a> chọn 3–5 server cho project</div>
         </div>
         <div class="pain-item">
           <q>Sửa thẳng lên nhánh bạn đang làm</q>
@@ -427,11 +438,12 @@
       <div class="step">
         <h3>Nói như bình thường</h3>
         <p>Mô tả việc bạn muốn. <a href="#s-using-superpowers">using-superpowers</a> tự gọi skill phù hợp, bắt đầu bằng brainstorming.</p>
+        <p>Agent tự tra codebase, docs, DB trước, chỉ hỏi phần chỉ bạn quyết được.</p>
         <code class="ex">Let's make a react todo list</code>
       </div>
       <div class="step">
-        <h3>Bạn quyết 3 điểm</h3>
-        <p>Trả lời các câu hỏi làm rõ, duyệt <b>design</b>, duyệt <b>plan</b>, rồi nói “go”.</p>
+        <h3>Bạn quyết 4 điểm</h3>
+        <p>Trả lời câu hỏi làm rõ, chọn <b>hướng tiếp cận</b>, duyệt <b>design doc</b>, duyệt <b>plan</b>, rồi nói “go”.</p>
       </div>
       <div class="step">
         <h3>Agent tự chạy</h3>
@@ -469,20 +481,13 @@
     <!-- 1 Hiểu -->
     <div class="phase"><h3>1 · Hiểu yêu cầu</h3><span>Trước khi có dòng code nào</span></div>
     <div class="cards">
-      <article class="card" id="s-research-before-brainstorming">
-        <header><span class="badge">1</span><h4>research-before-brainstorming</h4><span class="tag">Tuỳ chọn</span><span class="tag new">Mới</span></header>
-        <p class="row pain"><b>Vấn đề</b>Agent hỏi bạn những câu mà tool tự trả lời được: version thư viện, schema DB, lỗi trong log.</p>
-        <p class="row"><b>Làm gì</b>Tự tra codebase, docs đúng version trong lockfile, DB (chỉ đọc), log, git history. Ghi lại thành một research brief ngắn.</p>
-        <p class="row"><b>Dùng khi</b>Yêu cầu đụng tới thư viện, DB, log hoặc hệ thống chưa kiểm tra. Bỏ qua nếu yêu cầu đã đủ rõ.</p>
-        <a class="back" href="#diagram">↑ Về diagram</a>
-      </article>
-
       <article class="card" id="s-brainstorming">
-        <header><span class="badge">2</span><h4>brainstorming</h4><span class="tag">Trong luồng</span></header>
-        <p class="row pain"><b>Vấn đề</b>Agent code ngay theo giả định, kết quả là đúng thứ bạn không cần.</p>
-        <p class="row"><b>Làm gì</b>Đọc project trước, rồi hỏi từng câu về “bạn muốn gì và vì sao”. Đưa vài hướng để bạn chọn, viết design doc ngắn và chờ bạn duyệt.</p>
-        <p class="row"><b>Dùng khi</b>Trước mọi việc tạo mới hoặc đổi hành vi. Yêu cầu nhỏ và rõ (đổi màu icon) thì làm luôn.</p>
+        <header><span class="badge">1</span><h4>brainstorming</h4><span class="tag">Trong luồng</span><span class="tag new">Nâng cấp</span></header>
+        <p class="row pain"><b>Vấn đề</b>Agent code ngay theo giả định, hoặc hỏi bạn những câu mà tool tự trả lời được (version thư viện, schema DB, lỗi trong log). Kết quả là đúng thứ bạn không cần.</p>
+        <p class="row"><b>Làm gì</b>Tự tra trước (code, docs đúng version trong lockfile, DB chỉ đọc, log, git), rồi báo lại: điều đã xác nhận kèm link, điều AI tự quyết, điều chỉ bạn quyết được. Hỏi từng câu về “muốn gì và vì sao”, tóm tắt lại cho bạn sửa, đưa 2–3 hướng để bạn chọn, rồi viết design doc HTML (có mục Evidence) và chờ bạn duyệt. Chưa duyệt thì chưa được code.</p>
+        <p class="row"><b>Dùng khi</b>Trước mọi việc tạo mới hoặc đổi hành vi. Yêu cầu nhỏ và rõ (đổi màu icon) thì làm luôn. Không muốn hỏi đáp thì nói “cứ làm đi”.</p>
         <a class="back" href="#diagram">↑ Về diagram</a>
+        <a class="back" href="skills-detail/brainstorming.html">Xem luồng chi tiết →</a>
       </article>
     </div>
 
@@ -490,15 +495,16 @@
     <div class="phase"><h3>2 · Chuẩn bị</h3><span>Design đã duyệt, chưa đụng code</span></div>
     <div class="cards">
       <article class="card" id="s-using-git-worktrees">
-        <header><span class="badge">3</span><h4>using-git-worktrees</h4><span class="tag">Trong luồng</span></header>
+        <header><span class="badge">2</span><h4>using-git-worktrees</h4><span class="tag">Trong luồng</span></header>
         <p class="row pain"><b>Vấn đề</b>Agent sửa thẳng lên nhánh bạn đang làm. Hỏng thì khó quay lại.</p>
         <p class="row"><b>Làm gì</b>Tạo workspace cô lập trên nhánh mới (hoặc nhận ra cái đã có), chạy setup, kiểm tra test baseline đang xanh.</p>
         <p class="row"><b>Dùng khi</b>Sau khi design được duyệt, trước khi code. Agent hỏi bạn đồng ý trước khi tạo.</p>
         <a class="back" href="#diagram">↑ Về diagram</a>
+        <a class="back" href="skills-detail/using-git-worktrees.html">Xem chi tiết →</a>
       </article>
 
       <article class="card" id="s-writing-plans">
-        <header><span class="badge">4</span><h4>writing-plans</h4><span class="tag">Trong luồng</span></header>
+        <header><span class="badge">3</span><h4>writing-plans</h4><span class="tag">Trong luồng</span></header>
         <p class="row pain"><b>Vấn đề</b>Plan mơ hồ nên agent tự đoán từng chi tiết, mỗi lần một kiểu.</p>
         <p class="row"><b>Làm gì</b>Biến design thành các task nhỏ (2–5 phút), mỗi task có đường dẫn file chính xác, code đầy đủ và bước kiểm tra. Lưu ở <code>docs/superpowers/plans/</code>.</p>
         <p class="row"><b>Dùng khi</b>Đã có spec được duyệt cho việc nhiều bước, trước khi đụng code.</p>
@@ -510,7 +516,7 @@
     <div class="phase"><h3>3 · Thực thi</h3><span>Chọn 1 trong 2 cách chạy plan, rồi lặp TDD + review cho từng task</span></div>
     <div class="cards">
       <article class="card" id="s-subagent-driven-development">
-        <header><span class="badge">5</span><h4>subagent-driven-development</h4><span class="tag">Chọn 1 · kỹ nhất</span></header>
+        <header><span class="badge">4</span><h4>subagent-driven-development</h4><span class="tag">Chọn 1 · kỹ nhất</span></header>
         <p class="row pain"><b>Vấn đề</b>Một agent làm hết trong một context dài: đầy context, lệch plan, tự chấm bài của mình.</p>
         <p class="row"><b>Làm gì</b>Mỗi task giao cho một subagent mới (context sạch). Sau đó review 2 lớp: đúng spec trước, chất lượng code sau. Cuối cùng review cả nhánh. Chạy liên tục, không hỏi “tiếp nhé?”.</p>
         <p class="row"><b>Dùng khi</b>Đã có plan và môi trường có subagent. Chất lượng cao nhất nhưng tốn token hơn.</p>
@@ -518,7 +524,7 @@
       </article>
 
       <article class="card" id="s-executing-plans">
-        <header><span class="badge">5</span><h4>executing-plans</h4><span class="tag">Chọn 1 · rẻ nhất</span></header>
+        <header><span class="badge">4</span><h4>executing-plans</h4><span class="tag">Chọn 1 · rẻ nhất</span></header>
         <p class="row pain"><b>Vấn đề</b>Subagent cho từng task tốn token vì mỗi lần phải đọc lại codebase từ đầu.</p>
         <p class="row"><b>Làm gì</b>Agent tự làm tuần tự trong phiên hiện tại. TDD là cổng kiểm từng task, có sổ ghi (ledger) để không quên, và một review mới cho cả nhánh ở cuối.</p>
         <p class="row"><b>Dùng khi</b>Bạn chọn chạy inline để tiết kiệm, hoặc môi trường không có subagent.</p>
@@ -526,7 +532,7 @@
       </article>
 
       <article class="card" id="s-test-driven-development">
-        <header><span class="badge">6</span><h4>test-driven-development</h4><span class="tag">Trong luồng</span></header>
+        <header><span class="badge">5</span><h4>test-driven-development</h4><span class="tag">Trong luồng</span></header>
         <p class="row pain"><b>Vấn đề</b>Test viết sau code thì luôn pass, nên không chứng minh được gì.</p>
         <p class="row"><b>Làm gì</b>Red → Green → Refactor: viết test, xem nó fail, viết code tối thiểu cho pass. Code viết trước test thì xoá đi làm lại.</p>
         <p class="row"><b>Dùng khi</b>Mọi feature, bugfix, refactor. Ngoại lệ (prototype bỏ đi, code sinh tự động, file config) phải hỏi bạn.</p>
@@ -534,7 +540,7 @@
       </article>
 
       <article class="card" id="s-requesting-code-review">
-        <header><span class="badge">7</span><h4>requesting-code-review</h4><span class="tag">Mỗi task</span></header>
+        <header><span class="badge">6</span><h4>requesting-code-review</h4><span class="tag">Mỗi task</span></header>
         <p class="row pain"><b>Vấn đề</b>Lỗi nhỏ ở task 2 âm thầm lan sang task 3, 4, 5.</p>
         <p class="row"><b>Làm gì</b>Giao một subagent reviewer (chỉ nhận mô tả và khoảng commit, không thấy lịch sử phiên) soi theo plan. Báo lỗi theo mức độ, lỗi Critical chặn tiến độ.</p>
         <p class="row"><b>Dùng khi</b>Sau mỗi task, sau tính năng lớn, trước khi merge. Cũng dùng được khi bị kẹt.</p>
@@ -546,7 +552,7 @@
     <div class="phase"><h3>4 · Chứng minh</h3><span>Trước khi nói “xong”</span></div>
     <div class="cards">
       <article class="card" id="s-verification-before-completion">
-        <header><span class="badge">8</span><h4>verification-before-completion</h4><span class="tag">Trong luồng</span></header>
+        <header><span class="badge">7</span><h4>verification-before-completion</h4><span class="tag">Trong luồng</span></header>
         <p class="row pain"><b>Vấn đề</b>Agent nói “xong rồi, test pass” mà chưa hề chạy.</p>
         <p class="row"><b>Làm gì</b>Luật: không tuyên bố hoàn thành khi chưa có output mới từ lệnh kiểm chứng. Chạy lệnh, đọc kết quả, rồi mới được nói.</p>
         <p class="row"><b>Dùng khi</b>Ngay trước khi báo hoàn thành, commit hoặc mở PR.</p>
@@ -554,7 +560,7 @@
       </article>
 
       <article class="card" id="s-verifying-ai-generated-code">
-        <header><span class="badge">9</span><h4>verifying-ai-generated-code</h4><span class="tag">Trong luồng</span><span class="tag new">Mới</span></header>
+        <header><span class="badge">8</span><h4>verifying-ai-generated-code</h4><span class="tag">Trong luồng</span><span class="tag new">Mới</span></header>
         <p class="row pain"><b>Vấn đề</b>Test do chính agent viết thì cùng hiểu sai với code, nên pass mà tính năng vẫn sai.</p>
         <p class="row"><b>Làm gì</b>Kiểm theo tầng: static → unit → integration → e2e. Test do một subagent khác viết từ design (không thấy code). E2e phải có bằng chứng (screenshot, video, trace). Tầng nào không chạy được thì báo “not verified”, không giấu.</p>
         <p class="row"><b>Dùng khi</b>Lúc lên plan cho thay đổi người dùng nhìn thấy (viết e2e sớm), và khi sắp báo xong.</p>
@@ -566,7 +572,7 @@
     <div class="phase"><h3>5 · Kết thúc</h3><span>Đưa việc đã xong vào nhánh chính</span></div>
     <div class="cards">
       <article class="card" id="s-finishing-a-development-branch">
-        <header><span class="badge">10</span><h4>finishing-a-development-branch</h4><span class="tag">Trong luồng</span></header>
+        <header><span class="badge">9</span><h4>finishing-a-development-branch</h4><span class="tag">Trong luồng</span></header>
         <p class="row pain"><b>Vấn đề</b>Làm xong thì nhánh và worktree bị bỏ lơ, hoặc merge khi test còn đỏ.</p>
         <p class="row"><b>Làm gì</b>Chạy full test. Nếu xanh thì đưa 3 lựa chọn: merge, mở PR hoặc giữ nhánh. Sau đó dọn worktree.</p>
         <p class="row"><b>Dùng khi</b>Implement xong và test pass.</p>
@@ -621,9 +627,145 @@
         <a class="back" href="#diagram">↑ Về diagram</a>
       </article>
     </div>
+  </div>
+</section>
+
+<!-- ============ 4. MCP ============ -->
+<section id="mcp">
+  <div class="wrap">
+    <h2><span class="secno">4</span>MCP catalog: nối agent với tool ngoài</h2>
+    <p class="lead">Thư mục <code>mcp/</code> là một menu 15 MCP server, đóng gói thành config sẵn để gộp vào project. Không bật gì mặc định: mỗi project chọn 3–5 server cần dùng. Đây không phải skill và không nằm trong luồng chính. Nó là phần thêm riêng của fork này, không thuộc Superpowers upstream.</p>
+
+    <div class="callout" style="margin-top:0">
+      <b>Liên quan tới brainstorming:</b> bước “tra trước khi hỏi” dùng docs thư viện, DB, log nếu session có tool tương ứng (context7, dbhub, sentry, datadog… trong catalog là những tool như vậy). Không có tool thì brainstorming không đoán, mà chuyển câu đó thành câu hỏi cho bạn.
+    </div>
+
+    <!-- Nguyên tắc -->
+    <div class="phase"><h3>Nguyên tắc</h3><span>Vì sao catalog được đóng gói như vậy</span></div>
+    <div class="cards">
+      <article class="card plain">
+        <header><h4>Config, không phải code</h4></header>
+        <p class="row">Không chép code server vào repo. Mỗi <code>mcp.json</code> trỏ tới package npm đã pin version, hoặc endpoint do vendor host.</p>
+      </article>
+      <article class="card plain">
+        <header><h4>Menu, không phải bundle</h4></header>
+        <p class="row">Mỗi server bật lên là thêm tool definition vào context của mọi request. Chọn 3–5 server; catalog ghi số tool đã đo.</p>
+      </article>
+      <article class="card plain">
+        <header><h4>Quyền tối thiểu</h4></header>
+        <p class="row">Mặc định read-only hoặc có giới hạn. Lưu ý: read-only ở đây là ẩn tool, không phải rào quyền. Vẫn nên dùng credential ít quyền.</p>
+      </article>
+      <article class="card plain">
+        <header><h4>Không secret trong git</h4></header>
+        <p class="row">Config chỉ chứa tham chiếu <code>${VAR}</code>. Tên các biến nằm trong <code>mcp/.env.example</code>.</p>
+      </article>
+      <article class="card plain">
+        <header><h4>Pin version</h4></header>
+        <p class="row">Server npm/PyPI được pin (Portainer pin tới minor vì phải khớp instance). Server vendor-hosted (GitHub, Supabase, Sentry, Datadog) không pin được, vendor kiểm soát hành vi.</p>
+      </article>
+      <article class="card plain">
+        <header><h4>Nói rõ đã test gì</h4></header>
+        <p class="row">README mỗi server kết thúc bằng mục “Last verified”: đã chạy gì, chưa chạy gì.</p>
+      </article>
+    </div>
+
+    <!-- Server -->
+    <div class="phase"><h3>15 server theo nhóm</h3><span>Số tool là số đã đo khi chạy server với config trong repo. “chưa đo” = cần credential hoặc đăng nhập thật</span></div>
+    <div class="tbl-wrap">
+      <table class="tbl servers">
+        <thead><tr><th>Server</th><th>Cho agent</th><th>Tool</th></tr></thead>
+        <tbody>
+          <tr class="grp"><td colspan="3">Developer essentials</td></tr>
+          <tr><td><code>context7</code></td><td>Docs thư viện đúng version</td><td class="num">2</td></tr>
+          <tr><td><code>github</code></td><td>Issue, PR, code search, Actions, security alert</td><td class="num">chưa đo (toolset mặc định lớn)</td></tr>
+          <tr><td><code>playwright</code></td><td>Điều khiển trình duyệt thật để kiểm UI</td><td class="num">25</td></tr>
+          <tr><td><code>chrome-devtools</code></td><td>Console, network, performance trace của trang đang chạy</td><td class="num">33</td></tr>
+          <tr><td><code>sequential-thinking</code></td><td>Scratchpad suy luận từng bước</td><td class="num">1</td></tr>
+          <tr><td><code>memory</code></td><td>Knowledge graph lưu qua các phiên</td><td class="num">9</td></tr>
+          <tr class="grp"><td colspan="3">Data và infrastructure (mặc định read-only)</td></tr>
+          <tr><td><code>dbhub</code></td><td>SQL và tìm schema cho Postgres, MySQL, MariaDB, SQL Server, SQLite</td><td class="num">2</td></tr>
+          <tr><td><code>mongodb</code></td><td>Collection, schema, query trên MongoDB</td><td class="num">20 (31 khi cho ghi)</td></tr>
+          <tr><td><code>kubernetes</code></td><td>Đọc tài nguyên và log của cluster</td><td class="num">15 (21 khi cho ghi)</td></tr>
+          <tr><td><code>datadog</code></td><td>Trace, log, metric, monitor</td><td class="num">chưa đo</td></tr>
+          <tr><td><code>supabase</code></td><td>Query và xem project Supabase dev, tìm docs</td><td class="num">chưa đo</td></tr>
+          <tr><td><code>sentry</code></td><td>Lỗi production, stack trace, release health</td><td class="num">chưa đo</td></tr>
+          <tr><td><code>portainer</code></td><td>Docker/Kubernetes qua Portainer (chỉ homelab, không dùng cho production)</td><td class="num">40 (239 mặc định)</td></tr>
+          <tr class="grp"><td colspan="3">Gọi API</td></tr>
+          <tr><td><code>postman</code></td><td>Đọc collection, environment, spec từ workspace Postman (không gửi request tuỳ ý)</td><td class="num">23 (42 mặc định, 234 full)</td></tr>
+          <tr><td><code>openapi</code></td><td>Gọi API có OpenAPI spec như các tool có kiểu</td><td class="num">3 (chế độ dynamic)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="tbl-note">Cột “Use MCP or CLI?” trong <code>mcp/catalog.md</code> cho biết khi nào CLI (<code>gh</code>, <code>psql</code>, <code>kubectl</code>…) đủ dùng và nhẹ hơn. Nếu agent chọn tool kém, hãy bớt server trước khi làm gì khác.</p>
+
+    <!-- Kết hợp -->
+    <div class="phase"><h3>Gợi ý kết hợp</h3><span>Bắt đầu từ đây rồi bớt hoặc thêm</span></div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Tình huống</th><th>Bật</th></tr></thead>
+        <tbody>
+          <tr><td>Web app có UI</td><td><code>context7</code> + <code>playwright</code> (thêm <code>github</code> nếu không có <code>gh</code>)</td></tr>
+          <tr><td>Debug lỗi front-end</td><td><code>context7</code> + <code>chrome-devtools</code></td></tr>
+          <tr><td>Backend Postgres/MySQL</td><td><code>context7</code> + <code>dbhub</code></td></tr>
+          <tr><td>Backend Supabase</td><td><code>context7</code> + <code>supabase</code> (project dev, read-only)</td></tr>
+          <tr><td>Backend MongoDB</td><td><code>context7</code> + <code>mongodb</code></td></tr>
+          <tr><td>Kubernetes / on-call</td><td><code>kubernetes</code> + <code>datadog</code> (thêm <code>sentry</code> nếu có dùng)</td></tr>
+          <tr><td>Tích hợp API bên thứ ba</td><td><code>context7</code> + <code>openapi</code> (hoặc <code>postman</code> nếu team giữ spec ở đó)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Cài -->
+    <div class="phase"><h3>Cài vào project</h3><span>Agent làm theo 6 bước, bạn xác nhận ở bước 2</span></div>
+    <div class="steps">
+      <div class="step">
+        <h3>Đọc catalog, xem stack</h3>
+        <p>Agent đọc <code>catalog.md</code> và kiểm tra stack của project (<code>package.json</code>, <code>pyproject.toml</code>, <code>supabase/</code>, CI, <code>.mcp.json</code> có sẵn).</p>
+      </div>
+      <div class="step">
+        <h3>Đề xuất 3–5 server</h3>
+        <p>Mỗi server một dòng lý do, và cái nào dùng CLI được thì nói. Agent chờ bạn xác nhận, không bật phần còn lại.</p>
+      </div>
+      <div class="step">
+        <h3>Đọc README từng server</h3>
+        <p>Chú ý mục Auth và Risks của từng cái đã chọn.</p>
+      </div>
+      <div class="step">
+        <h3>Gộp config vào harness</h3>
+        <p>Gộp <code>mcp.json</code> vào config của harness, không ghi đè cái đã có. Giữ mặc định ít quyền, không cấp quyền ghi vào production.</p>
+        <code class="ex">claude mcp add --scope project context7 -- npx -y @upstash/context7-mcp@4.7.3</code>
+      </div>
+      <div class="step">
+        <h3>Khai báo biến</h3>
+        <p>Thêm tên biến vào <code>.env.example</code> của project, không bao giờ ghi giá trị thật. Kiểm tra <code>.env</code> đã được gitignore.</p>
+      </div>
+      <div class="step">
+        <h3>Kiểm tra và báo trạng thái</h3>
+        <p>Chạy lệnh list/health của harness. Server đang “Pending approval” hoặc cần đăng nhập OAuth thì báo là đang chờ bạn, không báo là đã chạy.</p>
+      </div>
+    </div>
+
+    <div class="phase"><h3>Config nằm ở đâu</h3><span>Mỗi harness một chỗ, một cú pháp biến</span></div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Harness</th><th>File config</th><th>Cú pháp biến</th><th>Đã kiểm tới đâu</th></tr></thead>
+        <tbody>
+          <tr><td>Claude Code</td><td><code>.mcp.json</code> ở root repo</td><td><code>${VAR}</code></td><td>Đã đọc được config. Chưa thử kết nối thật (cần bạn duyệt)</td></tr>
+          <tr><td>Codex CLI</td><td><code>~/.codex/config.toml</code></td><td>Truyền tên biến môi trường</td><td>Chưa test, chỉ dựa vào docs</td></tr>
+          <tr><td>Cursor</td><td><code>.cursor/mcp.json</code></td><td><code>${env:VAR}</code></td><td>Chưa test, chỉ dựa vào docs</td></tr>
+          <tr><td>Gemini CLI</td><td><code>.gemini/settings.json</code></td><td><code>$VAR</code></td><td>Đã sinh config bằng CLI, chưa chạy thật</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="tbl-note">Claude Code không tự đọc <code>.env</code>: biến phải có sẵn trong môi trường lúc khởi chạy. Với Gemini CLI, chạy <code>gemini mcp add --scope project</code> lần thứ hai từng làm mất server thêm trước đó, nên đọc lại <code>settings.json</code> sau mỗi lần thêm.</p>
+
+    <div class="callout">
+      <b>Đã kiểm tra đến đâu (21/11/2026):</b> 5 server stdio (context7, playwright, chrome-devtools, sequential-thinking, memory) khởi động được và liệt kê tool. Các server dữ liệu đã kiểm là bản hạn chế không có tool ghi (kubernetes chỉ thử với kubeconfig giả, chưa có cluster thật). Server remote (github, supabase, sentry, datadog) chỉ xác nhận endpoint tồn tại và đòi xác thực, chưa thử với credential thật.
+      <br><b>Cẩn thận:</b> <code>dbhub</code> và <code>kubernetes</code> cần file <code>.toml</code> chép vào thư mục <code>.mcp/</code> của project. Thiếu file đó, <code>dbhub</code> ghi được vào DB.
+    </div>
 
     <footer>
-      Nguồn: <code>README.md</code> và <code>skills/*/SKILL.md</code>. Hai skill đánh dấu “Mới” (research-before-brainstorming, verifying-ai-generated-code) có trong thư mục <code>skills/</code> trên branch <code>feat/research-and-verification-skills</code> nhưng chưa được liệt kê trong README.
+      Nguồn: <code>README.md</code>, <code>skills/*/SKILL.md</code> và <code>mcp/</code>. Skill đánh dấu “Mới” (verifying-ai-generated-code) có trong thư mục <code>skills/</code> trên branch <code>feat/research-and-verification-skills</code> nhưng chưa được liệt kê trong README. <code>research-before-brainstorming</code> không còn là skill riêng: nội dung đã gộp vào <code>brainstorming</code> (xem <code>skills/brainstorming/references/research.md</code>).
     </footer>
   </div>
 </section>

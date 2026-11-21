@@ -1,0 +1,599 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>using-git-worktrees Explainer</title>
+<link rel="stylesheet" href="../assets/sidebar.css">
+<script src="../assets/sidebar.js"></script>
+<style>
+  :root {
+    --bg: #f7f6f2;
+    --surface: #ffffff;
+    --ink: #1c1b19;
+    --muted: #67655e;
+    --line: #d8d5ca;
+    --accent: #4338ca;
+    --accent-soft: #ecebfd;
+    --new: #0f766e;
+    --new-soft: #dff2ef;
+    --pain: #b42318;
+    --pain-soft: #fdecea;
+    --code-bg: #efede6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #141413;
+      --surface: #1e1e1c;
+      --ink: #ecebe6;
+      --muted: #a3a097;
+      --line: #36352f;
+      --accent: #a9a4ff;
+      --accent-soft: #262540;
+      --new: #5eead4;
+      --new-soft: #12312d;
+      --pain: #ff9b8f;
+      --pain-soft: #3a1f1c;
+      --code-bg: #2a2a27;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  a { color: var(--accent); }
+  code, pre, .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  code { background: var(--code-bg); padding: 2px 6px; border-radius: 5px; font-size: .88em; }
+  pre.cmd {
+    margin: 4px 0 0; padding: 10px 12px; background: var(--code-bg); border-radius: 8px;
+    font-size: 12.5px; line-height: 1.55; overflow-x: auto; white-space: pre;
+  }
+
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+
+  /* top nav */
+  .topnav {
+    position: sticky; top: 0; z-index: 10;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .topnav .wrap { display: flex; gap: 20px; align-items: center; height: 52px; overflow-x: auto; white-space: nowrap; }
+  .topnav strong { font-size: 15px; margin-right: auto; }
+  .topnav a { text-decoration: none; color: var(--muted); font-size: 14px; font-weight: 500; }
+  .topnav a:hover { color: var(--accent); }
+
+  /* hero */
+  .hero { padding: 48px 0 8px; }
+  .hero h1 { font-size: clamp(30px, 5vw, 44px); line-height: 1.15; margin: 0 0 12px; letter-spacing: -.02em; }
+  .hero p { max-width: 66ch; font-size: 18px; color: var(--muted); margin: 0 0 16px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { font-size: 13px; padding: 4px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); }
+
+  section { padding: 44px 0 8px; }
+  section > .wrap > h2 { font-size: 26px; margin: 0 0 6px; letter-spacing: -.01em; }
+  .lead { color: var(--muted); margin: 0 0 24px; max-width: 72ch; }
+  .secno { color: var(--accent); font-weight: 700; margin-right: 8px; }
+
+  /* diagram */
+  .diagram-grid { display: grid; grid-template-columns: minmax(0, 560px) minmax(0, 1fr); gap: 32px; align-items: start; }
+  .diagram-box { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 16px 12px 12px; }
+  svg.flow { width: 100%; height: auto; display: block; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 12.5px; color: var(--muted); padding: 10px 8px 2px; }
+  .legend i { display: inline-block; width: 22px; height: 12px; border-radius: 4px; border: 1.5px solid var(--accent); vertical-align: -2px; margin-right: 6px; background: var(--surface); }
+  .legend i.dash { border-style: dashed; border-color: var(--muted); }
+  .legend i.new { border-color: var(--new); }
+
+  .flow .node { cursor: pointer; outline: none; }
+  .flow .node rect { fill: var(--surface); stroke: var(--accent); stroke-width: 1.5; transition: fill .12s; }
+  .flow .node.opt rect { stroke: var(--muted); stroke-dasharray: 5 4; }
+  .flow .node.new rect { stroke: var(--new); }
+  .flow .node:hover rect, .flow .node:focus-visible rect { fill: var(--accent-soft); stroke-width: 2.6; }
+  .flow .name { font: 600 12px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; fill: var(--ink); }
+  .flow .sub { font: 11.5px system-ui, -apple-system, "Segoe UI", sans-serif; fill: var(--muted); }
+  .flow .num circle { fill: var(--accent); }
+  .flow .num text { fill: #fff; font: 700 10px system-ui, sans-serif; text-anchor: middle; }
+  .flow .node.new .num circle { fill: var(--new); }
+  .flow .arrow { fill: none; stroke: var(--muted); stroke-width: 1.5; marker-end: url(#ah); }
+  .flow .arrow.join { marker-end: none; }
+  .flow #ah path { fill: var(--muted); }
+  .flow .note { font: italic 500 10.5px system-ui, sans-serif; fill: var(--muted); }
+  .flow .note.strong { font-style: normal; font-weight: 700; letter-spacing: .04em; fill: var(--accent); }
+
+  /* pain list */
+  .pains { position: sticky; top: 68px; }
+  .pains h3 { margin: 0 0 4px; font-size: 18px; }
+  .pains p { margin: 0 0 14px; color: var(--muted); font-size: 14px; }
+  .pain-item { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--pain); border-radius: 10px; padding: 10px 14px; margin-bottom: 10px; }
+  .pain-item q { display: block; quotes: none; font-weight: 600; font-size: 14.5px; line-height: 1.4; }
+  .pain-item .fix { margin-top: 6px; font-size: 13.5px; color: var(--muted); }
+  .skill-link {
+    display: inline-block; font: 600 12px ui-monospace, Menlo, Consolas, monospace;
+    background: var(--accent-soft); color: var(--accent); text-decoration: none;
+    padding: 2px 8px; border-radius: 6px; margin: 2px 4px 2px 0;
+  }
+  .skill-link:hover { text-decoration: underline; }
+
+  .callout { margin-top: 16px; padding: 12px 16px; border-radius: 12px; background: var(--accent-soft); font-size: 14.5px; }
+  .callout.warn { background: var(--pain-soft); }
+
+  /* parallel diagram */
+  .par { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 16px; }
+  .gitbar {
+    text-align: center; font: 600 13px ui-monospace, Menlo, Consolas, monospace;
+    background: var(--accent-soft); color: var(--accent); border-radius: 10px; padding: 8px 12px;
+  }
+  .gitbar small { display: block; font: 12.5px system-ui, sans-serif; color: var(--muted); }
+  .lanes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin: 14px 0; }
+  .lane { border: 1.5px dashed var(--line); border-radius: 12px; padding: 12px; }
+  .lane h3 { margin: 0 0 10px; font-size: 15px; }
+  .lstep { background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; font-size: 14px; }
+  .lstep small { display: block; color: var(--muted); font-size: 12.5px; }
+  .lstep.key { border-color: var(--new); background: var(--new-soft); }
+  .down { text-align: center; color: var(--muted); line-height: 1.5; font-size: 14px; }
+  .merge { text-align: center; padding: 8px 12px; border-radius: 10px; border: 1.5px solid var(--new); background: var(--new-soft); font-size: 14px; font-weight: 600; }
+
+  .vs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .vs .case { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; }
+  .vs .case.bad { border-left: 4px solid var(--pain); }
+  .vs .case.good { border-left: 4px solid var(--new); }
+  .vs h3 { margin: 0 0 8px; font-size: 16px; }
+  .vs .case.bad h3 { color: var(--pain); }
+  .vs .case.good h3 { color: var(--new); }
+  .vs ol { margin: 0; padding-left: 20px; font-size: 14.5px; }
+  .vs li + li { margin-top: 4px; }
+  .vs p { margin: 8px 0 0; font-size: 13.5px; color: var(--muted); }
+
+  /* skill cards */
+  .phase { margin: 32px 0 12px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
+  .phase h3 { margin: 0; font-size: 19px; }
+  .phase span { color: var(--muted); font-size: 14px; }
+  .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .cards.one { grid-template-columns: minmax(0, 1fr); }
+  .card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+    padding: 16px 18px 12px; scroll-margin-top: 72px; transition: box-shadow .2s, border-color .2s;
+  }
+  .card:target { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+  .card header { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .badge { display: inline-grid; place-items: center; min-width: 26px; height: 26px; padding: 0 6px; border-radius: 13px; background: var(--accent); color: #fff; font-weight: 700; font-size: 13px; }
+  .card h4 { margin: 0; font: 700 15px ui-monospace, Menlo, Consolas, monospace; word-break: break-word; }
+  .card.plain h4 { font: 700 15px/1.3 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  .tag { font-size: 11.5px; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--code-bg); color: var(--muted); }
+  .tag.new { background: var(--new-soft); color: var(--new); }
+  .row { margin: 0 0 9px; font-size: 14.5px; }
+  .row b.lbl { display: block; font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-bottom: 1px; }
+  .row.pain { background: var(--pain-soft); border-radius: 8px; padding: 7px 10px; }
+  .row.pain b.lbl { color: var(--pain); }
+  .card ul { margin: 0 0 9px; padding-left: 20px; font-size: 14.5px; }
+  .card li + li { margin-top: 3px; }
+  .back { font-size: 12.5px; text-decoration: none; color: var(--muted); display: inline-block; margin-top: 2px; }
+  .back:hover { color: var(--accent); }
+
+  /* tables */
+  .tbl-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; }
+  .card .tbl-wrap { margin: 4px 0 12px; }
+  table.tbl { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 480px; }
+  .tbl th, .tbl td { text-align: left; vertical-align: top; padding: 8px 14px; border-bottom: 1px solid var(--line); }
+  .tbl th { font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+  .tbl tr:last-child td { border-bottom: 0; }
+  .tbl td:first-child { white-space: nowrap; }
+  .tbl.wrapfirst td:first-child { white-space: normal; }
+  .tbl-note { margin: 8px 4px 0; font-size: 13px; color: var(--muted); }
+
+  footer { margin: 48px 0 64px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13.5px; }
+
+  .swipe-hint { display: none; font-size: 12.5px; color: var(--muted); margin: 0 0 8px 4px; }
+
+  @media (max-width: 600px) {
+    .diagram-box { overflow-x: auto; }
+    svg.flow { min-width: 520px; }
+    .swipe-hint { display: block; }
+    .lanes, .vs { grid-template-columns: minmax(0, 1fr); }
+  }
+
+  @media (max-width: 900px) {
+    .diagram-grid { grid-template-columns: minmax(0, 1fr); }
+    .pains { position: static; }
+    .cards { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="wrap">
+    <strong>using-git-worktrees</strong>
+    <a href="#diagram">1 · Diagram</a>
+    <a href="#parallel">2 · Song song</a>
+    <a href="#steps">3 · Từng bước</a>
+    <a href="#ref">4 · Tra nhanh</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <h1>using-git-worktrees</h1>
+    <p>Skill bắt agent làm việc trong một workspace cô lập (worktree + nhánh riêng) thay vì sửa thẳng lên nhánh bạn đang dùng. Nó kiểm tra đã cô lập chưa, hỏi bạn, tạo bằng tool native nếu có, rồi setup và chạy test baseline.</p>
+    <div class="chips">
+      <span class="chip"><b>4</b> bước (0 → 3)</span>
+      <span class="chip">Ưu tiên tool native của harness</span>
+      <span class="chip">Hỏi bạn trước khi tạo</span>
+      <span class="chip">Mỗi lần gọi = <b>1</b> worktree</span>
+      <span class="chip">Click vào node trong diagram để xem chi tiết</span>
+    </div>
+  </div>
+</header>
+
+<!-- ============ 1. DIAGRAM ============ -->
+<section id="diagram">
+  <div class="wrap">
+    <h2><span class="secno">1</span>Diagram: skill chạy thế nào</h2>
+    <p class="lead">Đi từ trên xuống. Đường bên trái là lối tắt: những trường hợp không cần (hoặc không thể) tạo worktree mới thì đi thẳng tới Step 2.</p>
+
+    <div class="diagram-grid">
+      <div class="diagram-box">
+        <p class="swipe-hint">← Vuốt ngang để xem hết diagram →</p>
+        <svg class="flow" viewBox="0 0 560 676" role="group" aria-label="Luồng quyết định của skill using-git-worktrees">
+          <defs>
+            <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0 1 L10 5 L0 9 z"/>
+            </marker>
+          </defs>
+
+          <!-- arrows (drawn first, nodes on top) -->
+          <path class="arrow" d="M24 41 V457 H150"/>
+          <path class="arrow join" d="M150 41 H24"/>
+          <path class="arrow join" d="M150 139 H24"/>
+          <text class="note strong" x="100" y="35" text-anchor="middle">CÓ</text>
+          <text class="note" x="100" y="133" text-anchor="middle">từ chối</text>
+          <text class="note" transform="rotate(-90 12 250)" x="12" y="250" text-anchor="middle">Làm tại chỗ (đã cô lập · bạn từ chối · sandbox chặn)</text>
+
+          <path class="arrow" d="M300 68 V112"/>
+          <text class="note strong" x="308" y="96">CHƯA</text>
+          <path class="arrow" d="M300 166 V210"/>
+          <text class="note" x="308" y="193">đồng ý</text>
+
+          <path class="arrow" d="M300 264 V286 H175 V308"/>
+          <path class="arrow" d="M300 286 H425 V308"/>
+          <text class="note" x="168" y="280" text-anchor="end">ưu tiên</text>
+          <text class="note" x="432" y="280">nếu không có tool</text>
+
+          <path class="arrow" d="M175 362 V392 H300 V430"/>
+          <path class="arrow join" d="M425 362 V392 H300"/>
+
+          <path class="arrow" d="M300 484 V516"/>
+          <path class="arrow" d="M300 570 V602"/>
+
+          <!-- Step 0 -->
+          <a class="node" href="#s-step0" aria-label="Step 0: phát hiện cô lập">
+            <rect x="150" y="14" width="300" height="54" rx="10"/>
+            <text class="name" x="164" y="37">Step 0 · Phát hiện cô lập</text>
+            <text class="sub" x="164" y="55">Đã ở trong linked worktree chưa?</text>
+            <g class="num"><circle cx="150" cy="14" r="10"/><text x="150" y="17.5">0</text></g>
+          </a>
+          <a class="node opt" href="#s-step0" aria-label="Hỏi bạn đồng ý tạo worktree">
+            <rect x="150" y="112" width="300" height="54" rx="10"/>
+            <text class="name" x="164" y="135">Hỏi bạn đồng ý?</text>
+            <text class="sub" x="164" y="153">Đã có preference thì khỏi hỏi</text>
+          </a>
+
+          <!-- Step 1 -->
+          <a class="node" href="#s-step1a" aria-label="Step 1: tạo workspace">
+            <rect x="150" y="210" width="300" height="54" rx="10"/>
+            <text class="name" x="164" y="233">Step 1 · Tạo workspace</text>
+            <text class="sub" x="164" y="251">Thử theo thứ tự: native → git</text>
+            <g class="num"><circle cx="150" cy="210" r="10"/><text x="150" y="213.5">1</text></g>
+          </a>
+          <a class="node" href="#s-step1a" aria-label="1a: tool native">
+            <rect x="60" y="308" width="230" height="54" rx="10"/>
+            <text class="name" x="74" y="331">1a · Tool native</text>
+            <text class="sub" x="74" y="349">EnterWorktree, /worktree…</text>
+            <g class="num"><circle cx="60" cy="308" r="11"/><text x="60" y="311.5">1a</text></g>
+          </a>
+          <a class="node" href="#s-step1b" aria-label="1b: git worktree add">
+            <rect x="310" y="308" width="230" height="54" rx="10"/>
+            <text class="name" x="324" y="331">1b · git worktree add</text>
+            <text class="sub" x="324" y="349">Chọn thư mục + check-ignore</text>
+            <g class="num"><circle cx="310" cy="308" r="11"/><text x="310" y="311.5">1b</text></g>
+          </a>
+
+          <!-- Step 2, 3 -->
+          <a class="node" href="#s-step2" aria-label="Step 2: setup dự án">
+            <rect x="150" y="430" width="300" height="54" rx="10"/>
+            <text class="name" x="164" y="453">Step 2 · Setup dự án</text>
+            <text class="sub" x="164" y="471">npm install, cargo build, pip…</text>
+            <g class="num"><circle cx="150" cy="430" r="10"/><text x="150" y="433.5">2</text></g>
+          </a>
+          <a class="node" href="#s-step3" aria-label="Step 3: test baseline">
+            <rect x="150" y="516" width="300" height="54" rx="10"/>
+            <text class="name" x="164" y="539">Step 3 · Test baseline</text>
+            <text class="sub" x="164" y="557">Fail → báo lỗi và hỏi bạn</text>
+            <g class="num"><circle cx="150" cy="516" r="10"/><text x="150" y="519.5">3</text></g>
+          </a>
+          <a class="node new" href="#s-step3" aria-label="Sẵn sàng làm việc">
+            <rect x="150" y="602" width="300" height="54" rx="10"/>
+            <text class="name" x="164" y="625">Sẵn sàng làm việc</text>
+            <text class="sub" x="164" y="643">Worktree ready · tests passing</text>
+          </a>
+        </svg>
+        <div class="legend">
+          <span><i></i>Bước của skill</span>
+          <span><i class="dash"></i>Nét đứt: điểm bạn quyết</span>
+          <span><i class="new"></i>Viền xanh: kết quả cuối</span>
+        </div>
+      </div>
+
+      <aside class="pains">
+        <h3>Nó giải quyết painpoint nào?</h3>
+        <p>Những lỗi mà từng phần của skill sinh ra để chặn.</p>
+
+        <div class="pain-item">
+          <q>Agent sửa thẳng lên nhánh bạn đang làm, hỏng thì khó quay lại</q>
+          <div class="fix"><a class="skill-link" href="#s-step1a">Step 1</a> làm trên nhánh và thư mục riêng</div>
+        </div>
+        <div class="pain-item">
+          <q>Tạo worktree lồng trong một worktree đã có</q>
+          <div class="fix"><a class="skill-link" href="#s-step0">Step 0</a> so <code>GIT_DIR</code> với <code>GIT_COMMON</code>, đã cô lập thì không tạo thêm</div>
+        </div>
+        <div class="pain-item">
+          <q>Dùng <code>git worktree add</code> dù harness có tool riêng, sinh “trạng thái ma”</q>
+          <div class="fix"><a class="skill-link" href="#s-step1a">Step 1a</a> bắt buộc thử tool native trước</div>
+        </div>
+        <div class="pain-item">
+          <q>Cả thư mục worktree bị commit nhầm vào repo</q>
+          <div class="fix"><a class="skill-link" href="#s-step1b">Step 1b</a> chạy <code>git check-ignore</code> trước khi tạo</div>
+        </div>
+        <div class="pain-item">
+          <q>Bắt đầu trên baseline đã đỏ, sau này không biết lỗi của ai</q>
+          <div class="fix"><a class="skill-link" href="#s-step3">Step 3</a> chạy test ngay, đỏ thì hỏi bạn</div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. PARALLEL ============ -->
+<section id="parallel">
+  <div class="wrap">
+    <h2><span class="secno">2</span>Chạy 2 task song song</h2>
+    <p class="lead">Skill <b>không tự điều phối</b> nhiều task. Mỗi lần gọi nó chỉ đảm bảo <b>một</b> workspace cô lập. Song song đến từ việc bạn mở nhiều session, mỗi session một worktree.</p>
+
+    <div class="par">
+      <div class="gitbar">.git (dùng chung)<small>history · branches · remote</small></div>
+      <div class="lanes">
+        <div class="lane">
+          <h3>Session Claude #1</h3>
+          <div class="lstep">Bắt đầu ở checkout chính<small>nhánh main</small></div>
+          <div class="down">↓</div>
+          <div class="lstep key"><code>.worktrees/task-a</code><small>skill tạo, branch task-a</small></div>
+          <div class="down">↓</div>
+          <div class="lstep">Code · test · commit<small>chỉ chạm file trong task-a</small></div>
+        </div>
+        <div class="lane">
+          <h3>Session Claude #2</h3>
+          <div class="lstep">Bắt đầu ở checkout chính<small>nhánh main</small></div>
+          <div class="down">↓</div>
+          <div class="lstep key"><code>.worktrees/task-b</code><small>skill tạo, branch task-b</small></div>
+          <div class="down">↓</div>
+          <div class="lstep">Code · test · commit<small>chỉ chạm file trong task-b</small></div>
+        </div>
+      </div>
+      <div class="down">↓ &nbsp;hai session chạy cùng lúc, không đè file của nhau&nbsp; ↓</div>
+      <div class="merge">Merge hoặc mở PR về main, từng nhánh một</div>
+    </div>
+
+    <div class="phase"><h3>Sai và đúng</h3><span>Điểm dễ vấp nhất là Step 0</span></div>
+    <div class="vs">
+      <div class="case bad">
+        <h3>✗ Một session làm cả 2 task</h3>
+        <ol>
+          <li>Gọi skill cho task A: tạo <code>task-a</code>, session đứng trong đó.</li>
+          <li>Gọi skill lần nữa cho task B.</li>
+          <li>Step 0 thấy <code>GIT_DIR ≠ GIT_COMMON</code>: “đã cô lập rồi”.</li>
+          <li>Skill <b>không</b> tạo <code>task-b</code>, nhảy thẳng tới Step 2.</li>
+        </ol>
+        <p>Kết quả: task B làm chung worktree với task A. Việc chặn này do Step 0 của skill, không phải do git (git vẫn cho tạo worktree lồng nhau).</p>
+      </div>
+      <div class="case good">
+        <h3>✓ Mỗi task một session</h3>
+        <ol>
+          <li>Mở session #1 ở checkout chính, gọi skill: tạo <code>task-a</code>.</li>
+          <li>Mở session #2 ở checkout chính, gọi skill: tạo <code>task-b</code>.</li>
+          <li>Mỗi session chạy Step 2, Step 3 trong worktree của nó.</li>
+        </ol>
+        <p>Nếu harness đã tạo sẵn worktree cho session (ví dụ <code>--worktree</code>), Step 0 nhận ra và dùng luôn. Cũng đúng, vì mỗi session vẫn có chỗ riêng.</p>
+      </div>
+    </div>
+
+    <div class="phase"><h3>Tách riêng và dùng chung</h3><span>Phần này là hành vi của git, không phải của skill</span></div>
+    <div class="cards">
+      <article class="card plain">
+        <header><h4>Tách riêng cho mỗi worktree</h4><span class="tag new">An toàn song song</span></header>
+        <ul>
+          <li>File đang sửa và staged changes</li>
+          <li>Branch (mỗi worktree một branch)</li>
+          <li><code>node_modules</code>, build output</li>
+        </ul>
+        <p class="row"><b class="lbl">Hệ quả</b>Step 2 và Step 3 phải chạy lại ở từng worktree: cài dependency và chạy test baseline riêng.</p>
+      </article>
+      <article class="card plain">
+        <header><h4>Dùng chung, dễ xung đột</h4><span class="tag">Cẩn thận</span></header>
+        <ul>
+          <li><code>.git</code>: history, remote, danh sách branch</li>
+          <li>Port dev server (hai task cùng chạy cổng 3000 sẽ đụng nhau)</li>
+          <li>Database local, file <code>.env</code> nằm ngoài git</li>
+        </ul>
+        <p class="row"><b class="lbl">Giới hạn của git</b>Một branch không thể checkout ở hai worktree cùng lúc, nên mỗi task cần tên branch khác nhau.</p>
+      </article>
+    </div>
+
+    <div class="callout">
+      <b>Muốn một session tự chạy nhiều task cùng lúc?</b> Đó là việc của skill khác trong repo này, như <code>dispatching-parallel-agents</code> và <code>subagent-driven-development</code>, không phải của skill này.
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3. STEPS ============ -->
+<section id="steps">
+  <div class="wrap">
+    <h2><span class="secno">3</span>Từng bước chi tiết</h2>
+    <p class="lead">Mỗi bước có 3 dòng: vấn đề nó giải, nó làm gì, và dùng khi nào. Số trong badge khớp với số trên diagram.</p>
+
+    <div class="phase"><h3>Kiểm tra</h3><span>Luôn chạy trước khi tạo bất cứ thứ gì</span></div>
+    <div class="cards one">
+      <article class="card" id="s-step0">
+        <header><span class="badge">0</span><h4>Phát hiện cô lập</h4><span class="tag">Luôn chạy</span></header>
+        <p class="row pain"><b class="lbl">Vấn đề</b>Agent tạo worktree lồng trong worktree, hoặc tạo khi bạn không muốn. Nhìn bằng mắt rất dễ nhầm, vì isolation do harness tạo và submodule đều đánh lừa việc “đoán”.</p>
+        <p class="row"><b class="lbl">Làm gì</b>Chạy lệnh so sánh thư mục git của workspace với thư mục git chung:</p>
+<pre class="cmd">GIT_DIR=$(cd "$(git rev-parse --git-dir)" 2&gt;/dev/null &amp;&amp; pwd -P)
+GIT_COMMON=$(cd "$(git rev-parse --git-common-dir)" 2&gt;/dev/null &amp;&amp; pwd -P)
+BRANCH=$(git branch --show-current)
+
+# Chống nhầm submodule (cũng làm GIT_DIR ≠ GIT_COMMON):
+git rev-parse --show-superproject-working-tree 2&gt;/dev/null</pre>
+        <div class="tbl-wrap">
+          <table class="tbl wrapfirst">
+            <thead><tr><th>Kết quả</th><th>Skill làm gì</th></tr></thead>
+            <tbody>
+              <tr><td><code>GIT_DIR ≠ GIT_COMMON</code>, đang ở một nhánh</td><td>Báo “Already in isolated workspace at &lt;path&gt; on branch &lt;name&gt;”, nhảy tới <b>Step 2</b></td></tr>
+              <tr><td>Như trên nhưng detached HEAD</td><td>Báo “(detached HEAD, externally managed). Branch creation needed at finish time”, nhảy tới <b>Step 2</b></td></tr>
+              <tr><td>Lệnh submodule trả về một đường dẫn</td><td>Đang ở submodule, không phải worktree: coi như repo thường</td></tr>
+              <tr><td><code>GIT_DIR = GIT_COMMON</code> (repo thường)</td><td>Có preference của bạn rồi thì theo. Chưa có thì hỏi: <i>“Would you like me to set up an isolated worktree? It protects your current branch from changes.”</i></td></tr>
+              <tr><td>Bạn từ chối</td><td>Làm tại chỗ, nhảy tới <b>Step 2</b></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="row"><b class="lbl">Dùng khi</b>Luôn là việc đầu tiên. “Chắc mình không ở trong worktree” không phải lý do để bỏ qua.</p>
+        <a class="back" href="#diagram">↑ Về diagram</a>
+      </article>
+    </div>
+
+    <div class="phase"><h3>Tạo workspace</h3><span>Chỉ chạy khi bạn đồng ý. Thử 2 cách theo đúng thứ tự</span></div>
+    <div class="cards">
+      <article class="card" id="s-step1a">
+        <header><span class="badge">1a</span><h4>Tool native</h4><span class="tag new">Ưu tiên</span></header>
+        <p class="row pain"><b class="lbl">Vấn đề</b>Gõ thẳng <code>git worktree add</code> dù harness đã có tool riêng sẽ tạo “trạng thái ma”: harness không thấy, không quản lý, không dọn được.</p>
+        <p class="row"><b class="lbl">Làm gì</b>Tìm xem mình có sẵn cách tạo worktree không: tool như <code>EnterWorktree</code>, <code>WorktreeCreate</code>, lệnh <code>/worktree</code> hoặc cờ <code>--worktree</code>. Có thì dùng và nhảy tới Step 2. Tool native lo luôn chỗ đặt thư mục, tạo branch và dọn dẹp.</p>
+        <p class="row"><b class="lbl">Dùng khi</b>Luôn thử trước. Bỏ qua bước này là “lỗi số 1” theo chính skill.</p>
+        <a class="back" href="#diagram">↑ Về diagram</a>
+      </article>
+
+      <article class="card" id="s-step1b">
+        <header><span class="badge">1b</span><h4>git worktree add</h4><span class="tag">Fallback</span></header>
+        <p class="row pain"><b class="lbl">Vấn đề</b>Không có tool native thì phải tự tạo, và dễ chọn bừa thư mục hoặc quên ignore.</p>
+        <p class="row"><b class="lbl">Làm gì</b>Chọn thư mục theo thứ tự ưu tiên bên dưới, kiểm tra đã ignore, rồi tạo:</p>
+<pre class="cmd">git check-ignore -q .worktrees 2&gt;/dev/null \
+  || git check-ignore -q worktrees 2&gt;/dev/null
+# chưa ignore → thêm vào .gitignore + commit, rồi:
+git worktree add "$path" -b "$BRANCH_NAME"
+cd "$path"</pre>
+        <div class="tbl-wrap">
+          <table class="tbl wrapfirst">
+            <thead><tr><th>Ưu tiên</th><th>Chọn thư mục</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Chỉ dẫn bạn đã khai báo (dùng luôn, không hỏi)</td></tr>
+              <tr><td>2</td><td><code>.worktrees/</code> hoặc <code>worktrees/</code> đã có sẵn. Có cả hai thì <code>.worktrees/</code> thắng</td></tr>
+              <tr><td>3</td><td>Không có gì thì mặc định <code>.worktrees/</code> ở root</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="row"><b class="lbl">Dùng khi</b>Chỉ khi 1a không áp dụng. Nếu sandbox chặn (lỗi permission), skill báo bạn rồi <b>làm tại chỗ</b> và chạy setup ở đó.</p>
+        <a class="back" href="#diagram">↑ Về diagram</a>
+      </article>
+    </div>
+
+    <div class="phase"><h3>Chuẩn bị</h3><span>Chạy trong workspace cuối cùng, dù nó đến từ đâu</span></div>
+    <div class="cards">
+      <article class="card" id="s-step2">
+        <header><span class="badge">2</span><h4>Setup dự án</h4><span class="tag">Luôn chạy</span></header>
+        <p class="row pain"><b class="lbl">Vấn đề</b>Worktree mới là thư mục trống về dependency. Không cài thì build và test không chạy được.</p>
+        <p class="row"><b class="lbl">Làm gì</b>Tự nhận diện stack qua file có mặt:</p>
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead><tr><th>Thấy file</th><th>Chạy</th></tr></thead>
+            <tbody>
+              <tr><td><code>package.json</code></td><td><code>npm install</code></td></tr>
+              <tr><td><code>Cargo.toml</code></td><td><code>cargo build</code></td></tr>
+              <tr><td><code>requirements.txt</code></td><td><code>pip install -r requirements.txt</code></td></tr>
+              <tr><td><code>pyproject.toml</code></td><td><code>poetry install</code></td></tr>
+              <tr><td><code>go.mod</code></td><td><code>go mod download</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="row"><b class="lbl">Dùng khi</b>Sau khi đã có workspace. Không có file nào ở trên thì bỏ qua cài dependency.</p>
+        <a class="back" href="#diagram">↑ Về diagram</a>
+      </article>
+
+      <article class="card" id="s-step3">
+        <header><span class="badge">3</span><h4>Test baseline</h4><span class="tag">Luôn chạy</span></header>
+        <p class="row pain"><b class="lbl">Vấn đề</b>Bắt đầu trên nền đã đỏ thì mọi lỗi về sau đều mơ hồ: không biết do mình hay do có sẵn.</p>
+        <p class="row"><b class="lbl">Làm gì</b>Chạy test theo project (<code>npm test</code>, <code>cargo test</code>, <code>pytest</code>, <code>go test ./...</code>).</p>
+        <ul>
+          <li><b>Fail:</b> báo lỗi và hỏi bạn đi tiếp hay điều tra. Quyết định thuộc về bạn.</li>
+          <li><b>Pass:</b> báo sẵn sàng theo mẫu dưới.</li>
+        </ul>
+<pre class="cmd">Worktree ready at &lt;full-path&gt;
+Tests passing (&lt;N&gt; tests, 0 failures)
+Ready to implement &lt;feature-name&gt;</pre>
+        <p class="row" style="margin-top:10px"><b class="lbl">Dùng khi</b>Ngay sau Step 2, trước khi viết dòng code nào.</p>
+        <a class="back" href="#diagram">↑ Về diagram</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4. REFERENCE ============ -->
+<section id="ref">
+  <div class="wrap">
+    <h2><span class="secno">4</span>Tra nhanh</h2>
+    <p class="lead">Bảng “tình huống → hành động” lấy từ chính skill, cùng những lời bào chữa mà agent hay tự nhủ để bỏ qua bước.</p>
+
+    <div class="phase"><h3>Tình huống → hành động</h3><span>Quick Reference của skill</span></div>
+    <div class="tbl-wrap">
+      <table class="tbl wrapfirst">
+        <thead><tr><th>Tình huống</th><th>Hành động</th></tr></thead>
+        <tbody>
+          <tr><td>Đã ở trong linked worktree</td><td>Bỏ qua tạo (Step 0)</td></tr>
+          <tr><td>Đang ở trong submodule</td><td>Coi như repo thường (guard ở Step 0)</td></tr>
+          <tr><td>Có tool worktree native</td><td>Dùng nó (Step 1a)</td></tr>
+          <tr><td>Không có tool native</td><td>Fallback git worktree (Step 1b)</td></tr>
+          <tr><td><code>.worktrees/</code> đã có</td><td>Dùng, nhưng kiểm tra đã ignore</td></tr>
+          <tr><td><code>worktrees/</code> đã có</td><td>Dùng, nhưng kiểm tra đã ignore</td></tr>
+          <tr><td>Có cả hai</td><td>Dùng <code>.worktrees/</code></td></tr>
+          <tr><td>Không có cái nào</td><td>Xem file instruction, không có thì mặc định <code>.worktrees/</code></td></tr>
+          <tr><td>Thư mục chưa bị ignore</td><td>Thêm vào <code>.gitignore</code> và commit</td></tr>
+          <tr><td>Lỗi permission khi tạo</td><td>Sandbox fallback, làm tại chỗ</td></tr>
+          <tr><td>Test baseline fail</td><td>Báo lỗi và hỏi bạn</td></tr>
+          <tr><td>Không có <code>package.json</code> / <code>Cargo.toml</code>…</td><td>Bỏ qua cài dependency</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="phase"><h3>Agent hay tự bào chữa thế nào</h3><span>Common Rationalizations của skill: dấu hiệu bạn nên nhắc agent</span></div>
+    <div class="tbl-wrap">
+      <table class="tbl wrapfirst">
+        <thead><tr><th>Agent tự nhủ</th><th>Thực tế</th></tr></thead>
+        <tbody>
+          <tr><td>“Rõ ràng mình không ở trong worktree, khỏi kiểm tra”</td><td>Chạy Step 0. Isolation do harness tạo và submodule đều làm mắt thường nhầm. Lệnh phát hiện mới là câu trả lời.</td></tr>
+          <tr><td>“<code>git worktree add</code> nhanh hơn đi tìm tool native”</td><td>Tool native lo chỗ đặt, branch và dọn dẹp. Bỏ qua nó là lỗi số 1: sinh “trạng thái ma” mà harness không thấy.</td></tr>
+          <tr><td>“Thư mục worktree chắc đã được ignore rồi”</td><td>Chạy <code>git check-ignore</code>. Không ignore thì cả cây worktree bị commit vào repo.</td></tr>
+          <tr><td>“Tên thư mục nào cũng được”</td><td>Chỉ dẫn rõ ràng của bạn thắng thư mục project-local có sẵn, thứ này lại thắng mặc định <code>.worktrees/</code>.</td></tr>
+          <tr><td>“Workspace mới tinh, test baseline để sau”</td><td>Baseline bẩn làm mọi lỗi sau đó mơ hồ. Chạy test ngay. Có đi tiếp khi test đỏ hay không là quyết định của bạn.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <footer>
+      Nguồn: <code>skills/using-git-worktrees/SKILL.md</code> (167 dòng). Mục 2 mô tả cách dùng skill để làm song song: bản thân skill không nói gì về chạy nhiều task, phần “tách riêng / dùng chung” và giới hạn một-branch-một-worktree là hành vi của git. Đã chạy thử trong một repo tạm: so sánh <code>GIT_DIR</code> với <code>GIT_COMMON</code> khác nhau trong worktree, git từ chối checkout cùng branch ở hai nơi, và git vẫn cho tạo worktree lồng nhau (nên việc chặn là do Step 0 của skill).
+    </footer>
+  </div>
+</section>
+
+</body>
+</html>

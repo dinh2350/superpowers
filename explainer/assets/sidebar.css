@@ -1,0 +1,147 @@
+/* Explainer sidebar. Styled with its own --sb-* tokens so it looks the same
+   on every page, whatever colour tokens the page itself defines.
+   Wide screens (>= 1180px): fixed sidebar, page shifted right.
+   Narrow screens: hidden drawer opened by the floating "Menu" button. */
+
+html.ex-sb-on {
+  --ex-sb-w: 248px;
+  --sb-bg: #fbfaf6;
+  --sb-ink: #1c1b19;
+  --sb-muted: #67655e;
+  --sb-line: #d8d5ca;
+  --sb-accent: #4338ca;
+  --sb-accent-soft: #ecebfd;
+  --sb-chip: #efede6;
+  --sb-fab-bg: #1c1b19;
+  --sb-fab-ink: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  html.ex-sb-on:not([data-theme="light"]) {
+    --sb-bg: #1a1a18;
+    --sb-ink: #ecebe6;
+    --sb-muted: #a3a097;
+    --sb-line: #36352f;
+    --sb-accent: #a9a4ff;
+    --sb-accent-soft: #262540;
+    --sb-chip: #2a2a27;
+    --sb-fab-bg: #ecebe6;
+    --sb-fab-ink: #141413;
+  }
+}
+html.ex-sb-on[data-theme="dark"] {
+  --sb-bg: #1a1a18;
+  --sb-ink: #ecebe6;
+  --sb-muted: #a3a097;
+  --sb-line: #36352f;
+  --sb-accent: #a9a4ff;
+  --sb-accent-soft: #262540;
+  --sb-chip: #2a2a27;
+  --sb-fab-bg: #ecebe6;
+  --sb-fab-ink: #141413;
+}
+
+/* Some pages set box-sizing only on :root, which does not inherit. Do not rely on the page. */
+.ex-sb, .ex-sb *, .ex-sb-fab { box-sizing: border-box; }
+
+.ex-sb {
+  position: fixed; top: 0; bottom: 0; left: 0; z-index: 40;
+  width: var(--ex-sb-w);
+  padding: 20px 12px 24px;
+  overflow-y: auto; overscroll-behavior: contain;
+  background: var(--sb-bg); color: var(--sb-ink);
+  border-right: 1px solid var(--sb-line);
+  font: 14px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  text-align: left;
+}
+.ex-sb a { color: inherit; text-decoration: none; }
+.ex-sb a:focus-visible, .ex-sb-fab:focus-visible {
+  outline: 2px solid var(--sb-accent); outline-offset: 2px;
+}
+
+.ex-sb-brand {
+  display: block; padding: 0 8px 14px; margin-bottom: 4px;
+  border-bottom: 1px solid var(--sb-line);
+  font-weight: 700; font-size: 16px; letter-spacing: -.01em;
+}
+.ex-sb-brand small {
+  display: block; margin-top: 1px;
+  font-weight: 500; font-size: 12px; letter-spacing: 0; color: var(--sb-muted);
+}
+
+.ex-sb-group {
+  margin: 18px 8px 6px;
+  font-size: 11px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
+  color: var(--sb-muted);
+}
+.ex-sb-list { list-style: none; margin: 0; padding: 0; }
+.ex-sb-list li + li { margin-top: 2px; }
+
+.ex-sb-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 8px; border-radius: 8px;
+}
+.ex-sb-item:hover { background: var(--sb-accent-soft); }
+.ex-sb-item[aria-current="page"] {
+  background: var(--sb-accent-soft); color: var(--sb-accent); font-weight: 600;
+}
+.ex-sb-n {
+  flex: none; display: inline-grid; place-items: center;
+  min-width: 20px; height: 20px; padding: 0 5px; border-radius: 10px;
+  background: var(--sb-chip); color: var(--sb-muted);
+  font-size: 11px; font-weight: 700;
+}
+.ex-sb-item[aria-current="page"] .ex-sb-n { background: var(--sb-accent); color: var(--sb-bg); }
+.ex-sb-text { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.ex-sb-text small { display: block; font-size: 12px; font-weight: 400; color: var(--sb-muted); }
+.ex-sb-mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12.5px; }
+.ex-sb-tag {
+  flex: none; padding: 1px 7px; border-radius: 6px;
+  background: var(--sb-chip); color: var(--sb-muted);
+  font-size: 10.5px; font-weight: 600;
+}
+
+.ex-sb-fab, .ex-sb-backdrop { display: none; }
+
+@media (min-width: 1180px) {
+  html.ex-sb-on body { margin-left: var(--ex-sb-w); }
+}
+
+@media (max-width: 1179.98px) {
+  .ex-sb {
+    width: min(280px, 86vw);
+    visibility: hidden; transform: translateX(-100%);
+    transition: transform .2s ease, visibility 0s linear .2s;
+  }
+  .ex-sb.is-open {
+    visibility: visible; transform: none;
+    transition: transform .2s ease;
+    box-shadow: 0 0 40px rgba(0, 0, 0, .3);
+  }
+  .ex-sb-backdrop {
+    display: block; position: fixed; inset: 0; z-index: 30;
+    background: rgba(0, 0, 0, .4);
+    opacity: 0; pointer-events: none; transition: opacity .2s ease;
+  }
+  .ex-sb-backdrop.is-open { opacity: 1; pointer-events: auto; }
+  .ex-sb-fab {
+    display: inline-flex; align-items: center; gap: 8px;
+    position: fixed; z-index: 25;
+    left: max(16px, env(safe-area-inset-left, 0px));
+    bottom: max(16px, env(safe-area-inset-bottom, 0px));
+    padding: 10px 16px; border: 0; border-radius: 999px; cursor: pointer;
+    background: var(--sb-fab-bg); color: var(--sb-fab-ink);
+    font: 600 14px/1 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, .25);
+  }
+  /* Pages may style every <svg> globally (e.g. width:100%); pin the icon size. */
+  .ex-sb-fab svg { flex: none; display: block; width: 16px; height: 16px; max-width: none; margin: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ex-sb, .ex-sb.is-open, .ex-sb-backdrop { transition: none; }
+}
+
+@media print {
+  .ex-sb, .ex-sb-fab, .ex-sb-backdrop { display: none !important; }
+  html.ex-sb-on body { margin-left: 0; }
+}
