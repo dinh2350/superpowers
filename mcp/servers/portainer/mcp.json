@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "portainer": {
+      "command": "uvx",
+      "args": ["--from", "mcp-portainer~=${PORTAINER_MCP_MINOR}.0", "mcp-portainer"],
+      "env": {
+        "PORTAINER_URL": "${PORTAINER_URL}",
+        "PORTAINER_API_KEY": "${PORTAINER_API_KEY}",
+        "PORTAINER_READ_ONLY": "1",
+        "PORTAINER_PROFILES": "BASE,DOCKER",
+        "PORTAINER_NO_PROXY": "1"
+      }
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "datadog": {
+      "type": "http",
+      "url": "${DATADOG_MCP_URL}"
+    }
+  }
+}

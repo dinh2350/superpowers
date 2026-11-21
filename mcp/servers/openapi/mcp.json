@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "api": {
+      "command": "npx",
+      "args": ["-y", "@ivotoby/openapi-mcp-server@1.18.0"],
+      "env": {
+        "API_BASE_URL": "${API_BASE_URL}",
+        "OPENAPI_SPEC_PATH": "${OPENAPI_SPEC_PATH}",
+        "API_HEADERS": "${API_HEADERS:-}",
+        "TOOLS_MODE": "dynamic"
+      }
+    }
+  }
+}

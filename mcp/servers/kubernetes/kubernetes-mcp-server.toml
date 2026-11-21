@@ -1,0 +1,15 @@
+# Copy this file to .mcp/kubernetes-mcp-server.toml in the target project (the path mcp.json points at).
+# It holds no secrets and is safe to commit.
+#
+# These settings hide tools and reject requests. They are a best-effort guardrail,
+# NOT a permission boundary: the server still acts with whatever rights the active
+# kubeconfig identity has. Point KUBECONFIG at a dedicated read-only identity.
+
+# Register only read tools (no create/delete/scale/exec/run).
+read_only = true
+
+# Even read access can leak credentials: reject Secrets entirely.
+[[denied_resources]]
+group = ""
+version = "v1"
+kind = "Secret"

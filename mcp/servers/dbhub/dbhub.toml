@@ -1,0 +1,20 @@
+# Copy this file to .mcp/dbhub.toml in the target project (the path mcp.json points at).
+# It holds no secrets and is safe to commit: the connection string comes from the
+# DBHUB_DSN environment variable.
+#
+# readonly = true is a GUARDRAIL, not a permission boundary. Also connect with a
+# database user that only has SELECT rights.
+
+[[sources]]
+id = "main"
+dsn = "${DBHUB_DSN}"
+
+[[tools]]
+name = "execute_sql"
+source = "main"
+readonly = true
+max_rows = 200
+
+[[tools]]
+name = "search_objects"
+source = "main"
