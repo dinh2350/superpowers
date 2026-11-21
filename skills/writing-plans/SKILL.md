@@ -98,7 +98,8 @@ Default: `docs/superpowers/evidence/YYYY-MM-DD-<feature-name>/`
 
 [Five more checks, one line each in exactly this form, read by
 `verify-levels` (superpowers:verification-before-completion). Whole-project
-commands, never just the files this plan touches. Use the project's own
+commands; the one exception is Format and Lint on a repo already red at the
+base commit (see "Red at the base" below). Use the project's own
 scripts (`package.json` "scripts", the CI config) when it has them; the
 commands below are the JS/TS defaults. A gate is dropped only by writing
 `none — <reason>` in place of its command.]
@@ -207,6 +208,24 @@ the plan, and the line names its command. Sonar is the exception, because it
 needs a server the plan cannot create: ask your human partner whether the
 repo has a Sonar project, and write `none — <reason>` only on their word.
 
+**Red at the base.** Before writing the section, run the whole-project Format
+and Lint commands once on the commit the plan starts from. Green: keep them
+whole-project. Red, on a project that already has the tool set up: scope
+them to what this plan changes, so the plan does not ask anyone to repair
+code it never touched. Write the base commit's sha into the line, and guard
+the empty list, because ESLint 9 with no file arguments lints the whole
+directory:
+
+**Lint run:** `files=$(git diff --name-only --diff-filter=ACMR <base-sha>...HEAD -- '*.ts' '*.tsx' '*.js' '*.jsx'); [ -z "$files" ] || npx eslint $files --max-warnings 0`
+
+Another stack scopes its own linter the same way. Format checks only files the
+diff adds (`--diff-filter=A`): formatting a whole legacy file buries the real
+change in the diff. Under the gate lines, one plain sentence says which gates
+are scoped and what the whole-project run found ("lint: 412 findings at
+`<sha>`"), so your human partner sees it when they review the plan.
+Typecheck, Build and the tests stay whole-project; a red one at the base is
+a question for your human partner, not a gate to drop.
+
 **Sonar reads coverage.** The quality gate's coverage condition reads the
 report the tests write, so the Unit run (and the Integration run, if it
 measures coverage) must write it where the scanner looks
@@ -257,7 +276,7 @@ After writing the complete plan, look at the spec with fresh eyes and check the 
 
 **6. Test levels:** Does every Test Strategy row name a test at unit, integration, and e2e, or a line saying why a level does not apply? Does each integration test sit in the task that crosses the boundary it tests? Is the last task the e2e task? Does each of the header's Unit run, Integration run, and E2E run lines hold a command or `none — <reason>`, and does the E2E evidence line hold a path? Does the E2E run command, run exactly as written, write its capture into that path — with any environment variable it needs set on the command line? A command that writes evidence only when a variable is set, and does not set it, exits 0 with no evidence and fails at verification.
 
-**7. Quality gates:** Does each of the five Quality Gates lines hold a whole-project command or `none — <reason>`, and does each reason hold against the project's config files and CI? If the Sonar line is a command, does the Unit run write the coverage report it reads, and does no line spell out a token?
+**7. Quality gates:** Does each of the five Quality Gates lines hold a whole-project command or `none — <reason>` (Format and Lint scoped to the changed files only where the base run was red, with its finding count stated), and does each reason hold against the project's config files and CI? If the Sonar line is a command, does the Unit run write the coverage report it reads, and does no line spell out a token?
 
 If you find issues, fix them inline. No need to re-review — just fix and move on. If you find a spec requirement with no task, add the task.
 
