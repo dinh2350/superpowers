@@ -35,8 +35,7 @@
         { href: 'skills-detail/test-driven-development.html', label: 'test-driven-development', n: '5', mono: true },
         { href: 'skills-detail/requesting-code-review.html', label: 'requesting-code-review', n: '6', mono: true },
         { href: 'skills-detail/verification-before-completion.html', label: 'verification-before-completion', n: '7', mono: true },
-        { href: 'skills-detail/verifying-ai-generated-code.html', label: 'verifying-ai-generated-code', n: '8', mono: true, tag: 'Mới' },
-        { href: 'skills-detail/finishing-a-development-branch.html', label: 'finishing-a-development-branch', n: '9', mono: true }
+        { href: 'skills-detail/finishing-a-development-branch.html', label: 'finishing-a-development-branch', n: '8', mono: true }
       ]
     },
     {

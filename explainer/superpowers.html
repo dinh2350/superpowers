@@ -199,7 +199,7 @@
     <h1>Superpowers</h1>
     <p>Bộ skill ép coding agent làm việc như một kỹ sư có kỷ luật: hỏi cho rõ, lên plan, test trước, và chỉ nói “xong” khi đã chứng minh được.</p>
     <div class="chips">
-      <span class="chip"><b>16</b> skill</span>
+      <span class="chip"><b>15</b> skill</span>
       <span class="chip"><b>15</b> MCP server có sẵn config</span>
       <span class="chip">Tự kích hoạt, không cần gõ lệnh</span>
       <span class="chip">Click vào node trong diagram để xem chi tiết</span>
@@ -233,11 +233,8 @@
           <path class="arrow" d="M139 424 V456"/>
           <path class="arrow" d="M421 424 V456"/>
           <path class="arrow" d="M268 517 H290"/>
-          <path class="arrow" d="M280 568 V584 H139 V600"/>
-          <path class="arrow" d="M280 584 H421 V600"/>
-          <path class="arrow" d="M264 627 H294"/>
-          <path class="arrow" d="M139 654 V670 H280 V686"/>
-          <path class="arrow join" d="M421 654 V670 H280"/>
+          <path class="arrow" d="M280 568 V600"/>
+          <path class="arrow" d="M280 654 V686"/>
 
           <!-- bands -->
           <g class="band">
@@ -313,26 +310,20 @@
             <g class="num"><circle cx="292" cy="490" r="10"/><text x="292" y="493.5">6</text></g>
           </a>
 
-          <!-- 7, 8 -->
+          <!-- 7 -->
           <a class="node" href="#s-verification-before-completion" aria-label="verification-before-completion">
-            <rect x="14" y="600" width="250" height="54" rx="10"/>
-            <text class="name" x="28" y="623">verification-before-completion</text>
-            <text class="sub" x="28" y="641">Chạy lệnh thật rồi mới báo xong</text>
-            <g class="num"><circle cx="14" cy="600" r="10"/><text x="14" y="603.5">7</text></g>
-          </a>
-          <a class="node new" href="#s-verifying-ai-generated-code" aria-label="verifying-ai-generated-code">
-            <rect x="296" y="600" width="250" height="54" rx="10"/>
-            <text class="name" x="310" y="623">verifying-ai-generated-code</text>
-            <text class="sub" x="310" y="641">Test độc lập + bằng chứng thật</text>
-            <g class="num"><circle cx="296" cy="600" r="10"/><text x="296" y="603.5">8</text></g>
+            <rect x="130" y="600" width="300" height="54" rx="10"/>
+            <text class="name" x="144" y="623">verification-before-completion</text>
+            <text class="sub" x="144" y="641">Chạy lệnh thật rồi mới báo xong</text>
+            <g class="num"><circle cx="130" cy="600" r="10"/><text x="130" y="603.5">7</text></g>
           </a>
 
-          <!-- 9 -->
+          <!-- 8 -->
           <a class="node" href="#s-finishing-a-development-branch" aria-label="finishing-a-development-branch">
             <rect x="130" y="686" width="300" height="54" rx="10"/>
             <text class="name" x="144" y="709">finishing-a-development-branch</text>
             <text class="sub" x="144" y="727">Test xanh → merge / mở PR / giữ nhánh</text>
-            <g class="num"><circle cx="130" cy="686" r="10"/><text x="130" y="689.5">9</text></g>
+            <g class="num"><circle cx="130" cy="686" r="10"/><text x="130" y="689.5">8</text></g>
           </a>
 
           <!-- on demand -->
@@ -401,10 +392,7 @@
         </div>
         <div class="pain-item">
           <q>Test pass nhưng tính năng vẫn sai</q>
-          <div class="fix">
-            <a class="skill-link" href="#s-test-driven-development">test-driven-development</a>
-            <a class="skill-link" href="#s-verifying-ai-generated-code">verifying-ai-generated-code</a>
-          </div>
+          <div class="fix"><a class="skill-link" href="#s-test-driven-development">test-driven-development</a></div>
         </div>
         <div class="pain-item">
           <q>Nói “xong rồi” khi chưa chạy gì</q>
@@ -566,21 +554,13 @@
         <a class="back" href="skills-detail/verification-before-completion.html">Xem chi tiết →</a>
       </article>
 
-      <article class="card" id="s-verifying-ai-generated-code">
-        <header><span class="badge">8</span><h4>verifying-ai-generated-code</h4><span class="tag">Trong luồng</span><span class="tag new">Mới</span></header>
-        <p class="row pain"><b>Vấn đề</b>Test do chính agent viết thì cùng hiểu sai với code, nên pass mà tính năng vẫn sai.</p>
-        <p class="row"><b>Làm gì</b>Kiểm theo tầng: static → unit → integration → e2e. Test do một subagent khác viết từ design (không thấy code). E2e phải có bằng chứng (screenshot, video, trace). Tầng nào không chạy được thì báo “not verified”, không giấu.</p>
-        <p class="row"><b>Dùng khi</b>Lúc lên plan cho thay đổi người dùng nhìn thấy (viết e2e sớm), và khi sắp báo xong.</p>
-        <a class="back" href="#diagram">↑ Về diagram</a>
-        <a class="back" href="skills-detail/verifying-ai-generated-code.html">Xem chi tiết →</a>
-      </article>
     </div>
 
     <!-- 5 Kết thúc -->
     <div class="phase"><h3>5 · Kết thúc</h3><span>Đưa việc đã xong vào nhánh chính</span></div>
     <div class="cards">
       <article class="card" id="s-finishing-a-development-branch">
-        <header><span class="badge">9</span><h4>finishing-a-development-branch</h4><span class="tag">Trong luồng</span></header>
+        <header><span class="badge">8</span><h4>finishing-a-development-branch</h4><span class="tag">Trong luồng</span></header>
         <p class="row pain"><b>Vấn đề</b>Làm xong thì nhánh và worktree bị bỏ lơ, hoặc merge khi test còn đỏ.</p>
         <p class="row"><b>Làm gì</b>Chạy full test. Nếu xanh thì đưa 3 lựa chọn: merge, mở PR hoặc giữ nhánh. Sau đó dọn worktree.</p>
         <p class="row"><b>Dùng khi</b>Implement xong và test pass.</p>
@@ -779,7 +759,7 @@
     </div>
 
     <footer>
-      Nguồn: <code>README.md</code>, <code>skills/*/SKILL.md</code> và <code>mcp/</code>. Skill đánh dấu “Mới” (verifying-ai-generated-code) có trong thư mục <code>skills/</code> trên branch <code>feat/research-and-verification-skills</code> nhưng chưa được liệt kê trong README. <code>research-before-brainstorming</code> không còn là skill riêng: nội dung đã gộp vào <code>brainstorming</code> (xem <code>skills/brainstorming/references/research.md</code>).
+      Nguồn: <code>README.md</code>, <code>skills/*/SKILL.md</code> và <code>mcp/</code>. <code>research-before-brainstorming</code> không còn là skill riêng: nội dung đã gộp vào <code>brainstorming</code> (xem <code>skills/brainstorming/references/research.md</code>).
     </footer>
   </div>
 </section>
