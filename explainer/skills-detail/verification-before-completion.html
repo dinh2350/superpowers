@@ -13,7 +13,7 @@
 <nav class="topnav">
   <div class="wrap">
     <strong>verification-before-completion</strong>
-    <a href="#diagram">1 · Diagram</a><a href="#law">2 · Luật &amp; Gate</a><a href="#claims">3 · Bằng chứng</a><a href="#levels">4 · Ba loại test</a><a href="#flags">5 · Red Flags</a>
+    <a href="#diagram">1 · Diagram</a><a href="#law">2 · Luật &amp; Gate</a><a href="#claims">3 · Bằng chứng</a><a href="#gates">4 · Gate chất lượng</a><a href="#levels">5 · Tám level</a><a href="#flags">6 · Red Flags</a>
   </div>
 </nav>
 
@@ -21,7 +21,7 @@
   <div class="wrap">
     <h1>verification-before-completion</h1>
     <p>Bằng chứng trước, tuyên bố sau. Agent không được nói “xong”, “pass”, “đã sửa” khi chưa chạy lệnh kiểm chứng ngay trong tin nhắn đó và đọc output của nó.</p>
-    <div class="chips"><span class="chip">Luật sắt: không tuyên bố khi chưa có bằng chứng mới</span><span class="chip">Áp dụng cả với từ đồng nghĩa và hàm ý</span><span class="chip">Không tin báo cáo “success” của agent khác</span><span class="chip">Trước commit, PR và task kế</span><span class="chip">Báo xong tính năng: đủ unit, integration, e2e + evidence</span></div>
+    <div class="chips"><span class="chip">Luật sắt: không tuyên bố khi chưa có bằng chứng mới</span><span class="chip">Áp dụng cả với từ đồng nghĩa và hàm ý</span><span class="chip">Không tin báo cáo “success” của agent khác</span><span class="chip">Trước commit, PR và task kế</span><span class="chip">Báo xong tính năng: đủ unit, integration, e2e + evidence</span><span class="chip">Cổng chất lượng: Prettier, ESLint, tsc, build, SonarQube</span></div>
   </div>
 </header>
 
@@ -56,7 +56,7 @@
       <aside class="pains">
         <h3>Nó giải quyết painpoint nào?</h3>
         <p>Những lỗi mà từng phần của skill sinh ra để chặn.</p>
-<div class="pain-item"><q>Nói “xong rồi, test pass” mà chưa hề chạy</q><div class="fix"><a class="skill-link" href="#law">Luật sắt</a>: không claim khi chưa có bằng chứng mới</div></div><div class="pain-item"><q>Dùng “should”, “probably”, “seems to”</q><div class="fix"><a class="skill-link" href="#flags">Red Flags</a>: lời lẽ ngụ ý thành công cũng bị cấm</div></div><div class="pain-item"><q>Linter pass nên coi như build pass</q><div class="fix"><a class="skill-link" href="#claims">Mỗi claim cần đúng loại bằng chứng</a></div></div><div class="pain-item"><q>Tin báo cáo “success” của agent con</q><div class="fix"><a class="skill-link" href="#c-patterns">Kiểm VCS diff</a> rồi báo trạng thái thật</div></div><div class="pain-item"><q>Viết test hồi quy nhưng chưa từng thấy nó đỏ</q><div class="fix">Cần đủ chu trình red-green</div></div><div class="pain-item"><q>Unit và integration xanh nhưng chưa ai thử kịch bản thật</q><div class="fix"><a class="skill-link" href="#levels">verify-levels</a>: e2e phải pass và để lại evidence mới</div></div>
+<div class="pain-item"><q>Nói “xong rồi, test pass” mà chưa hề chạy</q><div class="fix"><a class="skill-link" href="#law">Luật sắt</a>: không claim khi chưa có bằng chứng mới</div></div><div class="pain-item"><q>Dùng “should”, “probably”, “seems to”</q><div class="fix"><a class="skill-link" href="#flags">Red Flags</a>: lời lẽ ngụ ý thành công cũng bị cấm</div></div><div class="pain-item"><q>Linter pass nên coi như build pass</q><div class="fix"><a class="skill-link" href="#claims">Mỗi claim cần đúng loại bằng chứng</a></div></div><div class="pain-item"><q>Tin báo cáo “success” của agent con</q><div class="fix"><a class="skill-link" href="#c-patterns">Kiểm VCS diff</a> rồi báo trạng thái thật</div></div><div class="pain-item"><q>Viết test hồi quy nhưng chưa từng thấy nó đỏ</q><div class="fix">Cần đủ chu trình red-green</div></div><div class="pain-item"><q>Unit và integration xanh nhưng chưa ai thử kịch bản thật</q><div class="fix"><a class="skill-link" href="#levels">verify-levels</a>: e2e phải pass và để lại evidence mới</div></div><div class="pain-item"><q>Test xanh nhưng CI đỏ vì format, lint, type hay quality gate</q><div class="fix"><a class="skill-link" href="#gates">Năm gate chất lượng</a> chạy trước khi báo xong</div></div><div class="pain-item"><q>Làm gate pass bằng <code>@ts-ignore</code> hay <code>eslint-disable</code></q><div class="fix"><a class="skill-link" href="#gates">Tắt tiếng không phải là sửa</a>; reviewer tìm trong diff</div></div>
       </aside>
     </div>
   </div>
@@ -81,7 +81,7 @@
 <div class="wrap">
 <h2><span class="secno">3</span>Claim nào cần bằng chứng gì</h2>
 <p class="lead">Mỗi loại tuyên bố đòi một loại bằng chứng riêng. Cột bên phải là những thứ hay bị lấy nhầm làm bằng chứng.</p>
-<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Claim</th><th>Cần</th><th>Không đủ</th></tr></thead><tbody><tr><td>Test pass</td><td>Output của lệnh test: 0 lỗi</td><td>Lần chạy trước, “chắc là pass”</td></tr><tr><td>Linter sạch</td><td>Output linter: 0 lỗi</td><td>Kiểm một phần, suy ra từ chỗ khác</td></tr><tr><td>Build thành công</td><td>Lệnh build: exit 0</td><td>Linter pass, log trông ổn</td></tr><tr><td>Bug đã sửa</td><td>Chạy lại đúng triệu chứng ban đầu: pass</td><td>Đã đổi code, cho là xong</td></tr><tr><td>Test hồi quy hoạt động</td><td>Đã kiểm chu trình red-green</td><td>Test pass một lần</td></tr><tr><td>Agent đã hoàn thành</td><td>VCS diff cho thấy thay đổi</td><td>Agent báo “success”</td></tr><tr><td>Đáp ứng yêu cầu</td><td>Checklist từng dòng</td><td>Test pass</td></tr><tr><td>Tính năng chạy end to end</td><td>Output lệnh e2e: mọi scenario pass, file evidence tồn tại và đã được mở xem</td><td>Unit và integration xanh, “chạy được trên trình duyệt” theo trí nhớ</td></tr></tbody></table></div>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Claim</th><th>Cần</th><th>Không đủ</th></tr></thead><tbody><tr><td>Test pass</td><td>Output của lệnh test: 0 lỗi</td><td>Lần chạy trước, “chắc là pass”</td></tr><tr><td>Linter sạch</td><td>Output linter: 0 lỗi</td><td>Kiểm một phần, suy ra từ chỗ khác</td></tr><tr><td>Build thành công</td><td>Lệnh build: exit 0</td><td>Linter pass, log trông ổn</td></tr><tr><td>Format sạch</td><td>Format check trên toàn project: exit 0</td><td>Editor tự format khi lưu, chỉ format một file</td></tr><tr><td>Type đúng</td><td>Lệnh typecheck: exit 0</td><td>Build pass (bundler bỏ type mà không kiểm), editor không báo đỏ</td></tr><tr><td>Quality gate pass</td><td>Sonar scan có chờ gate: exit 0</td><td>Lint sạch, “không có issue mới” theo trí nhớ</td></tr><tr><td>Bug đã sửa</td><td>Chạy lại đúng triệu chứng ban đầu: pass</td><td>Đã đổi code, cho là xong</td></tr><tr><td>Test hồi quy hoạt động</td><td>Đã kiểm chu trình red-green</td><td>Test pass một lần</td></tr><tr><td>Agent đã hoàn thành</td><td>VCS diff cho thấy thay đổi</td><td>Agent báo “success”</td></tr><tr><td>Đáp ứng yêu cầu</td><td>Checklist từng dòng</td><td>Test pass</td></tr><tr><td>Tính năng chạy end to end</td><td>Output lệnh e2e: mọi scenario pass, file evidence tồn tại và đã được mở xem</td><td>Unit và integration xanh, “chạy được trên trình duyệt” theo trí nhớ</td></tr></tbody></table></div>
 <div class="cards one">
 <article class="card plain" id="c-patterns">
 <header><h4>Mẫu đúng và mẫu sai</h4></header>
@@ -91,14 +91,47 @@
 </div>
 </div>
 </section>
+<section id="gates">
+<div class="wrap">
+<h2><span class="secno">4</span>Gate chất lượng: format, lint, type, build, Sonar</h2>
+<p class="lead">Test xanh chỉ nói code chạy đúng. Nó không nói code đã được format, sạch lint, đúng type, build được, hay qua quality gate của bạn. Năm level nữa lo việc đó, và <code>verify-levels</code> chạy chúng cùng các test.</p>
+<div class="cards one">
+<article class="card plain" id="c-gates">
+<header><h4>Năm gate và thứ tự chạy</h4><span class="tag new">Nâng cấp</span></header>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Level</th><th>Lệnh mặc định (JS/TS)</th><th>Fail khi</th></tr>
+</thead><tbody><tr><td>format</td><td><code>npx prettier --check .</code></td><td>có file chưa được format</td></tr>
+<tr><td>lint</td><td><code>npx eslint . --max-warnings 0</code></td><td>có lỗi hoặc cảnh báo</td></tr>
+<tr><td>typecheck</td><td><code>npx tsc --noEmit</code></td><td>có lỗi type</td></tr>
+<tr><td>build</td><td><code>npm run build</code></td><td>production build exit khác 0</td></tr>
+<tr><td>sonar</td><td><code>npx sonar-scanner -Dsonar.qualitygate.wait=true</code></td><td>quality gate fail: bug, vulnerability, code smell, coverage</td></tr>
+</tbody></table></div>
+<ul><li>Thứ tự chạy, rẻ nhất trước: <b>format, lint, typecheck, build, unit, integration, e2e, sonar</b>. Sonar chạy cuối vì điều kiện coverage của gate đọc báo cáo mà test ghi ra. Build chạy trước test vì e2e thường chạy trên bản build.</li>
+<li>Lệnh thật do plan ghi (mục Quality Gates của <code>writing-plans</code>); script riêng của project được ưu tiên hơn lệnh mặc định.</li>
+<li>Scanner đọc <code>SONAR_TOKEN</code> từ môi trường. Token không bao giờ nằm trong plan; <code>verify-levels</code> từ chối plan nào ghi token ra.</li>
+</ul>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-gatefix">
+<header><h4>Gate hỏng thì sửa trong code</h4></header>
+<ul><li><b>Format</b> có đúng một cách sửa thật: chạy formatter ở chế độ ghi (<code>prettier --write .</code>), đọc diff, commit.</li>
+<li><b>Lint, typecheck, Sonar</b>: sửa thứ gate tìm ra. <b>Tắt tiếng không phải là sửa</b>: <code>eslint-disable</code>, <code>@ts-ignore</code>, <code>@ts-expect-error</code>, <code>any</code>, <code>// NOSONAR</code>, <code>prettier-ignore</code>, rule bị tắt, <code>tsconfig</code> nới lỏng, exclusion mới, ngưỡng bị hạ, issue bị đánh dấu false positive.</li>
+<li>Tin rằng đó là false positive? Đưa finding và bằng chứng cho bạn. Agent không tự phán xử.</li>
+<li>Script in sẵn gợi ý này ngay trong output khi một gate fail, vì nhiều agent không nạp skill.</li>
+<li>Không chạy được gate (không có server SonarQube, thiếu <code>SONAR_TOKEN</code>): báo <code>sonar: NOT RUN — &lt;lý do&gt;</code>. Không báo quality gate đã pass từ kết quả lint, và không sửa dòng của plan thành <code>none</code> để lách.</li>
+</ul>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+</div>
+</div>
+</section>
 <section id="levels">
 <div class="wrap">
-<h2><span class="secno">4</span>Ba loại test: cổng cấp plan</h2>
+<h2><span class="secno">5</span>Tám level: cổng cấp plan</h2>
 <p class="lead">Unit và integration chứng minh từng phần. E2E chứng minh kịch bản bạn sẽ thấy. Trước khi báo một tính năng, plan hay nhánh là xong, agent chạy cả ba, không phải sau từng step.</p>
 <div class="cards one">
 <article class="card plain" id="c-levels">
 <header><h4>verify-levels: 4 bước</h4><span class="tag new">Nâng cấp</span></header>
-<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>#</th><th>Bước</th><th>Làm gì</th></tr></thead><tbody><tr><td>1</td><td>RUN</td><td>Chạy <code>verify-levels PLAN_FILE</code> khi mọi thứ đã commit. Script chạy lệnh Unit, Integration, E2E của plan theo thứ tự, dừng ở level fail đầu tiên. E2E chỉ pass khi lệnh exit 0 <b>và</b> đã ghi file evidence mới, không rỗng. Thành công thì ghi <code>verify.txt</code> cạnh evidence, ghi rõ HEAD đã được kiểm. Không có plan thì tự chạy ba level và nói rõ là không có plan.</td></tr><tr><td>2</td><td>READ</td><td>Đọc output. Exit 0 nghĩa là mỗi level đều PASS hoặc SKIPPED. Level SKIPPED mang lý do một dòng của plan: kiểm lại lý do đó còn đúng.</td></tr><tr><td>3</td><td>LOOK</td><td>Mở ảnh chụp (hoặc đọc transcript) trong thư mục evidence. Ảnh chưa mở xem thì chưa phải bằng chứng. Video không đọc được, nên thứ phải kiểm là ảnh chụp ở mỗi assertion.</td></tr><tr><td>4</td><td>REPORT</td><td>Báo các dòng của <code>verify.txt</code> và đường dẫn tuyệt đối của evidence.</td></tr></tbody></table></div>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>#</th><th>Bước</th><th>Làm gì</th></tr></thead><tbody><tr><td>1</td><td>RUN</td><td>Chạy <code>verify-levels PLAN_FILE</code> khi mọi thứ đã commit. Script chạy tám lệnh của plan theo thứ tự (format, lint, typecheck, build, unit, integration, e2e, sonar), dừng ở level fail đầu tiên. E2E chỉ pass khi lệnh exit 0 <b>và</b> đã ghi file evidence mới, không rỗng. Thành công thì ghi <code>verify.txt</code> cạnh evidence, ghi rõ HEAD đã được kiểm. Không có plan thì tự chạy đủ tám level và nói rõ là không có plan.</td></tr><tr><td>2</td><td>READ</td><td>Đọc output. Exit 0 nghĩa là mỗi level đều PASS hoặc SKIPPED. Level SKIPPED mang lý do một dòng của plan: kiểm lại lý do đó còn đúng.</td></tr><tr><td>3</td><td>LOOK</td><td>Mở ảnh chụp (hoặc đọc transcript) trong thư mục evidence. Ảnh chưa mở xem thì chưa phải bằng chứng. Video không đọc được, nên thứ phải kiểm là ảnh chụp ở mỗi assertion.</td></tr><tr><td>4</td><td>REPORT</td><td>Báo các dòng của <code>verify.txt</code> và đường dẫn tuyệt đối của evidence.</td></tr></tbody></table></div>
 <a class="back" href="#diagram">↑ Về diagram</a>
 </article>
 <article class="card plain" id="c-evidence">
@@ -108,7 +141,7 @@
 </article>
 <article class="card plain" id="c-check">
 <header><h4>--check: cổng rẻ ở cuối</h4></header>
-<p class="row"><b class="lbl">Làm gì</b><code>verify-levels --check PLAN_FILE</code> không chạy gì. Nó chỉ thành công khi <code>verify.txt</code> ghi cả ba level là PASS hoặc SKIPPED cho đúng HEAD hiện tại và không file tracked nào đổi sau đó. <code>finishing-a-development-branch</code> dùng nó: record thiếu, cũ, hoặc cây làm việc đã đổi thì dừng, không hiện menu merge.</p>
+<p class="row"><b class="lbl">Làm gì</b><code>verify-levels --check PLAN_FILE</code> không chạy gì. Nó chỉ thành công khi <code>verify.txt</code> ghi cả tám level là PASS hoặc SKIPPED cho đúng HEAD hiện tại và không file tracked nào đổi sau đó. <code>finishing-a-development-branch</code> dùng nó: record thiếu, cũ, hoặc cây làm việc đã đổi thì dừng, không hiện menu merge.</p>
 <a class="back" href="#diagram">↑ Về diagram</a>
 </article>
 </div>
@@ -116,7 +149,7 @@
 </section>
 <section id="flags">
 <div class="wrap">
-<h2><span class="secno">5</span>Khi nào áp dụng, Red Flags, bào chữa</h2>
+<h2><span class="secno">6</span>Khi nào áp dụng, Red Flags, bào chữa</h2>
 <p class="lead">Quy tắc áp dụng cho câu chữ chính xác, diễn đạt khác và từ đồng nghĩa, hàm ý thành công, và bất kỳ lời nào gợi ý rằng việc đã xong hay đã đúng.</p>
 <div class="cards">
 <article class="card plain" id="c-when">
@@ -126,18 +159,18 @@
 </article>
 <article class="card plain" id="c-flags">
 <header><h4>Red Flags: dừng lại</h4></header>
-<ul><li>Dùng “should”, “probably”, “seems to”.</li><li>Bày tỏ hài lòng trước khi kiểm chứng (“Great!”, “Perfect!”, “Done!”…).</li><li>Sắp commit/push/PR mà chưa kiểm chứng.</li><li>Tin báo cáo thành công của agent.</li><li>Dựa vào kiểm chứng một phần.</li><li>Báo xong tính năng khi bỏ qua e2e, hoặc evidence thiếu hay chưa từng được mở xem.</li><li>Nghĩ “chỉ lần này thôi”.</li><li>Mệt và muốn xong việc.</li><li><b>Bất kỳ cách nói nào ngụ ý thành công mà chưa chạy kiểm chứng.</b></li></ul>
+<ul><li>Dùng “should”, “probably”, “seems to”.</li><li>Bày tỏ hài lòng trước khi kiểm chứng (“Great!”, “Perfect!”, “Done!”…).</li><li>Sắp commit/push/PR mà chưa kiểm chứng.</li><li>Tin báo cáo thành công của agent.</li><li>Dựa vào kiểm chứng một phần.</li><li>Báo xong tính năng khi bỏ qua e2e, hoặc evidence thiếu hay chưa từng được mở xem.</li><li>Làm gate pass bằng cách tắt tiếng (<code>eslint-disable</code>, <code>@ts-ignore</code>, <code>NOSONAR</code>, config nới lỏng) thay vì sửa thứ nó tìm ra.</li><li>Báo xong tính năng khi bỏ qua một gate, hoặc một <code>none</code> mà lý do không còn đúng.</li><li>Nghĩ “chỉ lần này thôi”.</li><li>Mệt và muốn xong việc.</li><li><b>Bất kỳ cách nói nào ngụ ý thành công mà chưa chạy kiểm chứng.</b></li></ul>
 <a class="back" href="#diagram">↑ Về diagram</a>
 </article>
 </div>
 <div class="phase"><h3>Những lời bào chữa hay gặp</h3><span>Bảng Rationalization Prevention của skill</span></div>
-<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Agent tự nhủ</th><th>Thực tế</th></tr></thead><tbody><tr><td>“Giờ chắc chạy được rồi”</td><td>CHẠY kiểm chứng.</td></tr><tr><td>“Tôi tự tin”</td><td>Tự tin không phải bằng chứng.</td></tr><tr><td>“Chỉ lần này thôi”</td><td>Không có ngoại lệ.</td></tr><tr><td>“Linter pass rồi”</td><td>Linter không phải compiler.</td></tr><tr><td>“Agent báo thành công”</td><td>Kiểm chứng độc lập.</td></tr><tr><td>“Tôi mệt”</td><td>Mệt mỏi không phải lý do.</td></tr><tr><td>“Kiểm một phần là đủ”</td><td>Kiểm một phần chẳng chứng minh gì.</td></tr><tr><td>“Unit và integration xanh, e2e là thừa”</td><td>Chúng kiểm các phần. E2E kiểm kịch bản mà một người thật sẽ thử.</td></tr><tr><td>“Tôi thấy nó chạy rồi, khỏi chụp evidence”</td><td>Trí nhớ của bạn không phải thứ người cùng làm việc với bạn mở ra xem được. Hãy ghi lại.</td></tr><tr><td>“Đổi cách nói thì luật không áp dụng”</td><td>Tinh thần quan trọng hơn câu chữ.</td></tr></tbody></table></div>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Agent tự nhủ</th><th>Thực tế</th></tr></thead><tbody><tr><td>“Giờ chắc chạy được rồi”</td><td>CHẠY kiểm chứng.</td></tr><tr><td>“Tôi tự tin”</td><td>Tự tin không phải bằng chứng.</td></tr><tr><td>“Chỉ lần này thôi”</td><td>Không có ngoại lệ.</td></tr><tr><td>“Linter pass rồi”</td><td>Linter không phải compiler.</td></tr><tr><td>“Agent báo thành công”</td><td>Kiểm chứng độc lập.</td></tr><tr><td>“Tôi mệt”</td><td>Mệt mỏi không phải lý do.</td></tr><tr><td>“Kiểm một phần là đủ”</td><td>Kiểm một phần chẳng chứng minh gì.</td></tr><tr><td>“Unit và integration xanh, e2e là thừa”</td><td>Chúng kiểm các phần. E2E kiểm kịch bản mà một người thật sẽ thử.</td></tr><tr><td>“Tôi thấy nó chạy rồi, khỏi chụp evidence”</td><td>Trí nhớ của bạn không phải thứ người cùng làm việc với bạn mở ra xem được. Hãy ghi lại.</td></tr><tr><td>“Chỉ là format, test mới quan trọng”</td><td>Format và lint là gate rẻ nhất và là thứ CI chạy đầu tiên. Bỏ qua thì cái giá là CI đỏ trên PR của bạn.</td></tr><tr><td>“Chạy được trên dev server thì build được”</td><td>Dev server và test runner không chạy production build. Hãy chạy nó.</td></tr><tr><td>“Tôi thêm <code>@ts-ignore</code> / <code>eslint-disable</code>, đó là false positive”</td><td>Tắt tiếng là một phán quyết, không phải bản sửa, và phán quyết đó của bạn. Đưa finding cùng bằng chứng cho bạn xem.</td></tr><tr><td>“Sonar chậm, hoặc server đang tắt, bỏ qua”</td><td>Bỏ qua là một <code>none — &lt;lý do&gt;</code> quyết trong plan. Cuối cùng thì báo <code>sonar: NOT RUN</code>, đừng báo gate đã pass.</td></tr><tr><td>“Đổi cách nói thì luật không áp dụng”</td><td>Tinh thần quan trọng hơn câu chữ.</td></tr></tbody></table></div>
 </div>
 </section>
 
 <section>
   <div class="wrap">
-    <footer>Nguồn: <a href="../../skills/verification-before-completion/SKILL.md"><code>skills/verification-before-completion/SKILL.md</code></a> (163 dòng).</footer>
+    <footer>Nguồn: <a href="../../skills/verification-before-completion/SKILL.md"><code>skills/verification-before-completion/SKILL.md</code></a> (207 dòng).</footer>
   </div>
 </section>
 

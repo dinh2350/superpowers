@@ -495,7 +495,7 @@
       <article class="card" id="s-writing-plans">
         <header><span class="badge">3</span><h4>writing-plans</h4><span class="tag">Trong luồng</span><span class="tag new">Nâng cấp</span></header>
         <p class="row pain"><b>Vấn đề</b>Plan mơ hồ nên agent tự đoán từng chi tiết, mỗi lần một kiểu.</p>
-        <p class="row"><b>Làm gì</b>Biến design thành các task nhỏ (2–5 phút), mỗi task có đường dẫn file chính xác, code đầy đủ và bước kiểm tra. Header có mục <b>Test Strategy</b>: mỗi scenario ghi test ở cả 3 level (unit, integration, e2e), kèm lệnh chạy và nơi lưu evidence; task cuối luôn là task e2e. Lưu ở <code>docs/superpowers/plans/</code>.</p>
+        <p class="row"><b>Làm gì</b>Biến design thành các task nhỏ (2–5 phút), mỗi task có đường dẫn file chính xác, code đầy đủ và bước kiểm tra. Header có mục <b>Test Strategy</b>: mỗi scenario ghi test ở cả 3 level (unit, integration, e2e), kèm lệnh chạy và nơi lưu evidence; task cuối luôn là task e2e. Mục <b>Quality Gates</b> ghi năm lệnh toàn project: Prettier, ESLint, TypeScript, build, SonarQube. Lưu ở <code>docs/superpowers/plans/</code>.</p>
         <p class="row"><b>Dùng khi</b>Đã có spec được duyệt cho việc nhiều bước, trước khi đụng code.</p>
         <a class="back" href="#diagram">↑ Về diagram</a>
         <a class="back" href="skills-detail/writing-plans.html">Xem chi tiết →</a>
@@ -548,7 +548,7 @@
       <article class="card" id="s-verification-before-completion">
         <header><span class="badge">7</span><h4>verification-before-completion</h4><span class="tag">Trong luồng</span><span class="tag new">Nâng cấp</span></header>
         <p class="row pain"><b>Vấn đề</b>Agent nói “xong rồi, test pass” mà chưa hề chạy.</p>
-        <p class="row"><b>Làm gì</b>Luật: không tuyên bố hoàn thành khi chưa có output mới từ lệnh kiểm chứng. Chạy lệnh, đọc kết quả, rồi mới được nói. Trước khi báo xong cả tính năng, script <code>verify-levels</code> chạy đủ unit, integration, e2e và chỉ cho qua khi e2e để lại file evidence (ảnh, video hoặc log) mới ghi.</p>
+        <p class="row"><b>Làm gì</b>Luật: không tuyên bố hoàn thành khi chưa có output mới từ lệnh kiểm chứng. Chạy lệnh, đọc kết quả, rồi mới được nói. Trước khi báo xong cả tính năng, script <code>verify-levels</code> chạy đủ tám level theo thứ tự format, lint, typecheck, build, unit, integration, e2e, sonar (quality gate) và chỉ cho qua khi e2e để lại file evidence (ảnh, video hoặc log) mới ghi.</p>
         <p class="row"><b>Dùng khi</b>Ngay trước khi báo hoàn thành, commit hoặc mở PR.</p>
         <a class="back" href="#diagram">↑ Về diagram</a>
         <a class="back" href="skills-detail/verification-before-completion.html">Xem chi tiết →</a>

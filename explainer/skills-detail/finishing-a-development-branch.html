@@ -73,7 +73,7 @@
 <article class="card plain" id="c-s1">
 <header><span class="badge">1</span><h4>Verify tests</h4></header>
 <p class="row"><b class="lbl">Làm gì</b>Chạy test suite đầy đủ của dự án (<code>npm test</code> / <code>cargo test</code> / <code>pytest</code> / <code>go test ./...</code>). Nếu <b>test fail</b>, báo các lỗi và dừng: menu chỉ hiện sau khi suite xanh. Pass thì sang Step 2.</p>
-<p class="row"><b class="lbl">Plan có Test Strategy?</b>Suite xanh chưa đủ: chạy thêm <code>verify-levels --check PLAN_FILE</code>. Nó không chạy gì, chỉ thành công khi unit, integration và e2e đã được ghi là PASS hoặc SKIPPED cho đúng HEAD hiện tại, và không file tracked nào đổi sau đó. Kết quả khác thì dừng như suite đỏ. Việc không có plan thì bỏ qua kiểm tra này.</p>
+<p class="row"><b class="lbl">Plan có Test Strategy?</b>Suite xanh chưa đủ: chạy thêm <code>verify-levels --check PLAN_FILE</code>. Nó không chạy gì, chỉ thành công khi cả tám level (format, lint, typecheck, build, unit, integration, e2e, sonar) đã được ghi là PASS hoặc SKIPPED cho đúng HEAD hiện tại, và không file tracked nào đổi sau đó. Kết quả khác thì dừng như suite đỏ. Việc không có plan thì bỏ qua kiểm tra này.</p>
 <pre class="cmd">Plan verification not current: &lt;the script's message&gt;
 Run verify-levels PLAN_FILE (superpowers:verification-before-completion), then come back.</pre>
 <pre class="cmd">Tests failing (&lt;N&gt; failures). Must fix before completing:

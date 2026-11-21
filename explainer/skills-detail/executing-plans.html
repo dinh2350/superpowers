@@ -151,7 +151,7 @@
 <div class="cards one">
 <article class="card plain" id="c-verify">
 <header><h4>Verify cả 3 loại test, trước review</h4><span class="tag new">Nâng cấp</span></header>
-<p class="row"><b class="lbl">Làm gì</b>Sau dòng ledger của task cuối, khi mọi thứ đã commit, chạy <code>verify-levels PLAN_FILE</code>. Nó chạy lệnh Unit, Integration, E2E của plan, đòi evidence e2e mới, rồi ghi <code>docs/superpowers/evidence/&lt;plan&gt;/verify.txt</code>. Exit khác 0 nghĩa là plan chưa xong: tìm nguyên nhân bằng <code>systematic-debugging</code>, sửa, commit, chạy lại.</p>
+<p class="row"><b class="lbl">Làm gì</b>Sau dòng ledger của task cuối, khi mọi thứ đã commit, chạy <code>verify-levels PLAN_FILE</code>. Nó chạy lệnh Format, Lint, Typecheck, Build, Unit, Integration, E2E rồi Sonar của plan theo đúng thứ tự đó, đòi evidence e2e mới, rồi ghi <code>docs/superpowers/evidence/&lt;plan&gt;/verify.txt</code>. Exit khác 0 nghĩa là plan chưa xong: tìm nguyên nhân bằng <code>systematic-debugging</code>, sửa, commit, chạy lại. Gate hỏng thì sửa trong code: không nới dòng Quality Gates của plan và không tắt tiếng thứ gate tìm ra (<code>eslint-disable</code>, <code>@ts-ignore</code>, <code>NOSONAR</code>, config nới lỏng).</p>
 <p class="row"><b class="lbl">Không được</b>Hạ dòng Test Strategy của plan cho dễ qua. Sửa một lệnh hay đổi một level thành <code>none — &lt;lý do&gt;</code> là một ruling, ghi ledger như mọi chỗ lệch plan khác.</p>
 <a class="back" href="#diagram">↑ Về diagram</a>
 </article>
