@@ -74,6 +74,9 @@ Subagent (general-purpose):
       the version in the lockfile (Context7 if you have it, else the official docs),
       not how neighbouring code does it. Improve code you're touching the way a good
       developer would, but don't restructure things outside your task.
+    - A lint, type, or test failure in a file you change is yours to fix, even one
+      that was there before. One in a file you do not change is not: leave it, and
+      list it under "Any issues or concerns" in your report.
 
     ## When You're in Over Your Head
 
@@ -138,7 +141,7 @@ Subagent (general-purpose):
       - GREEN: command run and relevant passing output after implementation
     - Files changed
     - Self-review findings (if any)
-    - Any issues or concerns
+    - Any issues or concerns, including failures you saw in files you did not change
 
     Then report back with ONLY (under 15 lines — the detail lives in the
     report file):
