@@ -69,8 +69,11 @@ Subagent (general-purpose):
       it as DONE_WITH_CONCERNS — don't split files on your own without plan guidance
     - If an existing file you're modifying is already large or tangled, work carefully
       and note it as a concern in your report
-    - In existing codebases, follow established patterns. Improve code you're touching
-      the way a good developer would, but don't restructure things outside your task.
+    - In existing codebases, take naming and file locations from the surrounding code,
+      but not its quality. For how to use a library or framework, follow its docs for
+      the version in the lockfile (Context7 if you have it, else the official docs),
+      not how neighbouring code does it. Improve code you're touching the way a good
+      developer would, but don't restructure things outside your task.
 
     ## When You're in Over Your Head
 
@@ -106,7 +109,7 @@ Subagent (general-purpose):
     **Discipline:**
     - Did I avoid overbuilding (YAGNI)?
     - Did I only build what was requested?
-    - Did I follow existing patterns in the codebase?
+    - Did I follow the codebase's naming and layout, and the docs (not nearby code) for library usage?
 
     **Testing:**
     - Do tests actually verify behavior (not just mock behavior)?
