@@ -8,12 +8,15 @@ complete.
 Before the final review, run
 `bash ../../verification-before-completion/scripts/verify-levels PLAN_FILE`
 by its absolute path, from the working tree you're executing in, with
-everything committed. It runs the plan's unit, integration, and e2e
-commands, requires fresh e2e evidence, and writes
+everything committed. It runs the plan's format, lint, typecheck, build,
+unit, integration, e2e, and sonar commands in that order, requires fresh e2e
+evidence, and writes
 `docs/superpowers/evidence/<plan-basename>/verify.txt`.
 superpowers:verification-before-completion says how to read it. A non-zero
 exit means the plan is not complete: dispatch a fixer for the cause, then
-run it again. Do not weaken the plan's Test Strategy lines to make it pass;
+run it again. The fixer fixes the finding in the code; it does not suppress
+it (`eslint-disable`, `@ts-ignore`, `NOSONAR`, a loosened config). Do not
+weaken the plan's Test Strategy or Quality Gates lines to make it pass;
 editing a run command or turning a level into `none — <reason>` is a ruling,
 ledgered like any other.
 

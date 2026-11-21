@@ -42,11 +42,48 @@ Skip any step = lying, not verifying
 | Tests pass | Test command output: 0 failures | Previous run, "should pass" |
 | Linter clean | Linter output: 0 errors | Partial check, extrapolation |
 | Build succeeds | Build command: exit 0 | Linter passing, logs look good |
+| Format clean | Format check, whole project: exit 0 | Editor format-on-save, one file formatted |
+| Types check | Typecheck command: exit 0 | Build passing (bundlers strip types without checking them), no red in the editor |
+| Quality gate passes | Sonar scan that waits on the gate: exit 0 | Lint clean, "no new issues" from memory |
 | Bug fixed | Test original symptom: passes | Code changed, assumed fixed |
 | Regression test works | Red-green cycle verified | Test passes once |
 | Agent completed | VCS diff shows changes | Agent reports "success" |
 | Requirements met | Line-by-line checklist | Tests passing |
 | Feature works end to end | E2E command output: every scenario passes, evidence files exist and you looked at them | Unit and integration green, "works in the browser" from memory |
+
+## Quality Gates
+
+Passing tests say the code behaves. They do not say it is formatted,
+lint-clean, type-correct, buildable, or free of what your human partner's
+quality gate rejects. Five more levels cover that. The plan names the real
+commands (superpowers:writing-plans, "Quality Gates"); the project's own
+scripts win over these JS/TS defaults:
+
+| Level | Default | Fails when |
+|-------|---------|------------|
+| format | `npx prettier --check .` | any file is not formatted |
+| lint | `npx eslint . --max-warnings 0` | any error or warning |
+| typecheck | `npx tsc --noEmit` | any type error |
+| build | `npm run build` | the production build exits non-zero |
+| sonar | `npx sonar-scanner -Dsonar.qualitygate.wait=true` | the quality gate fails: bugs, vulnerabilities, code smells, coverage |
+
+They run before and after the tests, cheapest first: format, lint,
+typecheck, build, unit, integration, e2e, sonar. Sonar is last because the
+gate's coverage condition reads the report the tests write. The scanner
+reads `SONAR_TOKEN` from the environment; never write a token into the plan.
+
+**A failed gate is fixed in the code.** Format has one honest fix: the
+formatter in write mode (`prettier --write .`), then read the diff and
+commit. For the rest, fix the finding. Suppressing it is not a fix:
+`eslint-disable`, `@ts-ignore`, `@ts-expect-error`, `any`, `// NOSONAR`,
+`prettier-ignore`, a rule turned off, a loosened `tsconfig`, a new exclusion,
+a lowered threshold, an issue marked false positive. A finding you believe is
+a false positive goes to your human partner with the evidence; you do not
+rule on it yourself.
+
+**Cannot run a gate** (no SonarQube server, no `SONAR_TOKEN`)? Report
+`sonar: NOT RUN — <reason>`. Never claim the quality gate passed from lint
+output, and never edit the plan's line to `none` to get past it.
 
 ## End-to-End Evidence
 
@@ -59,11 +96,12 @@ BEFORE claiming a feature complete:
 
 1. RUN: `scripts/verify-levels PLAN_FILE` by its absolute path, from the
    working tree you're executing in, with your work committed. It runs the
-   plan's Unit, Integration, and E2E commands in order, stops at the first
-   failure, and passes e2e only if the command exits 0 AND wrote fresh
-   non-empty evidence. On success it writes `verify.txt` beside the
-   evidence, naming the HEAD it verified.
-   No plan? Run the three levels yourself, capture the same evidence, and
+   plan's eight levels in order (format, lint, typecheck, build, unit,
+   integration, e2e, sonar), stops at the first failure, and passes e2e
+   only if the command exits 0 AND wrote fresh non-empty evidence. On
+   success it writes `verify.txt` beside the evidence, naming the HEAD it
+   verified.
+   No plan? Run the eight levels yourself, capture the same evidence, and
    say there was no plan.
 2. READ: the script's output. Exit 0 means every level is PASS or SKIPPED;
    a SKIPPED level carries the plan's one-line reason, so check it still
@@ -95,6 +133,8 @@ gate in superpowers:finishing-a-development-branch checks it against HEAD.
 - Trusting agent success reports
 - Relying on partial verification
 - Declaring a feature complete with the e2e run skipped, or its evidence missing or never opened
+- Making a gate pass by suppressing it (`eslint-disable`, `@ts-ignore`, `NOSONAR`, a loosened config) instead of fixing what it found
+- Declaring a feature complete with a gate skipped, or a `none` whose reason no longer holds
 - Thinking "just this once"
 - Tired and wanting work over
 - **ANY wording implying success without having run verification**
@@ -112,6 +152,10 @@ gate in superpowers:finishing-a-development-branch checks it against HEAD.
 | "Partial check is enough" | Partial proves nothing |
 | "Unit and integration are green, e2e is redundant" | They test the parts. The e2e run tests the scenario a person will actually try. |
 | "I saw it work, no need to capture evidence" | Your memory is not something your human partner can open. Capture it. |
+| "It's only formatting, the tests are what matter" | Format and lint are the cheapest gates and the first ones CI runs. A red CI on your human partner's PR is what skipping them costs. |
+| "It runs fine in the dev server, so it builds" | The dev server and the test runner do not run the production build. Run it. |
+| "I'll add `@ts-ignore` / `eslint-disable`, it's a false positive" | Suppressing is a ruling, not a fix, and the ruling is your human partner's. Show them the finding and your evidence. |
+| "Sonar is slow, or the server is down, skip it" | Skipping is a `none — <reason>` decided in the plan. At the end, report `sonar: NOT RUN`; do not claim the gate passed. |
 | "Different words so rule doesn't apply" | Spirit over letter |
 
 ## Key Patterns

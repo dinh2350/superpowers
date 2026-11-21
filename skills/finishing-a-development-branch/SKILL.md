@@ -26,9 +26,10 @@ Tests failing (<N> failures). Must fix before completing:
 **Built from a plan with a Test Strategy?** A green suite is not enough:
 also run `../verification-before-completion/scripts/verify-levels --check PLAN_FILE`
 by its absolute path, from the working tree you're finishing in. It runs
-nothing; it succeeds only if the plan's unit, integration, and e2e levels
-were recorded as PASS or SKIPPED for the current HEAD, with no tracked file
-changed since. Any other result stops here, like a failing suite:
+nothing; it succeeds only if all eight levels (format, lint, typecheck,
+build, unit, integration, e2e, sonar) were recorded as PASS or SKIPPED for
+the current HEAD, with no tracked file changed since. Any other result stops
+here, like a failing suite:
 
 ```
 Plan verification not current: <the script's message>

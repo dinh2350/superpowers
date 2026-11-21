@@ -94,6 +94,21 @@ writing `none — <reason>` in place of its command; its table cell is `—`.]
 a UI; a saved terminal transcript or request/response log for a CLI or API.
 Default: `docs/superpowers/evidence/YYYY-MM-DD-<feature-name>/`
 
+## Quality Gates
+
+[Five more checks, one line each in exactly this form, read by
+`verify-levels` (superpowers:verification-before-completion). Whole-project
+commands, never just the files this plan touches. Use the project's own
+scripts (`package.json` "scripts", the CI config) when it has them; the
+commands below are the JS/TS defaults. A gate is dropped only by writing
+`none — <reason>` in place of its command.]
+
+**Format run:** `npx prettier --check .`
+**Lint run:** `npx eslint . --max-warnings 0`
+**Typecheck run:** `npx tsc --noEmit`
+**Build run:** `npm run build`
+**Sonar run:** `npx sonar-scanner -Dsonar.qualitygate.wait=true`
+
 ## Review Focus
 
 [The five input classes or failure modes the spec implies but no task's
@@ -176,6 +191,33 @@ PASS); prove it can fail by breaking the behavior it checks, running it
 (Expected: FAIL), and restoring; commit. Running it with evidence captured is
 the job of superpowers:verification-before-completion, not of this task.
 
+## Quality Gates in the Plan
+
+Read the project before filling in the section: `package.json` scripts,
+`.prettierrc*`, `eslint.config.*` or `.eslintrc*`, `tsconfig.json`,
+`sonar-project.properties`, the CI config. Write what CI runs.
+
+**Another stack** uses its equivalent (`ruff format --check`, `go vet ./...`,
+`cargo clippy -- -D warnings`), or `none — <reason>` where it has none.
+
+**Dropping a gate:** only when it does not apply: no TypeScript, no build
+step. "Not set up yet" in a JS/TS project is a gap, not a reason; the plan's
+first task sets the tool up, so your human partner sees it when they review
+the plan, and the line names its command. Sonar is the exception, because it
+needs a server the plan cannot create: ask your human partner whether the
+repo has a Sonar project, and write `none — <reason>` only on their word.
+
+**Sonar reads coverage.** The quality gate's coverage condition reads the
+report the tests write, so the Unit run (and the Integration run, if it
+measures coverage) must write it where the scanner looks
+(`sonar.javascript.lcov.reportPaths`, default `coverage/lcov.info`). A run
+that writes none fails the gate on coverage.
+
+**Credentials stay out of the plan.** The scanner reads `SONAR_TOKEN`, and
+the server URL from `sonar-project.properties` or `SONAR_HOST_URL`, in the
+environment. The plan is committed; `verify-levels` rejects one that spells
+out a token.
+
 ## What a Step Contains
 
 A step is done when the implementer can write exactly one reasonable thing
@@ -214,6 +256,8 @@ After writing the complete plan, look at the spec with fresh eyes and check the 
 **5. Proportion:** Compare the plan's length to the spec's. A plan several times longer than the spec it implements is a transcript of the program, not a plan. If code blocks are most of the document, replace bodies with signatures, test names and assertions, and check that each step is still unambiguous.
 
 **6. Test levels:** Does every Test Strategy row name a test at unit, integration, and e2e, or a line saying why a level does not apply? Does each integration test sit in the task that crosses the boundary it tests? Is the last task the e2e task? Does each of the header's Unit run, Integration run, and E2E run lines hold a command or `none — <reason>`, and does the E2E evidence line hold a path? Does the E2E run command, run exactly as written, write its capture into that path — with any environment variable it needs set on the command line? A command that writes evidence only when a variable is set, and does not set it, exits 0 with no evidence and fails at verification.
+
+**7. Quality gates:** Does each of the five Quality Gates lines hold a whole-project command or `none — <reason>`, and does each reason hold against the project's config files and CI? If the Sonar line is a command, does the Unit run write the coverage report it reads, and does no line spell out a token?
 
 If you find issues, fix them inline. No need to re-review — just fix and move on. If you find a spec requirement with no task, add the task.
 

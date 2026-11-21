@@ -1,25 +1,35 @@
 #!/usr/bin/env bash
-# Plan-level verification gate: run the plan's unit, integration, and e2e
-# commands, require fresh e2e evidence, and record the result for HEAD.
+# Plan-level verification gate: run the plan's format, lint, typecheck, build,
+# unit, integration, e2e, and sonar commands, require fresh e2e evidence, and
+# record the result for HEAD.
 #
 # The plan's header names the commands, one line each (writing-plans,
-# "Test Strategy"):
+# "Quality Gates" and "Test Strategy"):
+#   **Format run:** `<command>`        e.g. npx prettier --check .
+#   **Lint run:** `<command>`          e.g. npx eslint . --max-warnings 0
+#   **Typecheck run:** `<command>`     e.g. npx tsc --noEmit
+#   **Build run:** `<command>`         e.g. npm run build
 #   **Unit run:** `<command>`
 #   **Integration run:** `<command>`
 #   **E2E run:** `<command>`
 #   **E2E evidence:** `<path to a file or directory the e2e run writes>`
+#   **Sonar run:** `<command>`         e.g. npx sonar-scanner -Dsonar.qualitygate.wait=true
 # A level that does not apply reads `none — <reason>` in place of its command.
 #
-# Run mode runs the levels in order and stops at the first failure. On
-# success it writes docs/superpowers/evidence/<plan-basename>/verify.txt in
+# Run mode runs the levels in the order above, cheapest first, and stops at
+# the first failure. Sonar runs last: its quality gate reads the coverage
+# report the test levels write. The scanner reads SONAR_TOKEN from the
+# environment; a plan that spells a token out is rejected, because the plan is
+# committed. On success the script writes
+# docs/superpowers/evidence/<plan-basename>/verify.txt in
 # the repository, naming the HEAD it verified. That path is durable on purpose:
 # the executors delete their workspace before finishing, and this record has
 # to outlive it. The e2e level passes only if the command exits 0 AND the
 # evidence path holds a non-empty file written after the command started.
 #
-# --check runs nothing. It succeeds only if verify.txt records every level as
-# PASS or SKIPPED for the current HEAD and no tracked file has changed since.
-# It is the cheap gate finishing-a-development-branch uses.
+# --check runs nothing. It succeeds only if verify.txt records all eight
+# levels as PASS or SKIPPED for the current HEAD and no tracked file has
+# changed since. It is the cheap gate finishing-a-development-branch uses.
 #
 # Usage: verify-levels PLAN_FILE
 #        verify-levels --check PLAN_FILE
@@ -58,8 +68,8 @@ if [ "$check" = true ]; then
     echo "verify-levels: $summary verified a different commit than HEAD ($head). Run: verify-levels $plan" >&2
     exit 1
   fi
-  if [ "$(grep -cE '^(unit|integration|e2e): (PASS|SKIPPED)' "$summary")" -ne 3 ]; then
-    echo "verify-levels: $summary does not record all three levels as PASS or SKIPPED. Run: verify-levels $plan" >&2
+  if [ "$(grep -cE '^(format|lint|typecheck|build|unit|integration|e2e|sonar): (PASS|SKIPPED)' "$summary")" -ne 8 ]; then
+    echo "verify-levels: $summary does not record all eight levels as PASS or SKIPPED. Run: verify-levels $plan" >&2
     exit 1
   fi
   if [ -n "$(git -C "$repo" status --porcelain --untracked-files=no)" ]; then
@@ -82,19 +92,63 @@ quoted() {
   esac
 }
 
+# What to do about a failed level, printed with the failure. Agents act on what
+# the script prints; most never load the skill that says the same thing. The
+# test levels need no hint: their failure is the code's, and the output says so.
+hint() {
+  case "$1" in
+    format) echo "Fix: run the formatter in write mode (prettier --write .), read the diff, commit. Do not add ignore comments or ignore-file entries to pass." ;;
+    lint) echo "Fix the findings (eslint --fix handles the fixable ones), commit. Do not add disable comments, turn rules off, or raise the warning limit to pass." ;;
+    typecheck) echo "Fix the type errors, commit. Do not add @ts-ignore, @ts-expect-error, or any, and do not loosen tsconfig, to pass." ;;
+    build) echo "Fix the build error shown in the full log, commit. A passing linter or typecheck is not a passing build." ;;
+    sonar) echo "Open the dashboard URL in the log for the failing quality gate conditions (bugs, vulnerabilities, code smells, coverage), fix them, commit. Do not add NOSONAR, exclusions, or false-positive marks to pass. A scanner that cannot reach the server or has no SONAR_TOKEN is a block: report 'sonar: NOT RUN — <reason>'." ;;
+  esac
+}
+
 # Read every line of the plan before running anything: a malformed plan must
-# fail in a second, not after the unit suite.
-kinds=() ; payloads=()
-for spec in "unit:Unit run" "integration:Integration run" "e2e:E2E run"; do
+# fail in a second, not after the unit suite. The order is the run order:
+# cheap checks first, sonar last because it reads the coverage the tests write.
+specs=(
+  "format:Format run"
+  "lint:Lint run"
+  "typecheck:Typecheck run"
+  "build:Build run"
+  "unit:Unit run"
+  "integration:Integration run"
+  "e2e:E2E run"
+  "sonar:Sonar run"
+)
+names=() ; kinds=() ; payloads=()
+e2e_runs=false
+for spec in "${specs[@]}"; do
+  name=${spec%%:*}
   label=${spec#*:}
+  case "$name" in
+    unit|integration|e2e) section="Test Strategy" ;;
+    *) section="Quality Gates" ;;
+  esac
   value=$(field "$label")
   if [ -z "$value" ]; then
-    echo "verify-levels: the plan has no '**$label:**' line; writing-plans' Test Strategy requires it" >&2
+    echo "verify-levels: the plan has no '**$label:**' line; writing-plans' $section requires it" >&2
     exit 2
   fi
   cmd=$(quoted "$value")
+  # The template shows commands in backticks, so a skip often arrives wrapped
+  # in them too. "none" followed by a space, dash, colon, or nothing is that
+  # skip, never a command to run.
+  case "$cmd" in
+    none|none[[:space:]—–:-]*) value=$cmd ; cmd="" ;;
+  esac
   if [ -n "$cmd" ]; then
-    kinds+=(run) ; payloads+=("$cmd")
+    # The plan is committed. The scanner reads SONAR_TOKEN from the environment,
+    # so a token spelled out here is a leaked credential, never a configuration.
+    # `-Dsonar.token=$SONAR_TOKEN` is fine: the value is a variable.
+    if [ "$name" = sonar ] && printf '%s' "$cmd" | grep -qE "sonar\\.(token|login|password)=[\"']?[^\$\"'[:space:]]"; then
+      echo "verify-levels: the '**$label:**' line spells out a Sonar credential. Remove it from the plan and from git history, rotate it, and export SONAR_TOKEN in the environment instead; the scanner reads it from there." >&2
+      exit 2
+    fi
+    names+=("$name") ; kinds+=(run) ; payloads+=("$cmd")
+    [ "$name" != e2e ] || e2e_runs=true
     continue
   fi
   reason=""
@@ -105,11 +159,11 @@ for spec in "unit:Unit run" "integration:Integration run" "e2e:E2E run"; do
     echo "verify-levels: '**$label:** $value' is neither a \`command\` nor 'none — <reason>'" >&2
     exit 2
   fi
-  kinds+=(skip) ; payloads+=("$reason")
+  names+=("$name") ; kinds+=(skip) ; payloads+=("$reason")
 done
 
 evpath=""
-if [ "${kinds[2]}" = run ]; then
+if [ "$e2e_runs" = true ]; then
   evpath=$(quoted "$(field "E2E evidence")")
   if [ -z "$evpath" ]; then
     echo "verify-levels: the plan has no '**E2E evidence:** \`path\`' line; an e2e run without evidence does not count" >&2
@@ -129,8 +183,7 @@ mkdir -p "$evdir"
 lines=()
 evidence_note=""
 evidence_files=""
-names=(unit integration e2e)
-for i in 0 1 2; do
+for i in "${!names[@]}"; do
   name=${names[$i]}
   if [ "${kinds[$i]}" = skip ]; then
     echo "== $name: SKIPPED — ${payloads[$i]}"
@@ -149,6 +202,7 @@ for i in 0 1 2; do
   tail -n 5 "$log"
   if [ "$rc" -ne 0 ]; then
     echo "verify-levels: $name FAILED (exit $rc); later levels NOT RUN. Full output: $log" >&2
+    hint "$name" >&2
     exit "$rc"
   fi
   last=$(grep -v '^[[:space:]]*$' "$log" | tail -n 1) || last="(no output)"

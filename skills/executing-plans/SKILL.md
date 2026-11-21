@@ -82,7 +82,7 @@ digraph process {
 
     "Setup: worktree, workspace + ledger, read plan + spec, pre-flight scan" [shape=box];
     "More tasks remain?" [shape=diamond];
-    "Plan-level verification: verify-levels PLAN_FILE (unit + integration + e2e)" [shape=box];
+    "Plan-level verification: verify-levels PLAN_FILE (quality gates + unit + integration + e2e + sonar)" [shape=box];
     "Final whole-branch review (fresh reviewer if you have one)" [shape=box];
     "Re-grade, then: Critical/Important → ONE fix pass, each fix RED→GREEN + green suite; Minor → ledger" [shape=box];
     "Final review clean: delete this plan's workspace" [shape=box];
@@ -99,8 +99,8 @@ digraph process {
     "Completion contract met?" -> "task-done: run tests, ledger the result; mark todo complete" [label="yes"];
     "task-done: run tests, ledger the result; mark todo complete" -> "More tasks remain?";
     "More tasks remain?" -> "task-start: brief + BASE; read the brief" [label="yes"];
-    "More tasks remain?" -> "Plan-level verification: verify-levels PLAN_FILE (unit + integration + e2e)" [label="no"];
-    "Plan-level verification: verify-levels PLAN_FILE (unit + integration + e2e)" -> "Final whole-branch review (fresh reviewer if you have one)";
+    "More tasks remain?" -> "Plan-level verification: verify-levels PLAN_FILE (quality gates + unit + integration + e2e + sonar)" [label="no"];
+    "Plan-level verification: verify-levels PLAN_FILE (quality gates + unit + integration + e2e + sonar)" -> "Final whole-branch review (fresh reviewer if you have one)";
     "Final whole-branch review (fresh reviewer if you have one)" -> "Re-grade, then: Critical/Important → ONE fix pass, each fix RED→GREEN + green suite; Minor → ledger";
     "Re-grade, then: Critical/Important → ONE fix pass, each fix RED→GREEN + green suite; Minor → ledger" -> "Final review clean: delete this plan's workspace";
     "Final review clean: delete this plan's workspace" -> "Use superpowers:finishing-a-development-branch";
@@ -240,16 +240,19 @@ mark the todo complete and take the next task.
 After the last task's ledger line and before the final review, run
 `../verification-before-completion/scripts/verify-levels PLAN_FILE` by its
 absolute path, from the working tree you're executing in, with everything
-committed. It runs the plan's unit, integration, and e2e commands, requires
-fresh e2e evidence, and writes
+committed. It runs the plan's format, lint, typecheck, build, unit,
+integration, e2e, and sonar commands in that order, requires fresh e2e
+evidence, and writes
 `docs/superpowers/evidence/<plan-basename>/verify.txt`.
 superpowers:verification-before-completion says how to read it.
 
 A non-zero exit means the plan is not complete: find the cause with
-superpowers:systematic-debugging, fix it, commit, run it again. Do not weaken
-the plan's Test Strategy lines to make it pass — editing a run command or
-turning a level into `none — <reason>` is a ruling, ledgered like any other
-deviation.
+superpowers:systematic-debugging, fix it, commit, run it again. Fix a failed
+gate in the code. Do not weaken the plan's Test Strategy or Quality Gates
+lines to make it pass, and do not suppress what a gate found
+(`eslint-disable`, `@ts-ignore`, `NOSONAR`, a loosened config) — editing a run
+command or turning a level into `none — <reason>` is a ruling, ledgered like
+any other deviation.
 
 ## Final Review
 

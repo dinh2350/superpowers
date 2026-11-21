@@ -91,6 +91,15 @@ Subagent (general-purpose):
       behavior. `verify.txt` records all three levels for this HEAD, and
       the e2e evidence it names exists. A level quietly missing, or a
       `none` the spec contradicts, is Important.
+    - Plan has Quality Gates? `verify.txt` also records format, lint,
+      typecheck, build, and sonar for this HEAD. Each `SKIPPED` gate's
+      reason holds against the project: `tsconfig.json` exists but
+      typecheck is `none`, or `sonar-project.properties` exists but sonar
+      is `none`, is Important. Search the diff for a gate made to pass by
+      suppression rather than a fix: `eslint-disable`, `@ts-ignore`,
+      `@ts-expect-error`, `NOSONAR`, `prettier-ignore`, a rule turned off,
+      `tsconfig` loosened, a new Sonar exclusion, a lowered threshold. Each
+      is Important unless the plan or a ledger `Ruling:` explains it.
 
     **Production readiness:**
     - Migration strategy if schema changed?
