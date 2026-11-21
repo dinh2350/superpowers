@@ -93,6 +93,7 @@
 HEAD_SHA=$(git rev-parse HEAD)</pre>
 <p class="row"><b class="lbl">2 · Giao reviewer</b>Giao một subagent <code>general-purpose</code>, điền vào template <code>code-reviewer.md</code>:</p>
 <div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Placeholder</th><th>Nội dung</th></tr></thead><tbody><tr><td><code>{DESCRIPTION}</code></td><td>Tóm tắt ngắn cái bạn vừa làm.</td></tr><tr><td><code>{PLAN_OR_REQUIREMENTS}</code></td><td>Nó phải làm gì.</td></tr><tr><td><code>{BASE_SHA}</code></td><td>Commit bắt đầu.</td></tr><tr><td><code>{HEAD_SHA}</code></td><td>Commit kết thúc.</td></tr></tbody></table></div>
+<p class="row">Khi plan có Test Strategy, mục Testing của template còn bắt reviewer kiểm: mỗi dòng có test thật ở cả unit, integration và e2e (hoặc <code>none — &lt;lý do&gt;</code> mà lý do còn đúng), <code>verify.txt</code> ghi đủ ba level cho đúng HEAD, và evidence e2e tồn tại. Thiếu một level mà không ai nói là phát hiện mức Important.</p>
 <a class="back" href="#diagram">↑ Về diagram</a>
 </article>
 <article class="card plain" id="c-act">

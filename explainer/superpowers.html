@@ -275,10 +275,10 @@
           </a>
 
           <!-- 3 -->
-          <a class="node" href="#s-writing-plans" aria-label="writing-plans">
+          <a class="node new" href="#s-writing-plans" aria-label="writing-plans">
             <rect x="130" y="284" width="300" height="54" rx="10"/>
             <text class="name" x="144" y="307">writing-plans</text>
-            <text class="sub" x="144" y="325">Chia việc thành task 2–5 phút</text>
+            <text class="sub" x="144" y="325">Task 2–5 phút · kế hoạch 3 loại test</text>
             <g class="num"><circle cx="130" cy="284" r="10"/><text x="130" y="287.5">3</text></g>
           </a>
 
@@ -297,10 +297,10 @@
           </a>
 
           <!-- 5, 6 -->
-          <a class="node" href="#s-test-driven-development" aria-label="test-driven-development">
+          <a class="node new" href="#s-test-driven-development" aria-label="test-driven-development">
             <rect x="28" y="490" width="240" height="54" rx="10"/>
             <text class="name" x="42" y="513">test-driven-development</text>
-            <text class="sub" x="42" y="531">Test fail trước, rồi mới code</text>
+            <text class="sub" x="42" y="531">Unit + integration · fail trước</text>
             <g class="num"><circle cx="28" cy="490" r="10"/><text x="28" y="493.5">5</text></g>
           </a>
           <a class="node" href="#s-requesting-code-review" aria-label="requesting-code-review">
@@ -311,10 +311,10 @@
           </a>
 
           <!-- 7 -->
-          <a class="node" href="#s-verification-before-completion" aria-label="verification-before-completion">
+          <a class="node new" href="#s-verification-before-completion" aria-label="verification-before-completion">
             <rect x="130" y="600" width="300" height="54" rx="10"/>
             <text class="name" x="144" y="623">verification-before-completion</text>
-            <text class="sub" x="144" y="641">Chạy lệnh thật rồi mới báo xong</text>
+            <text class="sub" x="144" y="641">Chạy cả 3 loại test, lưu evidence</text>
             <g class="num"><circle cx="130" cy="600" r="10"/><text x="130" y="603.5">7</text></g>
           </a>
 
@@ -322,7 +322,7 @@
           <a class="node" href="#s-finishing-a-development-branch" aria-label="finishing-a-development-branch">
             <rect x="130" y="686" width="300" height="54" rx="10"/>
             <text class="name" x="144" y="709">finishing-a-development-branch</text>
-            <text class="sub" x="144" y="727">Test xanh → merge / mở PR / giữ nhánh</text>
+            <text class="sub" x="144" y="727">Test + verify xanh → merge / PR / giữ nhánh</text>
             <g class="num"><circle cx="130" cy="686" r="10"/><text x="130" y="689.5">8</text></g>
           </a>
 
@@ -392,7 +392,7 @@
         </div>
         <div class="pain-item">
           <q>Test pass nhưng tính năng vẫn sai</q>
-          <div class="fix"><a class="skill-link" href="#s-test-driven-development">test-driven-development</a></div>
+          <div class="fix"><a class="skill-link" href="#s-test-driven-development">test-driven-development</a> (unit + integration) và <a class="skill-link" href="#s-verification-before-completion">verification-before-completion</a> (e2e + evidence)</div>
         </div>
         <div class="pain-item">
           <q>Nói “xong rồi” khi chưa chạy gì</q>
@@ -435,7 +435,7 @@
       </div>
       <div class="step">
         <h3>Agent tự chạy</h3>
-        <p>Code theo TDD, review từng task, chạy kiểm chứng. Có thể tự làm vài giờ mà không lệch plan.</p>
+        <p>Code theo TDD, review từng task, chạy đủ unit, integration, e2e và lưu evidence. Có thể tự làm vài giờ mà không lệch plan.</p>
         <p>Cuối cùng bạn chọn: merge, mở PR hoặc giữ nhánh.</p>
       </div>
     </div>
@@ -493,9 +493,9 @@
       </article>
 
       <article class="card" id="s-writing-plans">
-        <header><span class="badge">3</span><h4>writing-plans</h4><span class="tag">Trong luồng</span></header>
+        <header><span class="badge">3</span><h4>writing-plans</h4><span class="tag">Trong luồng</span><span class="tag new">Nâng cấp</span></header>
         <p class="row pain"><b>Vấn đề</b>Plan mơ hồ nên agent tự đoán từng chi tiết, mỗi lần một kiểu.</p>
-        <p class="row"><b>Làm gì</b>Biến design thành các task nhỏ (2–5 phút), mỗi task có đường dẫn file chính xác, code đầy đủ và bước kiểm tra. Lưu ở <code>docs/superpowers/plans/</code>.</p>
+        <p class="row"><b>Làm gì</b>Biến design thành các task nhỏ (2–5 phút), mỗi task có đường dẫn file chính xác, code đầy đủ và bước kiểm tra. Header có mục <b>Test Strategy</b>: mỗi scenario ghi test ở cả 3 level (unit, integration, e2e), kèm lệnh chạy và nơi lưu evidence; task cuối luôn là task e2e. Lưu ở <code>docs/superpowers/plans/</code>.</p>
         <p class="row"><b>Dùng khi</b>Đã có spec được duyệt cho việc nhiều bước, trước khi đụng code.</p>
         <a class="back" href="#diagram">↑ Về diagram</a>
         <a class="back" href="skills-detail/writing-plans.html">Xem chi tiết →</a>
@@ -508,7 +508,7 @@
       <article class="card" id="s-subagent-driven-development">
         <header><span class="badge">4</span><h4>subagent-driven-development</h4><span class="tag">Chọn 1 · kỹ nhất</span></header>
         <p class="row pain"><b>Vấn đề</b>Một agent làm hết trong một context dài: đầy context, lệch plan, tự chấm bài của mình.</p>
-        <p class="row"><b>Làm gì</b>Mỗi task giao cho một subagent mới (context sạch). Sau đó review 2 lớp: đúng spec trước, chất lượng code sau. Cuối cùng review cả nhánh. Chạy liên tục, không hỏi “tiếp nhé?”.</p>
+        <p class="row"><b>Làm gì</b>Mỗi task giao cho một subagent mới (context sạch). Sau đó review 2 lớp: đúng spec trước, chất lượng code sau. Cuối cùng chạy <code>verify-levels</code> (đủ 3 loại test + evidence) rồi review cả nhánh. Chạy liên tục, không hỏi “tiếp nhé?”.</p>
         <p class="row"><b>Dùng khi</b>Đã có plan và môi trường có subagent. Chất lượng cao nhất nhưng tốn token hơn.</p>
         <a class="back" href="#diagram">↑ Về diagram</a>
         <a class="back" href="skills-detail/subagent-driven-development.html">Xem chi tiết →</a>
@@ -517,16 +517,16 @@
       <article class="card" id="s-executing-plans">
         <header><span class="badge">4</span><h4>executing-plans</h4><span class="tag">Chọn 1 · rẻ nhất</span></header>
         <p class="row pain"><b>Vấn đề</b>Subagent cho từng task tốn token vì mỗi lần phải đọc lại codebase từ đầu.</p>
-        <p class="row"><b>Làm gì</b>Agent tự làm tuần tự trong phiên hiện tại. TDD là cổng kiểm từng task, có sổ ghi (ledger) để không quên, và một review mới cho cả nhánh ở cuối.</p>
+        <p class="row"><b>Làm gì</b>Agent tự làm tuần tự trong phiên hiện tại. TDD là cổng kiểm từng task, có sổ ghi (ledger) để không quên, và một review mới cho cả nhánh ở cuối, sau khi <code>verify-levels</code> xác nhận cả 3 loại test đã chạy và có evidence.</p>
         <p class="row"><b>Dùng khi</b>Bạn chọn chạy inline để tiết kiệm, hoặc môi trường không có subagent.</p>
         <a class="back" href="#diagram">↑ Về diagram</a>
         <a class="back" href="skills-detail/executing-plans.html">Xem chi tiết →</a>
       </article>
 
       <article class="card" id="s-test-driven-development">
-        <header><span class="badge">5</span><h4>test-driven-development</h4><span class="tag">Trong luồng</span></header>
+        <header><span class="badge">5</span><h4>test-driven-development</h4><span class="tag">Trong luồng</span><span class="tag new">Nâng cấp</span></header>
         <p class="row pain"><b>Vấn đề</b>Test viết sau code thì luôn pass, nên không chứng minh được gì.</p>
-        <p class="row"><b>Làm gì</b>Red → Green → Refactor: viết test, xem nó fail, viết code tối thiểu cho pass. Code viết trước test thì xoá đi làm lại.</p>
+        <p class="row"><b>Làm gì</b>Red → Green → Refactor: viết test, xem nó fail, viết code tối thiểu cho pass. Áp dụng cho cả unit và integration test (task nào đi qua ranh giới thì có thêm integration test, dùng component thật). Code viết trước test thì xoá đi làm lại.</p>
         <p class="row"><b>Dùng khi</b>Mọi feature, bugfix, refactor. Ngoại lệ (prototype bỏ đi, code sinh tự động, file config) phải hỏi bạn.</p>
         <a class="back" href="#diagram">↑ Về diagram</a>
         <a class="back" href="skills-detail/test-driven-development.html">Xem chi tiết →</a>
@@ -546,9 +546,9 @@
     <div class="phase"><h3>4 · Chứng minh</h3><span>Trước khi nói “xong”</span></div>
     <div class="cards">
       <article class="card" id="s-verification-before-completion">
-        <header><span class="badge">7</span><h4>verification-before-completion</h4><span class="tag">Trong luồng</span></header>
+        <header><span class="badge">7</span><h4>verification-before-completion</h4><span class="tag">Trong luồng</span><span class="tag new">Nâng cấp</span></header>
         <p class="row pain"><b>Vấn đề</b>Agent nói “xong rồi, test pass” mà chưa hề chạy.</p>
-        <p class="row"><b>Làm gì</b>Luật: không tuyên bố hoàn thành khi chưa có output mới từ lệnh kiểm chứng. Chạy lệnh, đọc kết quả, rồi mới được nói.</p>
+        <p class="row"><b>Làm gì</b>Luật: không tuyên bố hoàn thành khi chưa có output mới từ lệnh kiểm chứng. Chạy lệnh, đọc kết quả, rồi mới được nói. Trước khi báo xong cả tính năng, script <code>verify-levels</code> chạy đủ unit, integration, e2e và chỉ cho qua khi e2e để lại file evidence (ảnh, video hoặc log) mới ghi.</p>
         <p class="row"><b>Dùng khi</b>Ngay trước khi báo hoàn thành, commit hoặc mở PR.</p>
         <a class="back" href="#diagram">↑ Về diagram</a>
         <a class="back" href="skills-detail/verification-before-completion.html">Xem chi tiết →</a>
@@ -562,7 +562,7 @@
       <article class="card" id="s-finishing-a-development-branch">
         <header><span class="badge">8</span><h4>finishing-a-development-branch</h4><span class="tag">Trong luồng</span></header>
         <p class="row pain"><b>Vấn đề</b>Làm xong thì nhánh và worktree bị bỏ lơ, hoặc merge khi test còn đỏ.</p>
-        <p class="row"><b>Làm gì</b>Chạy full test. Nếu xanh thì đưa 3 lựa chọn: merge, mở PR hoặc giữ nhánh. Sau đó dọn worktree.</p>
+        <p class="row"><b>Làm gì</b>Chạy full test, và nếu plan có Test Strategy thì kiểm record verify còn khớp HEAD. Nếu xanh thì đưa 3 lựa chọn: merge, mở PR hoặc giữ nhánh. Sau đó dọn worktree.</p>
         <p class="row"><b>Dùng khi</b>Implement xong và test pass.</p>
         <a class="back" href="#diagram">↑ Về diagram</a>
         <a class="back" href="skills-detail/finishing-a-development-branch.html">Xem chi tiết →</a>

@@ -21,7 +21,7 @@
   <div class="wrap">
     <h1>test-driven-development</h1>
     <p>Viết test trước. Xem nó fail. Viết code tối thiểu cho nó pass. Nếu chưa từng thấy test fail thì không biết được nó có kiểm đúng thứ cần kiểm hay không.</p>
-    <div class="chips"><span class="chip">RED → GREEN → REFACTOR</span><span class="chip">Code viết trước test thì xóa, làm lại</span><span class="chip">Chạy cả suite của dự án, không chỉ file test của mình</span><span class="chip">Ngoại lệ phải hỏi bạn</span></div>
+    <div class="chips"><span class="chip">RED → GREEN → REFACTOR</span><span class="chip">Code viết trước test thì xóa, làm lại</span><span class="chip">Chạy cả suite của dự án, không chỉ file test của mình</span><span class="chip">Ngoại lệ phải hỏi bạn</span><span class="chip">Unit + integration cùng một vòng; e2e do verification chạy</span></div>
   </div>
 </header>
 
@@ -63,7 +63,7 @@
       <aside class="pains">
         <h3>Nó giải quyết painpoint nào?</h3>
         <p>Những lỗi mà từng phần của skill sinh ra để chặn.</p>
-<div class="pain-item"><q>Test viết sau code thì luôn pass, nên chẳng chứng minh được gì</q><div class="fix"><a class="skill-link" href="#c-vred">Verify RED</a>: bắt buộc phải thấy nó fail</div></div><div class="pain-item"><q>Giữ code viết trước làm “tham khảo” rồi viết test bám theo</q><div class="fix"><a class="skill-link" href="#iron">Luật sắt</a>: xóa nghĩa là xóa</div></div><div class="pain-item"><q>Test chỉ kiểm mock, không kiểm code thật</q><div class="fix"><a class="skill-link" href="#c-good">writing-good-tests</a>: assert hành vi thật</div></div><div class="pain-item"><q>Báo “xong” khi chỉ chạy file test mình vừa viết</q><div class="fix"><a class="skill-link" href="#c-vgreen">Verify GREEN</a>: chạy cả suite của dự án</div></div><div class="pain-item"><q>Sửa bug mà không có test tái hiện</q><div class="fix"><a class="skill-link" href="#c-bug">Bug thì viết test fail trước</a></div></div>
+<div class="pain-item"><q>Test viết sau code thì luôn pass, nên chẳng chứng minh được gì</q><div class="fix"><a class="skill-link" href="#c-vred">Verify RED</a>: bắt buộc phải thấy nó fail</div></div><div class="pain-item"><q>Giữ code viết trước làm “tham khảo” rồi viết test bám theo</q><div class="fix"><a class="skill-link" href="#iron">Luật sắt</a>: xóa nghĩa là xóa</div></div><div class="pain-item"><q>Test chỉ kiểm mock, không kiểm code thật</q><div class="fix"><a class="skill-link" href="#c-good">writing-good-tests</a>: assert hành vi thật</div></div><div class="pain-item"><q>Báo “xong” khi chỉ chạy file test mình vừa viết</q><div class="fix"><a class="skill-link" href="#c-vgreen">Verify GREEN</a>: chạy cả suite của dự án</div></div><div class="pain-item"><q>Sửa bug mà không có test tái hiện</q><div class="fix"><a class="skill-link" href="#c-bug">Bug thì viết test fail trước</a></div></div><div class="pain-item"><q>Unit test xanh hết nhưng vỡ ở chỗ nối giữa các thành phần</q><div class="fix"><a class="skill-link" href="#c-levels">Integration test</a> cũng đi qua RED → GREEN, dùng component thật hai bên</div></div>
       </aside>
     </div>
   </div>
@@ -172,6 +172,16 @@ Otherwise → not TDD</pre>
 <a class="back" href="#diagram">↑ Về diagram</a>
 </article>
 </div>
+<div class="phase"><h3>Ba mức test</h3><span>Chu trình giống nhau ở mọi mức. Khác nhau ở lượng code thật đứng sau test và lúc nó chạy</span></div>
+<div class="cards one">
+<article class="card plain" id="c-levels">
+<header><h4>Test Levels: unit, integration, e2e</h4><span class="tag new">Nâng cấp</span></header>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Mức</th><th>Chứng minh</th><th>Trong vòng task?</th></tr></thead><tbody><tr><td>Unit</td><td>Một hành vi của một đơn vị. Chỉ phần chậm hoặc bên ngoài mới bị làm giả.</td><td>Có, mọi hành vi mới</td></tr><tr><td>Integration</td><td>Các component thật chạy cùng nhau qua một ranh giới: module với module, DB, mạng, filesystem.</td><td>Có, khi task của plan gọi tên nó hoặc sản phẩm của task đi qua ranh giới</td></tr><tr><td>End-to-end</td><td>Kịch bản của một người dùng qua hệ thống đang chạy.</td><td>Không. Task cuối của plan viết nó, <code>verification-before-completion</code> chạy nó</td></tr></tbody></table></div>
+<p class="row"><b class="lbl">Integration</b>RED, verify RED, GREEN, verify GREEN, y như unit test: Luật sắt áp dụng nguyên vẹn. Dùng component thật ở cả hai phía của đường nối. Mock phía bên kia thì nó thành unit test. Task đã gọi tên một integration test thì viết nó trước và xem nó fail. Task đi qua ranh giới mà plan không nêu test nào thì plan có lỗ hổng: vẫn viết test, và nói rõ trong báo cáo.</p>
+<p class="row"><b class="lbl">End-to-end</b>Không nằm trong chu trình này: nó cần cả hệ thống và quá chậm để chạy từng step. Không được báo một tính năng là xong khi chưa có nó. Cổng đó thuộc <code>verification-before-completion</code>.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+</div>
 </div>
 </section>
 <section id="good">
@@ -227,7 +237,7 @@ PASS</pre>
 <div class="cards">
 <article class="card plain" id="c-check">
 <header><h4>Checklist trước khi báo xong</h4></header>
-<ul><li>Mỗi hàm/phương thức mới đều có test.</li><li>Đã thấy từng test fail trước khi cài.</li><li>Mỗi test fail vì đúng lý do (thiếu tính năng, không phải gõ sai).</li><li>Đã viết code tối thiểu cho mỗi test pass.</li><li>Mọi test pass.</li><li>Output sạch (không lỗi, không warning).</li><li>Test dùng code thật (chỉ mock khi bất khả kháng).</li><li>Đã phủ các ca biên và ca lỗi.</li></ul>
+<ul><li>Mỗi hàm/phương thức mới đều có test.</li><li>Mọi ranh giới mà thay đổi đi qua đều có integration test, dùng component thật ở hai phía.</li><li>Đã thấy từng test fail trước khi cài.</li><li>Mỗi test fail vì đúng lý do (thiếu tính năng, không phải gõ sai).</li><li>Đã viết code tối thiểu cho mỗi test pass.</li><li>Mọi test pass.</li><li>Output sạch (không lỗi, không warning).</li><li>Test dùng code thật (chỉ mock khi bất khả kháng).</li><li>Đã phủ các ca biên và ca lỗi.</li></ul>
 <a class="back" href="#diagram">↑ Về diagram</a>
 </article>
 <article class="card plain" id="c-flags">
@@ -237,13 +247,13 @@ PASS</pre>
 </article>
 </div>
 <div class="phase"><h3>Những lời bào chữa hay gặp</h3><span>Bảng Common Rationalizations của skill</span></div>
-<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Agent tự nhủ</th><th>Thực tế</th></tr></thead><tbody><tr><td>“Quá đơn giản để test”</td><td>Code đơn giản vẫn hỏng. Viết test mất 30 giây.</td></tr><tr><td>“Tôi test sau”</td><td>Test viết sau pass ngay, nên chẳng chứng minh được gì. Chúng có thể kiểm sai thứ, kiểm cách cài thay vì hành vi, hoặc bỏ sót ca biên bạn quên. Chưa từng thấy nó fail nên chưa chứng minh được nó bắt được bug. Test trước ép phải có lần fail đó.</td></tr><tr><td>“Test sau cũng đạt cùng mục đích (tinh thần, không phải nghi thức)”</td><td>Test sau trả lời “code này làm gì?”; test trước trả lời “code này NÊN làm gì?”. Test viết sau bị thiên lệch bởi code đã viết: chỉ kiểm những ca đã nhớ, không phải những ca lẽ ra sẽ khám phá. Có độ phủ mà không có bằng chứng test hoạt động.</td></tr><tr><td>“Đã test tay rồi”</td><td>Test tay là ad hoc: không có bản ghi đã phủ gì, không chạy lại được khi code đổi, dễ quên ca dưới áp lực. “Tôi thử thì chạy” không phải toàn diện. Test tự động chạy giống hệt nhau mỗi lần.</td></tr><tr><td>“Xóa X giờ làm việc thì phí”</td><td>Chi phí chìm: thời gian đó mất rồi dù thế nào. Lựa chọn thật là viết lại bằng TDD (tin cậy cao) hay giữ code rồi gắn test sau (tin cậy thấp, nhiều bug). Giữ code không tin cậy được mới là phí.</td></tr><tr><td>“Giữ làm tham khảo, viết test trước”</td><td>Rồi sẽ chỉnh nó. Đó là test sau. Xóa nghĩa là xóa.</td></tr><tr><td>“Cần khám phá trước”</td><td>Được. Bỏ đi phần khám phá, bắt đầu bằng TDD.</td></tr><tr><td>“Test khó nghĩa là thiết kế chưa rõ”</td><td>Hãy nghe test. Khó test nghĩa là khó dùng.</td></tr><tr><td>“TDD làm tôi chậm”</td><td>TDD chính là con đường thực dụng: bắt bug trước khi commit, ngăn regression, cho phép refactor không sợ. Lối tắt “thực dụng” nghĩa là debug trên production, chậm hơn.</td></tr><tr><td>“Test tay nhanh hơn”</td><td>Test tay không chứng minh được ca biên. Sẽ phải test lại mỗi lần đổi.</td></tr><tr><td>“Code có sẵn chưa có test”</td><td>Đang cải thiện nó nghĩa là thêm test cho code đang có.</td></tr></tbody></table></div>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Agent tự nhủ</th><th>Thực tế</th></tr></thead><tbody><tr><td>“Quá đơn giản để test”</td><td>Code đơn giản vẫn hỏng. Viết test mất 30 giây.</td></tr><tr><td>“Tôi test sau”</td><td>Test viết sau pass ngay, nên chẳng chứng minh được gì. Chúng có thể kiểm sai thứ, kiểm cách cài thay vì hành vi, hoặc bỏ sót ca biên bạn quên. Chưa từng thấy nó fail nên chưa chứng minh được nó bắt được bug. Test trước ép phải có lần fail đó.</td></tr><tr><td>“Test sau cũng đạt cùng mục đích (tinh thần, không phải nghi thức)”</td><td>Test sau trả lời “code này làm gì?”; test trước trả lời “code này NÊN làm gì?”. Test viết sau bị thiên lệch bởi code đã viết: chỉ kiểm những ca đã nhớ, không phải những ca lẽ ra sẽ khám phá. Có độ phủ mà không có bằng chứng test hoạt động.</td></tr><tr><td>“Đã test tay rồi”</td><td>Test tay là ad hoc: không có bản ghi đã phủ gì, không chạy lại được khi code đổi, dễ quên ca dưới áp lực. “Tôi thử thì chạy” không phải toàn diện. Test tự động chạy giống hệt nhau mỗi lần.</td></tr><tr><td>“Xóa X giờ làm việc thì phí”</td><td>Chi phí chìm: thời gian đó mất rồi dù thế nào. Lựa chọn thật là viết lại bằng TDD (tin cậy cao) hay giữ code rồi gắn test sau (tin cậy thấp, nhiều bug). Giữ code không tin cậy được mới là phí.</td></tr><tr><td>“Giữ làm tham khảo, viết test trước”</td><td>Rồi sẽ chỉnh nó. Đó là test sau. Xóa nghĩa là xóa.</td></tr><tr><td>“Cần khám phá trước”</td><td>Được. Bỏ đi phần khám phá, bắt đầu bằng TDD.</td></tr><tr><td>“Test khó nghĩa là thiết kế chưa rõ”</td><td>Hãy nghe test. Khó test nghĩa là khó dùng.</td></tr><tr><td>“TDD làm tôi chậm”</td><td>TDD chính là con đường thực dụng: bắt bug trước khi commit, ngăn regression, cho phép refactor không sợ. Lối tắt “thực dụng” nghĩa là debug trên production, chậm hơn.</td></tr><tr><td>“Test tay nhanh hơn”</td><td>Test tay không chứng minh được ca biên. Sẽ phải test lại mỗi lần đổi.</td></tr><tr><td>“Code có sẵn chưa có test”</td><td>Đang cải thiện nó nghĩa là thêm test cho code đang có.</td></tr><tr><td>“Unit test phủ rồi, integration là thừa”</td><td>Unit pass trong khi chỗ nối giữa chúng vỡ: sai tên trường, sai thứ tự, sai định dạng. Một đường nối bị mock chỉ kiểm cái bạn đoán về phía bên kia.</td></tr></tbody></table></div>
 </div>
 </section>
 
 <section>
   <div class="wrap">
-    <footer>Nguồn: <a href="../../skills/test-driven-development/SKILL.md"><code>skills/test-driven-development/SKILL.md</code></a> (330 dòng).</footer>
+    <footer>Nguồn: <a href="../../skills/test-driven-development/SKILL.md"><code>skills/test-driven-development/SKILL.md</code></a> (357 dòng).</footer>
   </div>
 </section>
 

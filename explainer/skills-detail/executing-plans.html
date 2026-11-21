@@ -21,7 +21,7 @@
   <div class="wrap">
     <h1>executing-plans</h1>
     <p>Agent tự thực thi plan, từng task, ngay trong phiên này: không có implementer subagent cho mỗi task, không có reviewer cho mỗi task. Chỉ có <b>một lần review cả nhánh</b> bằng context mới ở cuối.</p>
-    <div class="chips"><span class="chip">Rẻ hơn <code>subagent-driven-development</code></span><span class="chip">Sổ ghi (ledger) thay cho trí nhớ</span><span class="chip">TDD là cổng kiểm từng task</span><span class="chip">Không dừng lại hỏi “tiếp nhé?”</span></div>
+    <div class="chips"><span class="chip">Rẻ hơn <code>subagent-driven-development</code></span><span class="chip">Sổ ghi (ledger) thay cho trí nhớ</span><span class="chip">TDD là cổng kiểm từng task</span><span class="chip">verify-levels: đủ 3 loại test trước review cuối</span><span class="chip">Không dừng lại hỏi “tiếp nhé?”</span></div>
   </div>
 </header>
 
@@ -34,7 +34,7 @@
     <div class="diagram-grid">
       <div class="diagram-box">
         <p class="swipe-hint">← Vuốt ngang để xem hết diagram →</p>
-<svg class="flow" viewBox="0 0 560 874" role="group" aria-label="Sơ đồ executing-plans"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 z"/></marker></defs>
+<svg class="flow" viewBox="0 0 560 972" role="group" aria-label="Sơ đồ executing-plans"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 z"/></marker></defs>
 <path class="arrow" d="M300 68 V112"/>
 <path class="arrow" d="M300 166 V210"/>
 <path class="arrow" d="M300 264 V308"/>
@@ -43,6 +43,7 @@
 <path class="arrow" d="M300 558 V602"/>
 <path class="arrow" d="M300 656 V700"/>
 <path class="arrow" d="M300 754 V798"/>
+<path class="arrow" d="M300 852 V896"/>
 <path class="arrow join" d="M150 335 H40"/>
 <path class="arrow" d="M40 335 V237 H150"/>
 <path class="arrow join" d="M150 531 H24"/>
@@ -57,16 +58,17 @@
 <a class="node opt" href="#c-contract" aria-label="Hợp đồng hoàn thành đạt? - Test chạy · Expected đã so · Ruling đã ghi"><rect x="150" y="308" width="300" height="54" rx="10"/><text class="name" x="164" y="331">Hợp đồng hoàn thành đạt?</text><text class="sub" x="164" y="349">Test chạy · Expected đã so · Ruling đã ghi</text></a>
 <a class="node" href="#c-done" aria-label="task-done - Chạy test, ghi một dòng vào ledger"><rect x="150" y="406" width="300" height="54" rx="10"/><text class="name" x="164" y="429">task-done</text><text class="sub" x="164" y="447">Chạy test, ghi một dòng vào ledger</text></a>
 <a class="node opt" href="#c-done" aria-label="Còn task nào nữa? - Không dừng lại hỏi bạn giữa các task"><rect x="150" y="504" width="300" height="54" rx="10"/><text class="name" x="164" y="527">Còn task nào nữa?</text><text class="sub" x="164" y="545">Không dừng lại hỏi bạn giữa các task</text></a>
-<a class="node" href="#c-final" aria-label="Review cả nhánh - Reviewer mới · model mạnh nhất"><rect x="150" y="602" width="300" height="54" rx="10"/><text class="name" x="164" y="625">Review cả nhánh</text><text class="sub" x="164" y="643">Reviewer mới · model mạnh nhất</text></a>
-<a class="node" href="#c-fix" aria-label="Sửa Critical/Important: MỘT đợt - Mỗi fix RED→GREEN, suite xanh"><rect x="150" y="700" width="300" height="54" rx="10"/><text class="name" x="164" y="723">Sửa Critical/Important: MỘT đợt</text><text class="sub" x="164" y="741">Mỗi fix RED→GREEN, suite xanh</text></a>
-<g class="node new" aria-label="finishing-a-development-branch - Merge, mở PR hoặc giữ nhánh"><rect x="150" y="798" width="300" height="54" rx="10"/><text class="name" x="164" y="821">finishing-a-development-branch</text><text class="sub" x="164" y="839">Merge, mở PR hoặc giữ nhánh</text></g></svg>
+<a class="node" href="#c-verify" aria-label="verify-levels - Unit + integration + e2e, evidence mới"><rect x="150" y="602" width="300" height="54" rx="10"/><text class="name" x="164" y="625">verify-levels</text><text class="sub" x="164" y="643">Unit + integration + e2e, evidence mới</text></a>
+<a class="node" href="#c-final" aria-label="Review cả nhánh - Reviewer mới · model mạnh nhất"><rect x="150" y="700" width="300" height="54" rx="10"/><text class="name" x="164" y="723">Review cả nhánh</text><text class="sub" x="164" y="741">Reviewer mới · model mạnh nhất</text></a>
+<a class="node" href="#c-fix" aria-label="Sửa Critical/Important: MỘT đợt - Mỗi fix RED→GREEN, suite xanh"><rect x="150" y="798" width="300" height="54" rx="10"/><text class="name" x="164" y="821">Sửa Critical/Important: MỘT đợt</text><text class="sub" x="164" y="839">Mỗi fix RED→GREEN, suite xanh</text></a>
+<g class="node new" aria-label="finishing-a-development-branch - Merge, mở PR hoặc giữ nhánh"><rect x="150" y="896" width="300" height="54" rx="10"/><text class="name" x="164" y="919">finishing-a-development-branch</text><text class="sub" x="164" y="937">Merge, mở PR hoặc giữ nhánh</text></g></svg>
         <div class="legend"><span><i></i>Bước của skill</span><span><i class="dash"></i>Nét đứt: điểm quyết định</span><span><i class="new"></i>Viền xanh: skill chạy tiếp theo</span></div>
       </div>
 
       <aside class="pains">
         <h3>Nó giải quyết painpoint nào?</h3>
         <p>Những lỗi mà từng phần của skill sinh ra để chặn.</p>
-<div class="pain-item"><q>Subagent cho từng task tốn token, vì mỗi lần phải đọc lại codebase từ đầu</q><div class="fix">Một context của chính agent, cộng một reviewer ở cuối</div></div><div class="pain-item"><q>Quên đang ở task nào sau compaction, làm lại task đã commit</q><div class="fix"><a class="skill-link" href="#c-setup">Ledger</a>: tin ledger và <code>git log</code> hơn trí nhớ</div></div><div class="pain-item"><q>Lệch plan mà không ai biết</q><div class="fix">Mọi chỗ lệch phải có dòng <code>Ruling:</code> trong ledger</div></div><div class="pain-item"><q>Dừng lại hỏi “tiếp nhé?” sau mỗi task</q><div class="fix"><a class="skill-link" href="#stops">Chỉ 4 điều được dừng agent</a></div></div><div class="pain-item"><q>Tự đọc diff của mình rồi tuyên bố ổn</q><div class="fix"><a class="skill-link" href="#c-final">Reviewer mới ở cuối</a>, không thay bằng tự đọc</div></div>
+<div class="pain-item"><q>Subagent cho từng task tốn token, vì mỗi lần phải đọc lại codebase từ đầu</q><div class="fix">Một context của chính agent, cộng một reviewer ở cuối</div></div><div class="pain-item"><q>Quên đang ở task nào sau compaction, làm lại task đã commit</q><div class="fix"><a class="skill-link" href="#c-setup">Ledger</a>: tin ledger và <code>git log</code> hơn trí nhớ</div></div><div class="pain-item"><q>Lệch plan mà không ai biết</q><div class="fix">Mọi chỗ lệch phải có dòng <code>Ruling:</code> trong ledger</div></div><div class="pain-item"><q>Dừng lại hỏi “tiếp nhé?” sau mỗi task</q><div class="fix"><a class="skill-link" href="#stops">Chỉ 4 điều được dừng agent</a></div></div><div class="pain-item"><q>Tự đọc diff của mình rồi tuyên bố ổn</q><div class="fix"><a class="skill-link" href="#c-final">Reviewer mới ở cuối</a>, không thay bằng tự đọc</div></div><div class="pain-item"><q>Báo xong khi chưa ai chạy e2e hay chụp evidence</q><div class="fix"><a class="skill-link" href="#c-verify">verify-levels</a> chạy cả 3 level, e2e phải để lại file evidence mới</div></div>
       </aside>
     </div>
   </div>
@@ -147,16 +149,23 @@
 <h2><span class="secno">4</span>Review cuối và kết thúc</h2>
 <p class="lead">Đây là lần duy nhất cả lượt chạy mua được một context mới. Không bỏ qua, và không thay bằng việc tự đọc diff của mình.</p>
 <div class="cards one">
+<article class="card plain" id="c-verify">
+<header><h4>Verify cả 3 loại test, trước review</h4><span class="tag new">Nâng cấp</span></header>
+<p class="row"><b class="lbl">Làm gì</b>Sau dòng ledger của task cuối, khi mọi thứ đã commit, chạy <code>verify-levels PLAN_FILE</code>. Nó chạy lệnh Unit, Integration, E2E của plan, đòi evidence e2e mới, rồi ghi <code>docs/superpowers/evidence/&lt;plan&gt;/verify.txt</code>. Exit khác 0 nghĩa là plan chưa xong: tìm nguyên nhân bằng <code>systematic-debugging</code>, sửa, commit, chạy lại.</p>
+<p class="row"><b class="lbl">Không được</b>Hạ dòng Test Strategy của plan cho dễ qua. Sửa một lệnh hay đổi một level thành <code>none — &lt;lý do&gt;</code> là một ruling, ghi ledger như mọi chỗ lệch plan khác.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
 <article class="card plain" id="c-final">
 <header><h4>Review cả nhánh</h4></header>
 <p class="row"><b class="lbl">Làm gì</b>Chạy <code>review-package PLAN_FILE MERGE_BASE HEAD</code> (MERGE_BASE là commit mà nhánh bắt đầu, ví dụ <code>git merge-base main HEAD</code>) rồi review từ file nó in ra.</p>
-<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Có subagent tool?</th><th>Làm gì</th></tr></thead><tbody><tr><td>Có</td><td>Dispatch reviewer trên model <b>mạnh nhất</b> hiện có, vì review cả nhánh là việc cần phán đoán. Dùng <code>code-reviewer.md</code> của <code>requesting-code-review</code>. Đưa cho nó: đường dẫn package, đường dẫn plan và spec, nguyên văn mục Review Focus của plan (nếu có), và chỉ tới các dòng <code>Ruling:</code> trong ledger. Chỉ định model rõ ràng: bỏ trống thì nó kế thừa model của phiên, có thể không phải model mạnh nhất.</td></tr><tr><td>Không</td><td>Đọc <code>code-reviewer.md</code> và tự review theo package, như một lượt riêng sau dòng ledger của task cuối. Ghi <code>Final review: self-review (no subagent tool)</code> vào ledger và nói rõ trong tin nhắn cuối: tự review của tác giả yếu hơn reviewer mới, và bạn quyết định thế đã đủ để merge hay chưa.</td></tr></tbody></table></div>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Có subagent tool?</th><th>Làm gì</th></tr></thead><tbody><tr><td>Có</td><td>Dispatch reviewer trên model <b>mạnh nhất</b> hiện có, vì review cả nhánh là việc cần phán đoán. Dùng <code>code-reviewer.md</code> của <code>requesting-code-review</code>. Đưa cho nó: đường dẫn package, đường dẫn plan và spec, đường dẫn <code>verify.txt</code>, nguyên văn mục Review Focus của plan (nếu có), và chỉ tới các dòng <code>Ruling:</code> trong ledger. Chỉ định model rõ ràng: bỏ trống thì nó kế thừa model của phiên, có thể không phải model mạnh nhất.</td></tr><tr><td>Không</td><td>Đọc <code>code-reviewer.md</code> và tự review theo package, như một lượt riêng sau dòng ledger của task cuối. Ghi <code>Final review: self-review (no subagent tool)</code> vào ledger và nói rõ trong tin nhắn cuối: tự review của tác giả yếu hơn reviewer mới, và bạn quyết định thế đã đủ để merge hay chưa.</td></tr></tbody></table></div>
 <a class="back" href="#diagram">↑ Về diagram</a>
 </article>
 <article class="card plain" id="c-fix">
 <header><h4>Phân loại, rồi sửa trong MỘT đợt</h4></header>
 <p class="row"><b class="lbl">Làm gì</b>Phân loại trước khi hành động. Nhãn mức độ của reviewer chỉ là gợi ý, cổng là của agent. Mục “Declined to judge” cũng là của agent: mỗi dòng là một ruling, ghi ledger dạng <code>Final: Ruling: …</code>. Chấm lại theo <b>hậu quả</b>: gắn nhãn Minor chỉ vì spec im lặng là đang chấm spec, không phải chấm tác động.</p>
 <div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Loại</th><th>Xử lý</th></tr></thead><tbody><tr><td>Critical, Important</td><td>Vào đợt sửa duy nhất. Mỗi fix: viết test tái hiện, thấy nó fail, làm cho pass, rồi chạy cả suite. Ghi <code>Final: fixed &lt;finding&gt; — &lt;test&gt; RED→GREEN, suite &lt;N&gt;/&lt;N&gt;</code>. Không dispatch review lại: các test phủ đã trả lời “đã xử lý”, lần chạy suite đã trả lời “không làm hỏng gì”.</td></tr><tr><td>Minor</td><td>Ghi ledger <code>Final: minor (deferred): …</code> và đưa vào mục “Deferred minors” của tin nhắn cuối. Không bao giờ vào đợt sửa, không thành ruling.</td></tr><tr><td>Quyết định không sửa</td><td>Là một ruling: <code>Final: Ruling: &lt;finding&gt; — &lt;vì sao giữ code&gt; — &lt;chi phí nếu sai&gt;</code>, và tới tay bạn trong danh sách ruling. Không có đợt sửa thứ hai.</td></tr></tbody></table></div>
+<p class="row">Đợt sửa có commit thì chạy lại <code>verify-levels</code> trước khi kết thúc: record gắn với HEAD, <code>finishing-a-development-branch</code> từ chối record cũ.</p>
 <a class="back" href="#diagram">↑ Về diagram</a>
 </article>
 <article class="card plain" id="c-finish">
@@ -193,7 +202,7 @@
 
 <section>
   <div class="wrap">
-    <footer>Nguồn: <a href="../../skills/executing-plans/SKILL.md"><code>skills/executing-plans/SKILL.md</code></a> (323 dòng).</footer>
+    <footer>Nguồn: <a href="../../skills/executing-plans/SKILL.md"><code>skills/executing-plans/SKILL.md</code></a> (346 dòng).</footer>
   </div>
 </section>
 

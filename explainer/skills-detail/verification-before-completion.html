@@ -13,7 +13,7 @@
 <nav class="topnav">
   <div class="wrap">
     <strong>verification-before-completion</strong>
-    <a href="#diagram">1 · Diagram</a><a href="#law">2 · Luật &amp; Gate</a><a href="#claims">3 · Bằng chứng</a><a href="#flags">4 · Red Flags</a>
+    <a href="#diagram">1 · Diagram</a><a href="#law">2 · Luật &amp; Gate</a><a href="#claims">3 · Bằng chứng</a><a href="#levels">4 · Ba loại test</a><a href="#flags">5 · Red Flags</a>
   </div>
 </nav>
 
@@ -21,7 +21,7 @@
   <div class="wrap">
     <h1>verification-before-completion</h1>
     <p>Bằng chứng trước, tuyên bố sau. Agent không được nói “xong”, “pass”, “đã sửa” khi chưa chạy lệnh kiểm chứng ngay trong tin nhắn đó và đọc output của nó.</p>
-    <div class="chips"><span class="chip">Luật sắt: không tuyên bố khi chưa có bằng chứng mới</span><span class="chip">Áp dụng cả với từ đồng nghĩa và hàm ý</span><span class="chip">Không tin báo cáo “success” của agent khác</span><span class="chip">Trước commit, PR và task kế</span></div>
+    <div class="chips"><span class="chip">Luật sắt: không tuyên bố khi chưa có bằng chứng mới</span><span class="chip">Áp dụng cả với từ đồng nghĩa và hàm ý</span><span class="chip">Không tin báo cáo “success” của agent khác</span><span class="chip">Trước commit, PR và task kế</span><span class="chip">Báo xong tính năng: đủ unit, integration, e2e + evidence</span></div>
   </div>
 </header>
 
@@ -56,7 +56,7 @@
       <aside class="pains">
         <h3>Nó giải quyết painpoint nào?</h3>
         <p>Những lỗi mà từng phần của skill sinh ra để chặn.</p>
-<div class="pain-item"><q>Nói “xong rồi, test pass” mà chưa hề chạy</q><div class="fix"><a class="skill-link" href="#law">Luật sắt</a>: không claim khi chưa có bằng chứng mới</div></div><div class="pain-item"><q>Dùng “should”, “probably”, “seems to”</q><div class="fix"><a class="skill-link" href="#flags">Red Flags</a>: lời lẽ ngụ ý thành công cũng bị cấm</div></div><div class="pain-item"><q>Linter pass nên coi như build pass</q><div class="fix"><a class="skill-link" href="#claims">Mỗi claim cần đúng loại bằng chứng</a></div></div><div class="pain-item"><q>Tin báo cáo “success” của agent con</q><div class="fix"><a class="skill-link" href="#c-patterns">Kiểm VCS diff</a> rồi báo trạng thái thật</div></div><div class="pain-item"><q>Viết test hồi quy nhưng chưa từng thấy nó đỏ</q><div class="fix">Cần đủ chu trình red-green</div></div>
+<div class="pain-item"><q>Nói “xong rồi, test pass” mà chưa hề chạy</q><div class="fix"><a class="skill-link" href="#law">Luật sắt</a>: không claim khi chưa có bằng chứng mới</div></div><div class="pain-item"><q>Dùng “should”, “probably”, “seems to”</q><div class="fix"><a class="skill-link" href="#flags">Red Flags</a>: lời lẽ ngụ ý thành công cũng bị cấm</div></div><div class="pain-item"><q>Linter pass nên coi như build pass</q><div class="fix"><a class="skill-link" href="#claims">Mỗi claim cần đúng loại bằng chứng</a></div></div><div class="pain-item"><q>Tin báo cáo “success” của agent con</q><div class="fix"><a class="skill-link" href="#c-patterns">Kiểm VCS diff</a> rồi báo trạng thái thật</div></div><div class="pain-item"><q>Viết test hồi quy nhưng chưa từng thấy nó đỏ</q><div class="fix">Cần đủ chu trình red-green</div></div><div class="pain-item"><q>Unit và integration xanh nhưng chưa ai thử kịch bản thật</q><div class="fix"><a class="skill-link" href="#levels">verify-levels</a>: e2e phải pass và để lại evidence mới</div></div>
       </aside>
     </div>
   </div>
@@ -81,7 +81,7 @@
 <div class="wrap">
 <h2><span class="secno">3</span>Claim nào cần bằng chứng gì</h2>
 <p class="lead">Mỗi loại tuyên bố đòi một loại bằng chứng riêng. Cột bên phải là những thứ hay bị lấy nhầm làm bằng chứng.</p>
-<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Claim</th><th>Cần</th><th>Không đủ</th></tr></thead><tbody><tr><td>Test pass</td><td>Output của lệnh test: 0 lỗi</td><td>Lần chạy trước, “chắc là pass”</td></tr><tr><td>Linter sạch</td><td>Output linter: 0 lỗi</td><td>Kiểm một phần, suy ra từ chỗ khác</td></tr><tr><td>Build thành công</td><td>Lệnh build: exit 0</td><td>Linter pass, log trông ổn</td></tr><tr><td>Bug đã sửa</td><td>Chạy lại đúng triệu chứng ban đầu: pass</td><td>Đã đổi code, cho là xong</td></tr><tr><td>Test hồi quy hoạt động</td><td>Đã kiểm chu trình red-green</td><td>Test pass một lần</td></tr><tr><td>Agent đã hoàn thành</td><td>VCS diff cho thấy thay đổi</td><td>Agent báo “success”</td></tr><tr><td>Đáp ứng yêu cầu</td><td>Checklist từng dòng</td><td>Test pass</td></tr></tbody></table></div>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Claim</th><th>Cần</th><th>Không đủ</th></tr></thead><tbody><tr><td>Test pass</td><td>Output của lệnh test: 0 lỗi</td><td>Lần chạy trước, “chắc là pass”</td></tr><tr><td>Linter sạch</td><td>Output linter: 0 lỗi</td><td>Kiểm một phần, suy ra từ chỗ khác</td></tr><tr><td>Build thành công</td><td>Lệnh build: exit 0</td><td>Linter pass, log trông ổn</td></tr><tr><td>Bug đã sửa</td><td>Chạy lại đúng triệu chứng ban đầu: pass</td><td>Đã đổi code, cho là xong</td></tr><tr><td>Test hồi quy hoạt động</td><td>Đã kiểm chu trình red-green</td><td>Test pass một lần</td></tr><tr><td>Agent đã hoàn thành</td><td>VCS diff cho thấy thay đổi</td><td>Agent báo “success”</td></tr><tr><td>Đáp ứng yêu cầu</td><td>Checklist từng dòng</td><td>Test pass</td></tr><tr><td>Tính năng chạy end to end</td><td>Output lệnh e2e: mọi scenario pass, file evidence tồn tại và đã được mở xem</td><td>Unit và integration xanh, “chạy được trên trình duyệt” theo trí nhớ</td></tr></tbody></table></div>
 <div class="cards one">
 <article class="card plain" id="c-patterns">
 <header><h4>Mẫu đúng và mẫu sai</h4></header>
@@ -91,9 +91,32 @@
 </div>
 </div>
 </section>
+<section id="levels">
+<div class="wrap">
+<h2><span class="secno">4</span>Ba loại test: cổng cấp plan</h2>
+<p class="lead">Unit và integration chứng minh từng phần. E2E chứng minh kịch bản bạn sẽ thấy. Trước khi báo một tính năng, plan hay nhánh là xong, agent chạy cả ba, không phải sau từng step.</p>
+<div class="cards one">
+<article class="card plain" id="c-levels">
+<header><h4>verify-levels: 4 bước</h4><span class="tag new">Nâng cấp</span></header>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>#</th><th>Bước</th><th>Làm gì</th></tr></thead><tbody><tr><td>1</td><td>RUN</td><td>Chạy <code>verify-levels PLAN_FILE</code> khi mọi thứ đã commit. Script chạy lệnh Unit, Integration, E2E của plan theo thứ tự, dừng ở level fail đầu tiên. E2E chỉ pass khi lệnh exit 0 <b>và</b> đã ghi file evidence mới, không rỗng. Thành công thì ghi <code>verify.txt</code> cạnh evidence, ghi rõ HEAD đã được kiểm. Không có plan thì tự chạy ba level và nói rõ là không có plan.</td></tr><tr><td>2</td><td>READ</td><td>Đọc output. Exit 0 nghĩa là mỗi level đều PASS hoặc SKIPPED. Level SKIPPED mang lý do một dòng của plan: kiểm lại lý do đó còn đúng.</td></tr><tr><td>3</td><td>LOOK</td><td>Mở ảnh chụp (hoặc đọc transcript) trong thư mục evidence. Ảnh chưa mở xem thì chưa phải bằng chứng. Video không đọc được, nên thứ phải kiểm là ảnh chụp ở mỗi assertion.</td></tr><tr><td>4</td><td>REPORT</td><td>Báo các dòng của <code>verify.txt</code> và đường dẫn tuyệt đối của evidence.</td></tr></tbody></table></div>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-evidence">
+<header><h4>Evidence và các cách script từ chối</h4></header>
+<ul><li><b>UI</b>: ảnh chụp ở mỗi assertion cộng một video (Playwright: <code>video: 'on'</code>, <code>screenshot: 'on'</code>). <b>CLI hoặc API</b>: toàn bộ transcript hoặc log request/response, lưu thành file.</li><li>E2E exit 0 mà không ghi file nào mới: <b>không có evidence thì không pass</b>. File cũ từ lần chạy trước không được tính.</li><li>Plan sai định dạng (thiếu dòng, <code>none</code> không có lý do) bị từ chối <b>trước khi chạy bất kỳ lệnh nào</b>.</li><li>Không chạy được e2e (không có trình duyệt, màn hình, hệ thống đang chạy): báo <code>e2e: NOT RUN — &lt;lý do&gt;</code>. Không bao giờ báo xong chỉ dựa trên unit và integration, và không dựng lại evidence từ trí nhớ.</li><li>Chạy xong, script in danh sách file evidence kèm lời nhắc mở chúng ngay trong output: trong thử nghiệm, agent không nạp skill này nên không có chỗ nào khác nhắc việc đó.</li><li>Evidence ngoài git trừ khi plan nói commit. <code>verify.txt</code> thì script tự git-ignore (nó ghi HEAD đã kiểm, commit nó là làm nó cũ ngay). Commit thêm sau khi chạy thì record thành cũ: chạy lại.</li></ul>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-check">
+<header><h4>--check: cổng rẻ ở cuối</h4></header>
+<p class="row"><b class="lbl">Làm gì</b><code>verify-levels --check PLAN_FILE</code> không chạy gì. Nó chỉ thành công khi <code>verify.txt</code> ghi cả ba level là PASS hoặc SKIPPED cho đúng HEAD hiện tại và không file tracked nào đổi sau đó. <code>finishing-a-development-branch</code> dùng nó: record thiếu, cũ, hoặc cây làm việc đã đổi thì dừng, không hiện menu merge.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+</div>
+</div>
+</section>
 <section id="flags">
 <div class="wrap">
-<h2><span class="secno">4</span>Khi nào áp dụng, Red Flags, bào chữa</h2>
+<h2><span class="secno">5</span>Khi nào áp dụng, Red Flags, bào chữa</h2>
 <p class="lead">Quy tắc áp dụng cho câu chữ chính xác, diễn đạt khác và từ đồng nghĩa, hàm ý thành công, và bất kỳ lời nào gợi ý rằng việc đã xong hay đã đúng.</p>
 <div class="cards">
 <article class="card plain" id="c-when">
@@ -103,18 +126,18 @@
 </article>
 <article class="card plain" id="c-flags">
 <header><h4>Red Flags: dừng lại</h4></header>
-<ul><li>Dùng “should”, “probably”, “seems to”.</li><li>Bày tỏ hài lòng trước khi kiểm chứng (“Great!”, “Perfect!”, “Done!”…).</li><li>Sắp commit/push/PR mà chưa kiểm chứng.</li><li>Tin báo cáo thành công của agent.</li><li>Dựa vào kiểm chứng một phần.</li><li>Nghĩ “chỉ lần này thôi”.</li><li>Mệt và muốn xong việc.</li><li><b>Bất kỳ cách nói nào ngụ ý thành công mà chưa chạy kiểm chứng.</b></li></ul>
+<ul><li>Dùng “should”, “probably”, “seems to”.</li><li>Bày tỏ hài lòng trước khi kiểm chứng (“Great!”, “Perfect!”, “Done!”…).</li><li>Sắp commit/push/PR mà chưa kiểm chứng.</li><li>Tin báo cáo thành công của agent.</li><li>Dựa vào kiểm chứng một phần.</li><li>Báo xong tính năng khi bỏ qua e2e, hoặc evidence thiếu hay chưa từng được mở xem.</li><li>Nghĩ “chỉ lần này thôi”.</li><li>Mệt và muốn xong việc.</li><li><b>Bất kỳ cách nói nào ngụ ý thành công mà chưa chạy kiểm chứng.</b></li></ul>
 <a class="back" href="#diagram">↑ Về diagram</a>
 </article>
 </div>
 <div class="phase"><h3>Những lời bào chữa hay gặp</h3><span>Bảng Rationalization Prevention của skill</span></div>
-<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Agent tự nhủ</th><th>Thực tế</th></tr></thead><tbody><tr><td>“Giờ chắc chạy được rồi”</td><td>CHẠY kiểm chứng.</td></tr><tr><td>“Tôi tự tin”</td><td>Tự tin không phải bằng chứng.</td></tr><tr><td>“Chỉ lần này thôi”</td><td>Không có ngoại lệ.</td></tr><tr><td>“Linter pass rồi”</td><td>Linter không phải compiler.</td></tr><tr><td>“Agent báo thành công”</td><td>Kiểm chứng độc lập.</td></tr><tr><td>“Tôi mệt”</td><td>Mệt mỏi không phải lý do.</td></tr><tr><td>“Kiểm một phần là đủ”</td><td>Kiểm một phần chẳng chứng minh gì.</td></tr><tr><td>“Đổi cách nói thì luật không áp dụng”</td><td>Tinh thần quan trọng hơn câu chữ.</td></tr></tbody></table></div>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Agent tự nhủ</th><th>Thực tế</th></tr></thead><tbody><tr><td>“Giờ chắc chạy được rồi”</td><td>CHẠY kiểm chứng.</td></tr><tr><td>“Tôi tự tin”</td><td>Tự tin không phải bằng chứng.</td></tr><tr><td>“Chỉ lần này thôi”</td><td>Không có ngoại lệ.</td></tr><tr><td>“Linter pass rồi”</td><td>Linter không phải compiler.</td></tr><tr><td>“Agent báo thành công”</td><td>Kiểm chứng độc lập.</td></tr><tr><td>“Tôi mệt”</td><td>Mệt mỏi không phải lý do.</td></tr><tr><td>“Kiểm một phần là đủ”</td><td>Kiểm một phần chẳng chứng minh gì.</td></tr><tr><td>“Unit và integration xanh, e2e là thừa”</td><td>Chúng kiểm các phần. E2E kiểm kịch bản mà một người thật sẽ thử.</td></tr><tr><td>“Tôi thấy nó chạy rồi, khỏi chụp evidence”</td><td>Trí nhớ của bạn không phải thứ người cùng làm việc với bạn mở ra xem được. Hãy ghi lại.</td></tr><tr><td>“Đổi cách nói thì luật không áp dụng”</td><td>Tinh thần quan trọng hơn câu chữ.</td></tr></tbody></table></div>
 </div>
 </section>
 
 <section>
   <div class="wrap">
-    <footer>Nguồn: <a href="../../skills/verification-before-completion/SKILL.md"><code>skills/verification-before-completion/SKILL.md</code></a> (120 dòng).</footer>
+    <footer>Nguồn: <a href="../../skills/verification-before-completion/SKILL.md"><code>skills/verification-before-completion/SKILL.md</code></a> (163 dòng).</footer>
   </div>
 </section>
 

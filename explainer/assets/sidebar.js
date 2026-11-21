@@ -29,12 +29,12 @@
         { href: 'skills-detail/using-superpowers.html', label: 'using-superpowers', n: '0', mono: true },
         { href: 'skills-detail/brainstorming.html', label: 'brainstorming', n: '1', mono: true, tag: 'Nâng cấp' },
         { href: 'skills-detail/using-git-worktrees.html', label: 'using-git-worktrees', n: '2', mono: true },
-        { href: 'skills-detail/writing-plans.html', label: 'writing-plans', n: '3', mono: true },
+        { href: 'skills-detail/writing-plans.html', label: 'writing-plans', n: '3', mono: true, tag: 'Nâng cấp' },
         { href: 'skills-detail/subagent-driven-development.html', label: 'subagent-driven-development', n: '4', mono: true },
         { href: 'skills-detail/executing-plans.html', label: 'executing-plans', n: '4', mono: true },
-        { href: 'skills-detail/test-driven-development.html', label: 'test-driven-development', n: '5', mono: true },
+        { href: 'skills-detail/test-driven-development.html', label: 'test-driven-development', n: '5', mono: true, tag: 'Nâng cấp' },
         { href: 'skills-detail/requesting-code-review.html', label: 'requesting-code-review', n: '6', mono: true },
-        { href: 'skills-detail/verification-before-completion.html', label: 'verification-before-completion', n: '7', mono: true },
+        { href: 'skills-detail/verification-before-completion.html', label: 'verification-before-completion', n: '7', mono: true, tag: 'Nâng cấp' },
         { href: 'skills-detail/finishing-a-development-branch.html', label: 'finishing-a-development-branch', n: '8', mono: true }
       ]
     },

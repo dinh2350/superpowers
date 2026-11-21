@@ -21,7 +21,7 @@
   <div class="wrap">
     <h1>subagent-driven-development</h1>
     <p>Thực thi plan bằng cách giao <b>một subagent mới cho mỗi task</b>, một lần review task (đúng spec và chất lượng code) sau mỗi task, và một lần review rộng cả nhánh ở cuối. Agent điều phối giữ context sạch để làm việc điều phối.</p>
-    <div class="chips"><span class="chip">Mỗi task một context sạch</span><span class="chip">Review hai lớp sau mỗi task</span><span class="chip">Ledger sống sót qua compaction</span><span class="chip">Tối đa 5 vòng sửa mỗi task</span><span class="chip">Không dừng lại hỏi “tiếp nhé?”</span></div>
+    <div class="chips"><span class="chip">Mỗi task một context sạch</span><span class="chip">Review hai lớp sau mỗi task</span><span class="chip">Ledger sống sót qua compaction</span><span class="chip">Tối đa 5 vòng sửa mỗi task</span><span class="chip">verify-levels trước review cuối</span><span class="chip">Không dừng lại hỏi “tiếp nhé?”</span></div>
   </div>
 </header>
 
@@ -34,7 +34,7 @@
     <div class="diagram-grid">
       <div class="diagram-box">
         <p class="swipe-hint">← Vuốt ngang để xem hết diagram →</p>
-<svg class="flow" viewBox="0 0 560 776" role="group" aria-label="Sơ đồ subagent-driven-development"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 z"/></marker></defs>
+<svg class="flow" viewBox="0 0 560 874" role="group" aria-label="Sơ đồ subagent-driven-development"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 z"/></marker></defs>
 <path class="arrow" d="M300 68 V112"/>
 <path class="arrow" d="M300 166 V210"/>
 <path class="arrow" d="M300 264 V308"/>
@@ -44,6 +44,7 @@
 <path class="arrow join" d="M425 460 V482 H300"/>
 <path class="arrow" d="M300 558 V602"/>
 <path class="arrow" d="M300 656 V700"/>
+<path class="arrow" d="M300 754 V798"/>
 <path class="arrow join" d="M150 531 H24"/>
 <path class="arrow" d="M24 531 V139 H150"/>
 <text class="note" x="168" y="378" text-anchor="end">còn lỗi</text>
@@ -57,8 +58,9 @@
 <a class="node" href="#c-fix" aria-label="Fix loop - Tối đa 5 vòng mỗi task"><rect x="60" y="406" width="230" height="54" rx="10"/><text class="name" x="74" y="429">Fix loop</text><text class="sub" x="74" y="447">Tối đa 5 vòng mỗi task</text></a>
 <a class="node" href="#c-done" aria-label="Task xong - Ghi ledger, đánh dấu todo"><rect x="310" y="406" width="230" height="54" rx="10"/><text class="name" x="324" y="429">Task xong</text><text class="sub" x="324" y="447">Ghi ledger, đánh dấu todo</text></a>
 <a class="node opt" href="#stops" aria-label="Còn task nào nữa? - Không dừng lại hỏi bạn giữa các task"><rect x="150" y="504" width="300" height="54" rx="10"/><text class="name" x="164" y="527">Còn task nào nữa?</text><text class="sub" x="164" y="545">Không dừng lại hỏi bạn giữa các task</text></a>
-<a class="node" href="#c-final" aria-label="Review cả nhánh - Model mạnh nhất · MỘT đợt sửa"><rect x="150" y="602" width="300" height="54" rx="10"/><text class="name" x="164" y="625">Review cả nhánh</text><text class="sub" x="164" y="643">Model mạnh nhất · MỘT đợt sửa</text></a>
-<g class="node new" aria-label="finishing-a-development-branch - Merge, mở PR hoặc giữ nhánh"><rect x="150" y="700" width="300" height="54" rx="10"/><text class="name" x="164" y="723">finishing-a-development-branch</text><text class="sub" x="164" y="741">Merge, mở PR hoặc giữ nhánh</text></g></svg>
+<a class="node" href="#c-final" aria-label="verify-levels - Unit + integration + e2e, evidence mới"><rect x="150" y="602" width="300" height="54" rx="10"/><text class="name" x="164" y="625">verify-levels</text><text class="sub" x="164" y="643">Unit + integration + e2e, evidence mới</text></a>
+<a class="node" href="#c-final" aria-label="Review cả nhánh - Model mạnh nhất · MỘT đợt sửa"><rect x="150" y="700" width="300" height="54" rx="10"/><text class="name" x="164" y="723">Review cả nhánh</text><text class="sub" x="164" y="741">Model mạnh nhất · MỘT đợt sửa</text></a>
+<g class="node new" aria-label="finishing-a-development-branch - Merge, mở PR hoặc giữ nhánh"><rect x="150" y="798" width="300" height="54" rx="10"/><text class="name" x="164" y="821">finishing-a-development-branch</text><text class="sub" x="164" y="839">Merge, mở PR hoặc giữ nhánh</text></g></svg>
         <div class="legend"><span><i></i>Bước của skill</span><span><i class="dash"></i>Nét đứt: điểm quyết định</span><span><i class="new"></i>Viền xanh: skill chạy tiếp theo</span></div>
       </div>
 
@@ -170,8 +172,8 @@ Task &lt;N&gt;: complete (commits &lt;base7&gt;..&lt;head7&gt;, &lt;K&gt; parked
 </article>
 <article class="card plain" id="c-final">
 <header><h4>Review cuối và kết thúc</h4></header>
-<p class="row"><b class="lbl">Làm gì</b>Khi mọi task xong, đọc <code>references/final-review.md</code>. Review cả nhánh trên model mạnh nhất, bằng <code>code-reviewer.md</code> của <code>requesting-code-review</code>, chỉ nó tới các dòng deferred-minor và parked trong ledger.</p>
-<ul><li>Có phát hiện: giao đúng <b>MỘT</b> subagent sửa với toàn bộ danh sách (không phải mỗi phát hiện một subagent: một đợt sửa cuối thật đã tốn hơn mọi task cộng lại), rồi đúng một lần review lại có phạm vi.</li><li>Phần dư: phân xử như cầu dao ở vòng sửa. Không có đợt sửa thứ hai; phát hiện dư có tính nền tảng sẽ tới bạn khi <code>finishing-a-development-branch</code> đưa menu.</li><li>Kết thúc: gom mọi dòng <code>Ruling:</code> vào tin nhắn cuối dưới mục “Rulings I made”, rồi xóa workspace của plan, rồi gọi <code>finishing-a-development-branch</code>.</li></ul>
+<p class="row"><b class="lbl">Làm gì</b>Khi mọi task xong, đọc <code>references/final-review.md</code>. Trước tiên chạy <code>verify-levels PLAN_FILE</code> (đủ unit, integration, e2e và evidence mới; fail thì giao fixer sửa nguyên nhân rồi chạy lại). Sau đó review cả nhánh trên model mạnh nhất, bằng <code>code-reviewer.md</code> của <code>requesting-code-review</code>, chỉ nó tới các dòng deferred-minor và parked trong ledger.</p>
+<ul><li>Có phát hiện: giao đúng <b>MỘT</b> subagent sửa với toàn bộ danh sách (không phải mỗi phát hiện một subagent: một đợt sửa cuối thật đã tốn hơn mọi task cộng lại), rồi đúng một lần review lại có phạm vi.</li><li>Phần dư: phân xử như cầu dao ở vòng sửa. Không có đợt sửa thứ hai; phát hiện dư có tính nền tảng sẽ tới bạn khi <code>finishing-a-development-branch</code> đưa menu.</li><li>Đợt sửa có commit thì chạy lại <code>verify-levels</code>: record gắn với HEAD, <code>finishing-a-development-branch</code> từ chối record cũ.</li><li>Kết thúc: gom mọi dòng <code>Ruling:</code> vào tin nhắn cuối dưới mục “Rulings I made”, rồi xóa workspace của plan, rồi gọi <code>finishing-a-development-branch</code>.</li></ul>
 <a class="back" href="#diagram">↑ Về diagram</a>
 </article>
 </div>
