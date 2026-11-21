@@ -205,6 +205,31 @@ Keep tests green. Don't add behavior.
 
 Next failing test for next feature.
 
+## Test Levels
+
+The cycle is the same at every level. What changes is how much real code
+stands behind the test, and when it runs.
+
+| Level | Proves | In the per-task cycle? |
+|-------|--------|------------------------|
+| **Unit** | One behavior of one unit; only the slow or external edge is faked | Yes — every new behavior |
+| **Integration** | Real components working across a boundary: module to module, database, network, filesystem | Yes — when the plan's task names one, or its deliverable crosses a boundary |
+| **End-to-end** | A person's scenario through the running system | No — the plan's last task writes it, and superpowers:verification-before-completion runs it |
+
+**Unit:** everything above. One for every new behavior.
+
+**Integration:** RED, verify RED, GREEN, verify GREEN, exactly like a unit
+test — the Iron Law covers it. Use real components on both sides of the
+seam; mocking the other side turns it back into a unit test (see
+[writing-good-tests.md](writing-good-tests.md)). If the task names an
+integration test, write it first and watch it fail. If the task crosses a
+boundary and the plan names none, the plan has a gap: write the test anyway
+and say so in your report.
+
+**End-to-end:** not part of this cycle. It needs the whole system and is too
+slow to run per step. Do not claim a feature complete without it; that gate
+is superpowers:verification-before-completion's.
+
 ## Good Tests
 
 | Quality | Good | Bad |
@@ -234,6 +259,7 @@ When writing or changing any test, read [writing-good-tests.md](writing-good-tes
 | "TDD will slow me down" | TDD IS the pragmatic path: catches bugs before commit, prevents regressions, lets you refactor without fear. "Pragmatic" shortcuts mean debugging in production — slower, not faster. |
 | "Manual test faster" | Manual doesn't prove edge cases. You'll re-test every change. |
 | "Existing code has no tests" | You're improving it. Add tests for existing code. |
+| "Unit tests cover it, integration is overkill" | Units pass while the seam between them breaks: wrong field name, wrong order, wrong format. A mocked seam tests your guess about the other side. |
 
 ## Red Flags - STOP and Start Over
 
@@ -295,6 +321,7 @@ Extract validation for multiple fields if needed.
 Before marking work complete:
 
 - [ ] Every new function/method has a test
+- [ ] Every boundary the change crosses has an integration test, real components on both sides
 - [ ] Watched each test fail before implementing
 - [ ] Each test failed for expected reason (feature missing, not typo)
 - [ ] Wrote minimal code to pass each test

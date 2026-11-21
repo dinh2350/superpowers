@@ -85,6 +85,12 @@ Subagent (general-purpose):
     - Edge cases covered?
     - Integration tests where they matter?
     - All tests passing?
+    - Plan has a Test Strategy? Every row names a test at unit,
+      integration, and e2e, or the level reads `none — <reason>` and the
+      reason holds. Each named test exists in the diff and tests real
+      behavior. `verify.txt` records all three levels for this HEAD, and
+      the e2e evidence it names exists. A level quietly missing, or a
+      `none` the spec contradicts, is Important.
 
     **Production readiness:**
     - Migration strategy if schema changed?

@@ -82,6 +82,7 @@ digraph process {
 
     "Setup: worktree, workspace + ledger, read plan + spec, pre-flight scan" [shape=box];
     "More tasks remain?" [shape=diamond];
+    "Plan-level verification: verify-levels PLAN_FILE (unit + integration + e2e)" [shape=box];
     "Final whole-branch review (fresh reviewer if you have one)" [shape=box];
     "Re-grade, then: Critical/Important → ONE fix pass, each fix RED→GREEN + green suite; Minor → ledger" [shape=box];
     "Final review clean: delete this plan's workspace" [shape=box];
@@ -98,7 +99,8 @@ digraph process {
     "Completion contract met?" -> "task-done: run tests, ledger the result; mark todo complete" [label="yes"];
     "task-done: run tests, ledger the result; mark todo complete" -> "More tasks remain?";
     "More tasks remain?" -> "task-start: brief + BASE; read the brief" [label="yes"];
-    "More tasks remain?" -> "Final whole-branch review (fresh reviewer if you have one)" [label="no"];
+    "More tasks remain?" -> "Plan-level verification: verify-levels PLAN_FILE (unit + integration + e2e)" [label="no"];
+    "Plan-level verification: verify-levels PLAN_FILE (unit + integration + e2e)" -> "Final whole-branch review (fresh reviewer if you have one)";
     "Final whole-branch review (fresh reviewer if you have one)" -> "Re-grade, then: Critical/Important → ONE fix pass, each fix RED→GREEN + green suite; Minor → ledger";
     "Re-grade, then: Critical/Important → ONE fix pass, each fix RED→GREEN + green suite; Minor → ledger" -> "Final review clean: delete this plan's workspace";
     "Final review clean: delete this plan's workspace" -> "Use superpowers:finishing-a-development-branch";
@@ -233,6 +235,22 @@ if they pass — appends the completion line to the ledger:
 A failing run records nothing; the task is not complete. When it records,
 mark the todo complete and take the next task.
 
+## Plan-Level Verification
+
+After the last task's ledger line and before the final review, run
+`../verification-before-completion/scripts/verify-levels PLAN_FILE` by its
+absolute path, from the working tree you're executing in, with everything
+committed. It runs the plan's unit, integration, and e2e commands, requires
+fresh e2e evidence, and writes
+`docs/superpowers/evidence/<plan-basename>/verify.txt`.
+superpowers:verification-before-completion says how to read it.
+
+A non-zero exit means the plan is not complete: find the cause with
+superpowers:systematic-debugging, fix it, commit, run it again. Do not weaken
+the plan's Test Strategy lines to make it pass — editing a run command or
+turning a level into `none — <reason>` is a ruling, ledgered like any other
+deviation.
+
 ## Final Review
 
 Run `../subagent-driven-development/scripts/review-package PLAN_FILE MERGE_BASE HEAD`
@@ -243,7 +261,8 @@ by its absolute path, from the working tree you're executing in (MERGE_BASE = th
 available model — the whole-branch review is a judgment task — using
 superpowers:requesting-code-review's
 [code-reviewer.md](../requesting-code-review/code-reviewer.md), with the
-package path, the plan and spec paths, the plan's Review Focus section
+package path, the plan and spec paths, the path to `verify.txt` (the
+plan-level verification record), the plan's Review Focus section
 verbatim if it has one (the input classes and failure modes the plan's
 tests do not exercise — the reviewer checks each deliberately), and a
 pointer to the ledger's `Ruling:` lines so it can weigh the calls you
@@ -289,6 +308,10 @@ re-review: it would re-read a diff whose covering tests already answer
 A finding you decide not to fix is a ruling — `Final: Ruling: <finding> —
 <why the code stands> — <cost if wrong>` — and reaches your human partner
 in the rulings list. There is no second fix pass.
+
+If the fix pass committed anything, run `verify-levels PLAN_FILE` again
+before you finish: the record names the HEAD it verified, and
+superpowers:finishing-a-development-branch rejects one that is stale.
 
 ## Finish
 

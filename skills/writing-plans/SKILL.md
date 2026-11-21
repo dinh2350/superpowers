@@ -74,6 +74,26 @@ naming and copy rules, platform requirements — one line each, with exact
 values copied verbatim from the spec. Every task's requirements implicitly
 include this section.]
 
+## Test Strategy
+
+[Every plan covers all three test levels. One row per scenario from the
+spec's "how it will be verified", in your human partner's terms, naming the
+test at each level and the task that owns it. The four lines under the table
+are read by `verify-levels` (superpowers:verification-before-completion), so
+keep each on one line in exactly this form. A level is dropped only by
+writing `none — <reason>` in place of its command; its table cell is `—`.]
+
+| Scenario | Unit | Integration | E2E |
+|----------|------|-------------|-----|
+| [what they will see working] | `test_name` (Task N) | `test_name` (Task N) | `scenario name` (Task [last]) |
+
+**Unit run:** `[exact command]`
+**Integration run:** `[exact command]`
+**E2E run:** `[exact command; it must write its capture into the evidence path]`
+**E2E evidence:** `[path]` — screenshots at every assertion plus a video for
+a UI; a saved terminal transcript or request/response log for a CLI or API.
+Default: `docs/superpowers/evidence/YYYY-MM-DD-<feature-name>/`
+
 ## Review Focus
 
 [The five input classes or failure modes the spec implies but no task's
@@ -137,6 +157,25 @@ git commit -m "feat: add specific feature"
 ```
 ````
 
+## Test Levels in the Plan
+
+**Unit:** every task writes a unit test for each new behavior. That is
+Steps 1-4 above.
+
+**Integration:** when a task's deliverable crosses a boundary — module to
+module, database, network, filesystem — that task also carries an integration
+test: the same write, run-to-fail, implement, run-to-pass steps, with real
+components on both sides of the boundary and its own `Run:` and `Expected:`.
+The Test Strategy row names it. superpowers:test-driven-development runs it
+in the same cycle as the unit tests.
+
+**E2E:** the last task is always `### Task N: End-to-end scenarios`. It adds
+no production code. Its steps: write one e2e test per Test Strategy scenario
+from the spec's wording, never from the implementation; run it (Expected:
+PASS); prove it can fail by breaking the behavior it checks, running it
+(Expected: FAIL), and restoring; commit. Running it with evidence captured is
+the job of superpowers:verification-before-completion, not of this task.
+
 ## What a Step Contains
 
 A step is done when the implementer can write exactly one reasonable thing
@@ -173,6 +212,8 @@ After writing the complete plan, look at the spec with fresh eyes and check the 
 **4. Review Focus:** For each input class or failure mode the spec implies, is there a task whose tests exercise it? The five uncovered ones most likely to bite a person go in the Review Focus section, and each line there gets its test added to the owning task. An empty section means you checked and found none, not that you skipped the check.
 
 **5. Proportion:** Compare the plan's length to the spec's. A plan several times longer than the spec it implements is a transcript of the program, not a plan. If code blocks are most of the document, replace bodies with signatures, test names and assertions, and check that each step is still unambiguous.
+
+**6. Test levels:** Does every Test Strategy row name a test at unit, integration, and e2e, or a line saying why a level does not apply? Does each integration test sit in the task that crosses the boundary it tests? Is the last task the e2e task? Does each of the header's Unit run, Integration run, and E2E run lines hold a command or `none — <reason>`, and does the E2E evidence line hold a path? Does the E2E run command, run exactly as written, write its capture into that path — with any environment variable it needs set on the command line? A command that writes evidence only when a variable is set, and does not set it, exits 0 with no evidence and fails at verification.
 
 If you find issues, fix them inline. No need to re-review — just fix and move on. If you find a spec requirement with no task, add the task.
 

@@ -3,12 +3,29 @@
 Part of superpowers:subagent-driven-development. Every task in the plan is
 complete.
 
+### Plan-level verification
+
+Before the final review, run
+`bash ../../verification-before-completion/scripts/verify-levels PLAN_FILE`
+by its absolute path, from the working tree you're executing in, with
+everything committed. It runs the plan's unit, integration, and e2e
+commands, requires fresh e2e evidence, and writes
+`docs/superpowers/evidence/<plan-basename>/verify.txt`.
+superpowers:verification-before-completion says how to read it. A non-zero
+exit means the plan is not complete: dispatch a fixer for the cause, then
+run it again. Do not weaken the plan's Test Strategy lines to make it pass;
+editing a run command or turning a level into `none — <reason>` is a ruling,
+ledgered like any other.
+
+### Final review
+
 The final whole-branch review gets a package too: run
 `bash scripts/review-package PLAN_FILE MERGE_BASE HEAD` by its absolute path,
 from the working tree you're executing in (MERGE_BASE = the commit the
 branch started from, e.g. `git merge-base main HEAD`) and include the
-printed path in the final review dispatch, so the final reviewer reads
-one file instead of re-deriving the branch diff with git commands. Dispatch
+printed path in the final review dispatch, together with the path to
+`verify.txt`, so the final reviewer reads one file instead of re-deriving
+the branch diff with git commands, and can check the verification record. Dispatch
 on the most capable available model (see SKILL.md's Model Selection), using
 superpowers:requesting-code-review's
 [code-reviewer.md](../../requesting-code-review/code-reviewer.md). Point it at
@@ -29,6 +46,10 @@ ones and ledger what you decided. Only the four things that stop a running
 plan (top of SKILL.md) stop you here. There is no second fix wave —
 residual load-bearing findings surface to your human partner when
 finishing-a-development-branch presents the options.
+
+If the fix wave committed anything, run `verify-levels PLAN_FILE` again
+before you finish: the record names the HEAD it verified, and
+superpowers:finishing-a-development-branch rejects one that is stale.
 
 ### Finish
 

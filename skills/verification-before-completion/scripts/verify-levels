@@ -1,0 +1,184 @@
+#!/usr/bin/env bash
+# Plan-level verification gate: run the plan's unit, integration, and e2e
+# commands, require fresh e2e evidence, and record the result for HEAD.
+#
+# The plan's header names the commands, one line each (writing-plans,
+# "Test Strategy"):
+#   **Unit run:** `<command>`
+#   **Integration run:** `<command>`
+#   **E2E run:** `<command>`
+#   **E2E evidence:** `<path to a file or directory the e2e run writes>`
+# A level that does not apply reads `none — <reason>` in place of its command.
+#
+# Run mode runs the levels in order and stops at the first failure. On
+# success it writes docs/superpowers/evidence/<plan-basename>/verify.txt in
+# the repository, naming the HEAD it verified. That path is durable on purpose:
+# the executors delete their workspace before finishing, and this record has
+# to outlive it. The e2e level passes only if the command exits 0 AND the
+# evidence path holds a non-empty file written after the command started.
+#
+# --check runs nothing. It succeeds only if verify.txt records every level as
+# PASS or SKIPPED for the current HEAD and no tracked file has changed since.
+# It is the cheap gate finishing-a-development-branch uses.
+#
+# Usage: verify-levels PLAN_FILE
+#        verify-levels --check PLAN_FILE
+# Run from inside the git working tree you are executing in.
+# Exit: 0 all levels recorded; the failing command's status, or 1, otherwise;
+#       2 for a usage or plan-format problem.
+set -euo pipefail
+
+here=$(cd "$(dirname "$0")" && pwd)
+sdd="$here/../../subagent-driven-development/scripts"
+
+check=false
+if [ "${1:-}" = "--check" ]; then
+  check=true
+  shift
+fi
+if [ $# -ne 1 ]; then
+  echo "usage: verify-levels [--check] PLAN_FILE" >&2
+  exit 2
+fi
+plan=$1
+[ -f "$plan" ] || { echo "verify-levels: no such plan file: $plan" >&2; exit 2; }
+
+repo=$("${BASH:-bash}" "$sdd/sdd-repo" --with-commit)
+head=$(git -C "$repo" rev-parse --short=7 HEAD)
+slug=$(basename "$plan" .md)
+evdir="$repo/docs/superpowers/evidence/$slug"
+summary="$evdir/verify.txt"
+
+if [ "$check" = true ]; then
+  if [ ! -f "$summary" ]; then
+    echo "verify-levels: no record at $summary. Run: verify-levels $plan" >&2
+    exit 1
+  fi
+  if ! grep -qx "head: $head" "$summary"; then
+    echo "verify-levels: $summary verified a different commit than HEAD ($head). Run: verify-levels $plan" >&2
+    exit 1
+  fi
+  if [ "$(grep -cE '^(unit|integration|e2e): (PASS|SKIPPED)' "$summary")" -ne 3 ]; then
+    echo "verify-levels: $summary does not record all three levels as PASS or SKIPPED. Run: verify-levels $plan" >&2
+    exit 1
+  fi
+  if [ -n "$(git -C "$repo" status --porcelain --untracked-files=no)" ]; then
+    echo "verify-levels: tracked files changed since the record was written. Commit, then run: verify-levels $plan" >&2
+    exit 1
+  fi
+  cat "$summary"
+  exit 0
+fi
+
+# The first "**<label>:** value" line of the plan, value only.
+field() {
+  sed -n -E "s/^\*\*$1:\*\*[[:space:]]*//p" "$plan" | head -n 1
+}
+
+# The text between the first pair of backticks, or nothing.
+quoted() {
+  case "$1" in
+    '`'*) local s=${1#\`}; printf '%s' "${s%%\`*}" ;;
+  esac
+}
+
+# Read every line of the plan before running anything: a malformed plan must
+# fail in a second, not after the unit suite.
+kinds=() ; payloads=()
+for spec in "unit:Unit run" "integration:Integration run" "e2e:E2E run"; do
+  label=${spec#*:}
+  value=$(field "$label")
+  if [ -z "$value" ]; then
+    echo "verify-levels: the plan has no '**$label:**' line; writing-plans' Test Strategy requires it" >&2
+    exit 2
+  fi
+  cmd=$(quoted "$value")
+  if [ -n "$cmd" ]; then
+    kinds+=(run) ; payloads+=("$cmd")
+    continue
+  fi
+  reason=""
+  case "$value" in
+    none*) reason=$(printf '%s' "${value#none}" | sed -E 's/^[[:space:]]+//; s/^(—|–|-|:)[[:space:]]*//') ;;
+  esac
+  if ! printf '%s' "$reason" | grep -q '[[:alnum:]]'; then
+    echo "verify-levels: '**$label:** $value' is neither a \`command\` nor 'none — <reason>'" >&2
+    exit 2
+  fi
+  kinds+=(skip) ; payloads+=("$reason")
+done
+
+evpath=""
+if [ "${kinds[2]}" = run ]; then
+  evpath=$(quoted "$(field "E2E evidence")")
+  if [ -z "$evpath" ]; then
+    echo "verify-levels: the plan has no '**E2E evidence:** \`path\`' line; an e2e run without evidence does not count" >&2
+    exit 2
+  fi
+  case "$evpath" in /*) ;; *) evpath="$repo/$evpath" ;; esac
+fi
+
+logs=$("${BASH:-bash}" "$sdd/sdd-workspace" "$plan")
+rm -f "$summary"
+mkdir -p "$evdir"
+# verify.txt names the HEAD it verified, so committing it makes it stale on the
+# spot (and --check then rejects the changed tracked file). Keep it out of git
+# structurally. Create-only: a repo's own rules here are never overwritten.
+[ -e "$repo/docs/superpowers/evidence/.gitignore" ] || printf '*/verify.txt\n' > "$repo/docs/superpowers/evidence/.gitignore"
+
+lines=()
+evidence_note=""
+evidence_files=""
+names=(unit integration e2e)
+for i in 0 1 2; do
+  name=${names[$i]}
+  if [ "${kinds[$i]}" = skip ]; then
+    echo "== $name: SKIPPED — ${payloads[$i]}"
+    lines+=("$name: SKIPPED — ${payloads[$i]}")
+    continue
+  fi
+
+  cmd=${payloads[$i]}
+  marker="$logs/.verify-$name-start"
+  : > "$marker"
+  log="$logs/verify-$name.log"
+  rc=0
+  # pipefail: `run-tests | tee evidence.txt` must fail when run-tests fails.
+  (cd "$repo" && bash -o pipefail -c "$cmd") > "$log" 2>&1 || rc=$?
+  echo "== $name: $cmd"
+  tail -n 5 "$log"
+  if [ "$rc" -ne 0 ]; then
+    echo "verify-levels: $name FAILED (exit $rc); later levels NOT RUN. Full output: $log" >&2
+    exit "$rc"
+  fi
+  last=$(grep -v '^[[:space:]]*$' "$log" | tail -n 1) || last="(no output)"
+
+  if [ "$name" = e2e ]; then
+    # A missing evidence path makes find fail; that is "no evidence", not a crash.
+    fresh=$(find "$evpath" -type f -size +0 -newer "$marker" 2>/dev/null | wc -l | tr -d '[:space:]') || fresh=0
+    if [ "$fresh" -eq 0 ]; then
+      echo "verify-levels: e2e exited 0 but wrote no non-empty file under $evpath. No evidence, no pass. Full output: $log" >&2
+      exit 1
+    fi
+    evidence_note="evidence: $evpath ($fresh files)"
+    evidence_files=$(find "$evpath" -type f -size +0 -newer "$marker" 2>/dev/null | sort | head -n 15) || evidence_files=""
+  fi
+  lines+=("$name: PASS — $cmd → $last")
+done
+
+{
+  echo "plan: $plan"
+  echo "head: $head"
+  printf '%s\n' "${lines[@]}"
+  [ -z "$evidence_note" ] || echo "$evidence_note"
+} > "$summary"
+cat "$summary"
+
+# Reading the evidence is part of the check; say so where the agent is looking.
+if [ -n "$evidence_files" ]; then
+  echo
+  echo "Evidence files: open these (screenshots with the Read tool, text in full) before you report. A file you did not open is not evidence."
+  while IFS= read -r f; do
+    printf '  %s (%s bytes)\n' "$f" "$(wc -c < "$f" | tr -d '[:space:]')"
+  done <<< "$evidence_files"
+fi
