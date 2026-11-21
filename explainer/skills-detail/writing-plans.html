@@ -24,6 +24,21 @@
     <div class="chips"><span class="chip">Lưu ở <code>docs/superpowers/plans/</code></span><span class="chip">Task nhỏ, mỗi task có test riêng</span><span class="chip">Mỗi plan phủ đủ 3 loại test</span><span class="chip">Tự review 6 điểm trước khi giao</span><span class="chip">DRY · YAGNI · TDD · commit thường xuyên</span></div>
   </div>
 </header>
+<aside class="changed" id="changed">
+  <div class="wrap">
+    <div class="box">
+      <h2>THAY ĐỔI SO VỚI BẢN GỐC v7.0.2</h2>
+      <ul>
+        <li>Mục <b>Test Strategy</b>: mỗi scenario có test ở cả unit, integration, e2e, cùng bốn dòng lệnh mà <code>verify-levels</code> đọc.</li>
+        <li>Task cuối luôn là e2e và phải chứng minh được nó có thể fail.</li>
+        <li>Mục <b>Quality Gates</b>: năm dòng lệnh toàn project (Prettier, ESLint, tsc, build, Sonar).</li>
+        <li>Self-review thêm mục 6 (test levels) và mục 7 (quality gates).</li>
+      </ul>
+      <p class="diffcmd">Xem diff: <code>git diff 22f0b46..HEAD -- skills/writing-plans</code> · <a href="../changes.html#g-tests">Nhóm 3 · Ba loại test</a> · <a href="../changes.html#g-gates">Nhóm 4 · Gate chất lượng</a></p>
+    </div>
+  </div>
+</aside>
+
 
 <!-- ============ 1. DIAGRAM ============ -->
 <section id="diagram">

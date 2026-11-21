@@ -24,6 +24,19 @@
     <div class="chips"><span class="chip">RED → GREEN → REFACTOR</span><span class="chip">Code viết trước test thì xóa, làm lại</span><span class="chip">Chạy cả suite của dự án, không chỉ file test của mình</span><span class="chip">Ngoại lệ phải hỏi bạn</span><span class="chip">Unit + integration cùng một vòng; e2e do verification chạy</span></div>
   </div>
 </header>
+<aside class="changed" id="changed">
+  <div class="wrap">
+    <div class="box">
+      <h2>THAY ĐỔI SO VỚI BẢN GỐC v7.0.2</h2>
+      <ul>
+        <li>Bảng <b>Test Levels</b>: unit và integration cùng vòng red-green; e2e nằm ngoài vòng và do <code>verify-levels</code> chạy.</li>
+        <li>Thêm một câu bào chữa (“unit đủ rồi, integration là thừa”) và một mục checklist cho integration.</li>
+      </ul>
+      <p class="diffcmd">Xem diff: <code>git diff 22f0b46..HEAD -- skills/test-driven-development</code> · <a href="../changes.html#g-tests">Nhóm 3 · Ba loại test</a></p>
+    </div>
+  </div>
+</aside>
+
 
 <!-- ============ 1. DIAGRAM ============ -->
 <section id="diagram">

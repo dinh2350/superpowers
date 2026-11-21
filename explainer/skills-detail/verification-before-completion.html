@@ -24,6 +24,21 @@
     <div class="chips"><span class="chip">Luật sắt: không tuyên bố khi chưa có bằng chứng mới</span><span class="chip">Áp dụng cả với từ đồng nghĩa và hàm ý</span><span class="chip">Không tin báo cáo “success” của agent khác</span><span class="chip">Trước commit, PR và task kế</span><span class="chip">Báo xong tính năng: đủ unit, integration, e2e + evidence</span><span class="chip">Cổng chất lượng: Prettier, ESLint, tsc, build, SonarQube</span></div>
   </div>
 </header>
+<aside class="changed" id="changed">
+  <div class="wrap">
+    <div class="box">
+      <h2>THAY ĐỔI SO VỚI BẢN GỐC v7.0.2</h2>
+      <ul>
+        <li>Script mới <code>scripts/verify-levels</code>: chạy 8 level, dừng ở level fail đầu tiên, ghi <code>verify.txt</code> gắn với HEAD.</li>
+        <li>Mục <b>End-to-End Evidence</b>: e2e phải pass và để lại evidence mới, và evidence phải được mở ra xem.</li>
+        <li>Mục <b>Quality Gates</b>: 5 gate, thứ tự chạy, gate hỏng thì sửa trong code, không tắt tiếng.</li>
+        <li>Thêm dòng vào bảng Common Failures, Red Flags và Rationalization Prevention.</li>
+      </ul>
+      <p class="diffcmd">Xem diff: <code>git diff 22f0b46..HEAD -- skills/verification-before-completion</code> · <a href="../changes.html#g-tests">Nhóm 3 · Ba loại test</a> · <a href="../changes.html#g-gates">Nhóm 4 · Gate chất lượng</a></p>
+    </div>
+  </div>
+</aside>
+
 
 <!-- ============ 1. DIAGRAM ============ -->
 <section id="diagram">

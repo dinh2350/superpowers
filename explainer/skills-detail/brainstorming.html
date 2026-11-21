@@ -111,6 +111,17 @@
     <h1>Luồng Brainstorming Mới</h1>
     <p class="lead">research-before-brainstorming đã được gộp vào brainstorming. Giờ AI tự tra những gì tra được, báo lại kèm bằng chứng, và chỉ hỏi bạn phần chỉ bạn quyết được.</p>
   </header>
+  <aside class="changed" id="changed" style="background: var(--fact-bg); border: 1px solid var(--fact); border-left-width: 5px; border-radius: 12px; padding: 14px 18px; font-size: 14.5px;">
+    <div style="font-weight: 700; font-size: 15px; letter-spacing: .02em; color: var(--fact); margin-bottom: 8px;">THAY ĐỔI SO VỚI BẢN GỐC v7.0.2</div>
+    <ul style="margin: 0 0 10px; padding-left: 20px;">
+    <li>Thêm bước tra cứu trước khi hỏi (<code>references/research.md</code>): kết quả chia Confirmed, My call, Yours to decide; không có nguồn thì không phải phát hiện.</li>
+    <li>Design doc là file HTML dựng từ <code>templates/design-doc.html</code>.</li>
+    <li>Design doc có mục “how it will be verified”: kịch bản bạn sẽ thấy và unit, integration, e2e nào chứng minh nó. Test do một subagent riêng viết từ design doc.</li>
+    <li><code>builder-check-prompt.md</code> đọc được file HTML.</li>
+    </ul>
+    <p style="margin: 0; font-size: 13px; color: var(--muted);">Xem diff: <code>git diff 22f0b46..HEAD -- skills/brainstorming</code> · <a href="../changes.html#g-brainstorm">Nhóm 1 · Brainstorming</a></p>
+  </aside>
+
 
   <section>
     <h2>Cũ và mới</h2>

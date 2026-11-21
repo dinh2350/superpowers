@@ -24,6 +24,19 @@
     <div class="chips"><span class="chip">Review sớm, review thường xuyên</span><span class="chip">Bắt buộc: sau mỗi task, sau tính năng lớn, trước khi merge</span><span class="chip">Reviewer là subagent <code>general-purpose</code></span><span class="chip">Reviewer sai thì phản biện bằng lý lẽ</span></div>
   </div>
 </header>
+<aside class="changed" id="changed">
+  <div class="wrap">
+    <div class="box">
+      <h2>THAY ĐỔI SO VỚI BẢN GỐC v7.0.2</h2>
+      <ul>
+        <li><code>code-reviewer.md</code> kiểm Test Strategy: mỗi dòng có test thật ở cả ba level, <code>verify.txt</code> đủ cho HEAD, evidence tồn tại.</li>
+        <li>Kiểm Quality Gates: lý do của gate bị skip còn đúng; tìm trong diff các kiểu tắt tiếng (<code>eslint-disable</code>, <code>@ts-ignore</code>, <code>NOSONAR</code>...).</li>
+      </ul>
+      <p class="diffcmd">Xem diff: <code>git diff 22f0b46..HEAD -- skills/requesting-code-review</code> · <a href="../changes.html#g-tests">Nhóm 3 · Ba loại test</a> · <a href="../changes.html#g-gates">Nhóm 4 · Gate chất lượng</a></p>
+    </div>
+  </div>
+</aside>
+
 
 <!-- ============ 1. DIAGRAM ============ -->
 <section id="diagram">

@@ -205,3 +205,31 @@
     font: 700 15px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color: var(--ink);
   }
   .law small { display: block; margin-top: 6px; font: 500 13.5px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--muted); }
+
+  /* ---- review aids: "what changed" banner, level row, verified/not-verified tags ---- */
+  .changed { padding: 20px 0 0; }
+  .changed .box {
+    background: var(--new-soft); border: 1px solid var(--new); border-left-width: 5px;
+    border-radius: 12px; padding: 14px 18px;
+  }
+  .changed h2 { margin: 0 0 8px; font-size: 15px; letter-spacing: .02em; color: var(--new); }
+  .changed ul { margin: 0 0 10px; padding-left: 20px; font-size: 14.5px; }
+  .changed li + li { margin-top: 3px; }
+  .changed .diffcmd { margin: 0; font-size: 13px; color: var(--muted); }
+  .changed .diffcmd a { font-weight: 600; }
+  .lvlrow { display: flex; flex-wrap: wrap; gap: 6px 4px; align-items: center; margin: 6px 0 12px; }
+  .lvlrow .step {
+    border: 1px solid var(--line); background: var(--surface); border-radius: 10px;
+    padding: 5px 12px; font: 600 13px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  .lvlrow .step.gate { border-color: var(--new); background: var(--new-soft); color: var(--new); }
+  .lvlrow .step.test { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+  .lvlrow .arrow { color: var(--muted); font-size: 13px; }
+  .legend { font-size: 13px; color: var(--muted); margin: 0 0 12px; }
+  .legend .step { display: inline-block; padding: 1px 9px; margin-right: 4px; border-radius: 8px; border: 1px solid var(--line); font-size: 12px; }
+  .legend .step.gate { border-color: var(--new); background: var(--new-soft); color: var(--new); }
+  .legend .step.test { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+  .tag.warn { background: var(--pain-soft); color: var(--pain); }
+  .tbl td.num { white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .tbl td.cmd { white-space: normal; }
+  .tbl .tag { white-space: nowrap; }

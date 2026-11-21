@@ -203,6 +203,7 @@
       <span class="chip"><b>15</b> MCP server có sẵn config</span>
       <span class="chip">Tự kích hoạt, không cần gõ lệnh</span>
       <span class="chip">Click vào node trong diagram để xem chi tiết</span>
+      <span class="chip"><a href="changes.html"><b>Thay đổi so với bản gốc</b>, để review →</a></span>
     </div>
   </div>
 </header>
@@ -508,7 +509,7 @@
       <article class="card" id="s-subagent-driven-development">
         <header><span class="badge">4</span><h4>subagent-driven-development</h4><span class="tag">Chọn 1 · kỹ nhất</span></header>
         <p class="row pain"><b>Vấn đề</b>Một agent làm hết trong một context dài: đầy context, lệch plan, tự chấm bài của mình.</p>
-        <p class="row"><b>Làm gì</b>Mỗi task giao cho một subagent mới (context sạch). Sau đó review 2 lớp: đúng spec trước, chất lượng code sau. Cuối cùng chạy <code>verify-levels</code> (đủ 3 loại test + evidence) rồi review cả nhánh. Chạy liên tục, không hỏi “tiếp nhé?”.</p>
+        <p class="row"><b>Làm gì</b>Mỗi task giao cho một subagent mới (context sạch). Sau đó review 2 lớp: đúng spec trước, chất lượng code sau. Cuối cùng chạy <code>verify-levels</code> (đủ tám level: gate chất lượng, 3 loại test, Sonar, cùng evidence) rồi review cả nhánh. Chạy liên tục, không hỏi “tiếp nhé?”.</p>
         <p class="row"><b>Dùng khi</b>Đã có plan và môi trường có subagent. Chất lượng cao nhất nhưng tốn token hơn.</p>
         <a class="back" href="#diagram">↑ Về diagram</a>
         <a class="back" href="skills-detail/subagent-driven-development.html">Xem chi tiết →</a>

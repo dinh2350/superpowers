@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thay đổi để review Explainer</title>
+<link rel="stylesheet" href="assets/skill-detail.css">
+<link rel="stylesheet" href="assets/sidebar.css">
+<script src="assets/sidebar.js"></script>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="wrap">
+    <strong>Thay đổi để review</strong>
+    <a href="#groups">1 · Bốn nhóm</a><a href="#skills">2 · Skill nào đổi</a><a href="#levels">3 · Tám level</a><a href="#verified">4 · Đã kiểm chứng</a><a href="#decide">5 · Cần bạn quyết định</a><a href="#how">6 · Tự review</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <h1>Thay đổi so với Superpowers v7.0.2</h1>
+    <p>Trang này gom mọi thứ fork này đã đổi so với bản gốc, theo từng nhóm, để bạn review từng phần thay vì đọc cả diff. Mỗi nhóm nói rõ vấn đề gì, đổi gì, nhìn ở file nào, và đã kiểm chứng đến đâu.</p>
+    <div class="chips"><span class="chip">Bản gốc: v7.0.2 (<code>22f0b46</code>)</span><span class="chip">54 file, +2072 / −32 (không tính explainer)</span><span class="chip">4 nhóm thay đổi</span><span class="chip">Vẫn 15 skill: không thêm, không bớt</span></div>
+  </div>
+</header>
+
+<!-- ============ 1. GROUPS ============ -->
+<section id="groups">
+  <div class="wrap">
+    <h2><span class="secno">1</span>Bốn nhóm thay đổi</h2>
+    <p class="lead">Mỗi nhóm là một vấn đề riêng và có thể review riêng. Nhóm 3 và 4 cùng nằm trong script <code>verify-levels</code>: nhóm 3 tạo ra nó, nhóm 4 mở rộng từ 3 lên 8 level.</p>
+    <div class="cards">
+
+      <article class="card plain" id="g-brainstorm">
+        <header><h4>1 · Brainstorming: tra cứu trước, design doc có cách verify</h4><span class="tag new">Nâng cấp</span></header>
+        <p class="row pain"><b class="lbl">Vấn đề</b>Agent hỏi bạn những thứ mà tool tra được. Design doc là văn bản thuần, không có chỗ nói “làm sao biết nó chạy đúng”.</p>
+        <ul>
+          <li><code>references/research.md</code> (mới, 87 dòng): tra codebase, docs đúng version trong lockfile, DB chỉ đọc, log trước khi hỏi. Kết quả chia thành <b>Confirmed</b>, <b>My call</b>, <b>Yours to decide</b>; không có nguồn thì không được coi là phát hiện.</li>
+          <li>Design doc là một file HTML dựng từ <code>templates/design-doc.html</code> (mới, 165 dòng): Summary, Overview diagram, For your review, The design, Evidence.</li>
+          <li>Mục “how it will be verified”: kịch bản bạn sẽ thấy chạy, cùng unit, integration, e2e nào chứng minh nó. Test do một subagent riêng viết từ design doc, không viết từ code.</li>
+          <li><code>builder-check-prompt.md</code> đọc được file HTML.</li>
+        </ul>
+        <p class="row"><b class="lbl">Commit</b><code>b7562a0</code>, <code>644b013</code>. Skill <code>research-before-brainstorming</code> được thêm ở <code>45dfaef</code> rồi gộp vào brainstorming ở <code>644b013</code>.</p>
+        <p class="row"><b class="lbl">Xem</b><a href="skills-detail/brainstorming.html">Trang brainstorming</a> · <a href="../skills/brainstorming/references/research.md"><code>research.md</code></a></p>
+        <a class="back" href="#groups">↑ Về đầu mục</a>
+      </article>
+
+      <article class="card plain" id="g-mcp">
+        <header><h4>2 · MCP catalog: menu server có sẵn config</h4><span class="tag new">Nâng cấp</span></header>
+        <p class="row pain"><b class="lbl">Vấn đề</b>Agent cần tool ngoài (trình duyệt, DB, tracker) nhưng không có chỗ chọn server với cấu hình an toàn, đã pin version.</p>
+        <ul>
+          <li>Thư mục <code>mcp/</code> mới: 15 server, mỗi server có <code>mcp.json</code> (package npm hay PyPI đã pin, hoặc endpoint của vendor) và README ghi auth, rủi ro, ngày kiểm chứng gần nhất.</li>
+          <li>Mặc định không bật gì; mỗi project chọn 3–5 server. Mặc định chỉ đọc hoặc quyền hẹp.</li>
+          <li>Bí mật chỉ xuất hiện dưới dạng tham chiếu <code>${VAR}</code>; tên biến nằm trong <code>mcp/.env.example</code> (mọi giá trị để trống).</li>
+          <li><code>harnesses/</code> nói Claude Code, Codex, Cursor, Gemini CLI đọc config MCP ở đâu.</li>
+        </ul>
+        <p class="row"><b class="lbl">Commit</b><code>e6bbc64</code>. 39 file, +929, không động tới skill nào.</p>
+        <p class="row"><b class="lbl">Xem</b><a href="superpowers.html#mcp">Mục MCP</a> · <a href="../mcp/README.md"><code>mcp/README.md</code></a> · <a href="../mcp/catalog.md"><code>catalog.md</code></a></p>
+        <a class="back" href="#groups">↑ Về đầu mục</a>
+      </article>
+
+      <article class="card plain" id="g-tests">
+        <header><h4>3 · Ba loại test, có cổng kiểm</h4><span class="tag new">Nâng cấp</span></header>
+        <p class="row pain"><b class="lbl">Vấn đề</b>Unit xanh nhưng chưa ai thử kịch bản thật. Agent nói “xong” khi e2e chưa chạy, hoặc chạy mà không để lại bằng chứng.</p>
+        <ul>
+          <li><code>writing-plans</code>: mục <b>Test Strategy</b> (mỗi scenario một dòng, test ở cả unit, integration, e2e), bốn dòng lệnh <code>Unit run</code>, <code>Integration run</code>, <code>E2E run</code>, <code>E2E evidence</code>, và task cuối luôn là e2e, phải chứng minh được nó có thể fail.</li>
+          <li><code>test-driven-development</code>: unit và integration cùng vòng red-green; e2e nằm ngoài vòng.</li>
+          <li><code>scripts/verify-levels</code> (mới): chạy từng level, dừng ở level fail đầu tiên. E2E chỉ pass khi lệnh exit 0 <b>và</b> ghi file evidence mới, không rỗng. Thành công thì ghi <code>verify.txt</code> gắn với HEAD.</li>
+          <li><code>executing-plans</code> và <code>subagent-driven-development</code> chạy nó trước review cuối; <code>finishing-a-development-branch</code> từ chối record cũ; reviewer cuối kiểm record và evidence.</li>
+        </ul>
+        <p class="row"><b class="lbl">Bốn lỗi tìm ra khi chạy phiên thật</b>Lệnh fail đứng trước <code>| tee</code> vẫn qua (đã thêm pipefail); agent không mở evidence (script giờ liệt kê file cần mở); agent commit <code>verify.txt</code> làm nó cũ (script tự git-ignore); plan có lệnh e2e không ghi evidence (self-review hỏi).</p>
+        <p class="row"><b class="lbl">Commit</b><code>35107c6</code> (docs: <code>287c15e</code>)</p>
+        <p class="row"><b class="lbl">Xem</b><a href="skills-detail/verification-before-completion.html#levels">verification-before-completion</a> · <a href="../skills/verification-before-completion/scripts/verify-levels"><code>verify-levels</code></a></p>
+        <a class="back" href="#groups">↑ Về đầu mục</a>
+      </article>
+
+      <article class="card plain" id="g-gates">
+        <header><h4>4 · Gate chất lượng: Prettier, ESLint, tsc, build, Sonar</h4><span class="tag new">Nâng cấp</span></header>
+        <p class="row pain"><b class="lbl">Vấn đề</b>Test xanh nhưng CI đỏ vì chưa format, lint, đúng type, build, hay quality gate. Agent còn dễ làm gate pass bằng cách tắt tiếng thay vì sửa.</p>
+        <ul>
+          <li><code>verify-levels</code> chạy 8 level: thêm <b>format, lint, typecheck, build, sonar</b> vào ba level test. Thứ tự rẻ nhất trước; Sonar cuối vì quality gate đọc coverage do test ghi.</li>
+          <li><code>writing-plans</code> thêm mục <b>Quality Gates</b> (5 dòng lệnh toàn project) và mục tự kiểm số 7. Gate không áp dụng thì ghi <code>none — &lt;lý do&gt;</code>.</li>
+          <li>Gate fail thì script in cách sửa và những thứ <b>không phải</b> là sửa: <code>eslint-disable</code>, <code>@ts-ignore</code>, <code>NOSONAR</code>, config nới lỏng.</li>
+          <li>Plan ghi sẵn token Sonar bị từ chối; scanner đọc <code>SONAR_TOKEN</code> từ môi trường.</li>
+          <li><code>none — &lt;lý do&gt;</code> bọc trong backtick vẫn là skip, không bị chạy như một lệnh tên <code>none</code>. Tìm ra khi chạy script với Prettier, ESLint, tsc thật.</li>
+          <li>Reviewer cuối kiểm lý do của gate bị skip và tìm trong diff các kiểu tắt tiếng.</li>
+        </ul>
+        <p class="row"><b class="lbl">Commit</b><code>166c98d</code> (docs: <code>58f2ea2</code>)</p>
+        <p class="row"><b class="lbl">Xem</b><a href="skills-detail/verification-before-completion.html#gates">Gate chất lượng</a> · <a href="skills-detail/writing-plans.html#c-gates">Gate trong plan</a></p>
+        <a class="back" href="#groups">↑ Về đầu mục</a>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. SKILLS ============ -->
+<section id="skills">
+  <div class="wrap">
+    <h2><span class="secno">2</span>Skill nào đổi, đổi bao nhiêu</h2>
+    <p class="lead">Số dòng tính từ bản gốc <code>22f0b46</code> đến nay. “Nhóm” trỏ về mục 1. Cột cuối là lệnh để xem đúng phần diff đó.</p>
+    <div class="tbl-wrap"><table class="tbl wrapfirst">
+      <thead><tr><th>Skill hoặc thư mục</th><th>Nhóm</th><th>Đổi gì</th><th>+ / −</th><th>Xem diff</th></tr></thead>
+      <tbody>
+        <tr><td><a href="skills-detail/brainstorming.html">brainstorming</a></td><td>1</td><td>Bước tra cứu, design doc HTML, mục cách verify, builder check đọc HTML</td><td class="num">+327 / −24</td><td class="cmd"><code>git diff 22f0b46..HEAD -- skills/brainstorming</code></td></tr>
+        <tr><td><a href="skills-detail/writing-plans.html">writing-plans</a></td><td>3, 4</td><td>Test Strategy, Quality Gates, task e2e cuối, self-review thêm mục 6 và 7</td><td class="num">+85 / −0</td><td class="cmd"><code>git diff 22f0b46..HEAD -- skills/writing-plans</code></td></tr>
+        <tr><td><a href="skills-detail/test-driven-development.html">test-driven-development</a></td><td>3</td><td>Bảng Test Levels: unit và integration cùng vòng, e2e ngoài vòng</td><td class="num">+27 / −0</td><td class="cmd"><code>git diff 22f0b46..HEAD -- skills/test-driven-development</code></td></tr>
+        <tr><td><a href="skills-detail/verification-before-completion.html">verification-before-completion</a></td><td>3, 4</td><td>Mục Quality Gates và End-to-End Evidence, script <code>verify-levels</code> (238 dòng, mới), Red Flags và bào chữa mới</td><td class="num">+325 / −0</td><td class="cmd"><code>git diff 22f0b46..HEAD -- skills/verification-before-completion</code></td></tr>
+        <tr><td><a href="skills-detail/executing-plans.html">executing-plans</a></td><td>3, 4</td><td>Mục Plan-Level Verification: chạy <code>verify-levels</code> trước review cuối, chạy lại sau đợt sửa</td><td class="num">+28 / −2</td><td class="cmd"><code>git diff 22f0b46..HEAD -- skills/executing-plans</code></td></tr>
+        <tr><td><a href="skills-detail/subagent-driven-development.html">subagent-driven-development</a></td><td>3, 4</td><td><code>references/final-review.md</code> thêm bước verify-levels và quy tắc cho fixer</td><td class="num">+29 / −5</td><td class="cmd"><code>git diff 22f0b46..HEAD -- skills/subagent-driven-development</code></td></tr>
+        <tr><td><a href="skills-detail/finishing-a-development-branch.html">finishing-a-development-branch</a></td><td>3, 4</td><td>Chạy <code>verify-levels --check</code> trước menu; record thiếu hay cũ thì dừng</td><td class="num">+16 / −1</td><td class="cmd"><code>git diff 22f0b46..HEAD -- skills/finishing-a-development-branch</code></td></tr>
+        <tr><td><a href="skills-detail/requesting-code-review.html">requesting-code-review</a></td><td>3, 4</td><td><code>code-reviewer.md</code> kiểm Test Strategy, Quality Gates, gate bị skip, kiểu tắt tiếng trong diff</td><td class="num">+15 / −0</td><td class="cmd"><code>git diff 22f0b46..HEAD -- skills/requesting-code-review</code></td></tr>
+        <tr><td><code>tests/claude-code</code></td><td>3, 4</td><td><code>test-verify-levels.sh</code> (290 dòng, 82 kiểm tra) và một dòng đăng ký trong <code>run-skill-tests.sh</code></td><td class="num">+291 / −0</td><td class="cmd"><code>git diff 22f0b46..HEAD -- tests</code></td></tr>
+        <tr><td><a href="superpowers.html#mcp">mcp/</a></td><td>2</td><td>Thư mục mới: catalog 15 server, config từng harness</td><td class="num">+929 / −0</td><td class="cmd"><code>git diff 22f0b46..HEAD --stat -- mcp</code></td></tr>
+      </tbody>
+    </table></div>
+    <p class="lead" style="margin-top:14px">Các skill còn lại (<code>using-superpowers</code>, <code>using-git-worktrees</code>, <code>systematic-debugging</code>, <code>receiving-code-review</code>, <code>dispatching-parallel-agents</code>, <code>writing-skills</code>, <code>diagnosing-superpowers</code>) không đổi so với bản gốc.</p>
+  </div>
+</section>
+
+<!-- ============ 3. LEVELS ============ -->
+<section id="levels">
+  <div class="wrap">
+    <h2><span class="secno">3</span>Luồng <code>verify-levels</code>: từ không có, tới 3, tới 8 level</h2>
+    <p class="lead">Bản gốc không có script nào chạy cổng cấp plan: agent tự chạy test rồi nói “xong”. Giờ có một script chạy tám level theo thứ tự này.</p>
+    <div class="lvlrow" role="img" aria-label="format, lint, typecheck, build, unit, integration, e2e, sonar">
+      <span class="step gate">format</span><span class="arrow">→</span>
+      <span class="step gate">lint</span><span class="arrow">→</span>
+      <span class="step gate">typecheck</span><span class="arrow">→</span>
+      <span class="step gate">build</span><span class="arrow">→</span>
+      <span class="step test">unit</span><span class="arrow">→</span>
+      <span class="step test">integration</span><span class="arrow">→</span>
+      <span class="step test">e2e</span><span class="arrow">→</span>
+      <span class="step gate">sonar</span>
+    </div>
+    <p class="legend"><span class="step test">test</span>nhóm 3: ba loại test &nbsp; <span class="step gate">gate</span>nhóm 4: năm gate chất lượng</p>
+    <div class="cards one">
+      <article class="card plain" id="c-rules">
+        <header><h4>Quy tắc của script</h4></header>
+        <ul>
+          <li>Đọc hết plan trước khi chạy gì: plan thiếu dòng hay sai định dạng bị từ chối ngay (exit 2).</li>
+          <li>Dừng ở level fail đầu tiên và trả đúng exit status của lệnh đó. Level sau không chạy.</li>
+          <li>E2E pass chỉ khi lệnh exit 0 <b>và</b> có file evidence mới, không rỗng. Sonar chạy cuối vì cần coverage do test ghi.</li>
+          <li>Thành công thì ghi <code>docs/superpowers/evidence/&lt;plan&gt;/verify.txt</code> gắn với HEAD (git-ignored). <code>--check</code> không chạy gì, chỉ chấp nhận record đủ 8 level cho đúng HEAD và không có file tracked nào đổi sau đó.</li>
+          <li>Level không áp dụng ghi <code>none — &lt;lý do&gt;</code>; lý do được ghi vào record và reviewer cuối kiểm nó còn đúng.</li>
+        </ul>
+        <a class="back" href="#levels">↑ Về đầu mục</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4. VERIFIED ============ -->
+<section id="verified">
+  <div class="wrap">
+    <h2><span class="secno">4</span>Đã kiểm chứng gì, chưa kiểm chứng gì</h2>
+    <p class="lead">Chỗ nào chưa chạy thật thì ghi là chưa chạy.</p>
+    <div class="tbl-wrap"><table class="tbl wrapfirst">
+      <thead><tr><th>Hạng mục</th><th>Trạng thái</th><th>Ghi chú</th></tr></thead>
+      <tbody>
+        <tr><td><code>verify-levels</code>: 82 kiểm tra tự động</td><td><span class="tag new">Đã chạy</span></td><td class="cmd">Pass trên bash 3.2 của macOS, cả với <code>LC_ALL=C</code>. Chạy: <code>bash tests/claude-code/test-verify-levels.sh</code></td></tr>
+        <tr><td>Prettier, ESLint, tsc thật trên một project TS mẫu</td><td><span class="tag new">Đã chạy</span></td><td class="cmd">Cả ca pass lẫn ca fail (file chưa format, lỗi lint, lỗi type), cả <code>--check</code> và record cũ. Project mẫu nằm ngoài repo và chỉ chạy một lần, nên bạn không tái hiện được từ repo.</td></tr>
+        <tr><td>Cổng ba loại test trong phiên agent thật</td><td><span class="tag new">Đã chạy</span></td><td class="cmd">Commit <code>35107c6</code> ghi bốn lỗi tìm ra từ các phiên đó và đã sửa.</td></tr>
+        <tr><td>Năm gate chất lượng trong phiên agent thật</td><td><span class="tag warn">Chưa chạy</span></td><td class="cmd">Mới chạy script; chưa cho agent làm theo skill từ đầu đến cuối với 5 gate.</td></tr>
+        <tr><td>SonarQube server thật</td><td><span class="tag warn">Chưa chạy</span></td><td class="cmd">Tài liệu Sonar nói <code>sonar.qualitygate.wait=true</code> làm scanner fail khi gate fail (server từ 8.1), nhưng có ý kiến trái chiều trên forum. Lần đầu dùng, hãy cố tình làm gate fail một lần để xác nhận exit code khác 0.</td></tr>
+        <tr><td>Brainstorming và <code>mcp/</code></td><td><span class="tag">Ngoài trang này</span></td><td class="cmd">Trang này không có bằng chứng kiểm chứng riêng cho hai nhóm đó; xem các commit tương ứng.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<!-- ============ 5. DECIDE ============ -->
+<section id="decide">
+  <div class="wrap">
+    <h2><span class="secno">5</span>Những chỗ cần bạn quyết định</h2>
+    <p class="lead">Đây là các lựa chọn thiết kế đã được chọn mặc định. Chỗ nào bạn không đồng ý thì nói, vì mỗi cái đều đổi được.</p>
+    <div class="cards one">
+      <article class="card plain" id="c-decide">
+        <header><h4>Sáu lựa chọn</h4></header>
+        <ul>
+          <li><b>Năm dòng Quality Gates là bắt buộc.</b> Plan cũ thiếu chúng bị <code>verify-levels</code> từ chối (exit 2) kèm thông báo nêu dòng còn thiếu. Nếu muốn mềm hơn, thiếu dòng có thể mặc định là <code>none</code>, nhưng khi đó gate dễ bị quên.</li>
+          <li><b>Gate chỉ chạy ở cuối plan, không sau từng task.</b> Lỗi format và lint có thể dồn đến cuối mới lộ. Có thể thêm bước format, lint, typecheck vào implementer prompt nếu bạn muốn bắt sớm.</li>
+          <li><b>Lối thoát <code>none — &lt;lý do&gt;</code> do reviewer kiểm, không phải script.</b> Script có thể chặn cứng khi thấy <code>tsconfig.json</code> hay <code>sonar-project.properties</code> mà gate là <code>none</code>, đổi lại cần thêm cách bỏ qua hợp lệ.</li>
+          <li><b>Project JS/TS chưa có Prettier, ESLint hay tsc.</b> Task đầu của plan sẽ cài chúng, tức là thêm dependency vào project của bạn; bạn thấy việc đó khi duyệt plan.</li>
+          <li><b>Sonar cần server và <code>SONAR_TOKEN</code>.</b> Không có thì chỉ bạn mới được quyết <code>none</code>; agent không tự quyết.</li>
+          <li><b>Chỉ phù hợp fork này.</b> <code>AGENTS.md</code> của repo upstream nói PR theo kiểu fork-specific hoặc phụ thuộc bên thứ ba sẽ bị đóng, nên đừng gửi lên upstream.</li>
+        </ul>
+        <a class="back" href="#decide">↑ Về đầu mục</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6. HOW ============ -->
+<section id="how">
+  <div class="wrap">
+    <h2><span class="secno">6</span>Tự review thế nào</h2>
+    <p class="lead">Thứ tự đọc gợi ý: script và test của nó trước (hành vi cứng), rồi mới tới các SKILL.md (hành vi do prompt dẫn dắt).</p>
+    <div class="cards one">
+      <article class="card plain" id="c-how">
+        <header><h4>Lệnh hay dùng</h4></header>
+<pre class="cmd"># toàn bộ thay đổi, không tính explainer
+git diff 22f0b46..HEAD --stat -- . ':!explainer'
+
+# từng nhóm, theo commit
+git show 166c98d    # nhóm 4: gate chất lượng
+git show 35107c6    # nhóm 3: ba loại test
+git show e6bbc64    # nhóm 2: MCP catalog
+git show 644b013    # nhóm 1: brainstorming
+
+# hành vi cứng của script
+bash tests/claude-code/test-verify-levels.sh</pre>
+        <p class="row" style="margin-top:12px"><b class="lbl">Đọc theo thứ tự</b><a href="../skills/verification-before-completion/scripts/verify-levels"><code>verify-levels</code></a> → <a href="../tests/claude-code/test-verify-levels.sh"><code>test-verify-levels.sh</code></a> → <a href="../skills/writing-plans/SKILL.md"><code>writing-plans</code></a> → <a href="../skills/verification-before-completion/SKILL.md"><code>verification-before-completion</code></a> → các skill gọi script.</p>
+        <a class="back" href="#how">↑ Về đầu mục</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <footer>Nguồn: <code>git diff 22f0b46..HEAD</code>. Số dòng lấy từ <code>git diff --numstat</code>.</footer>
+  </div>
+</section>
+
+</body>
+</html>

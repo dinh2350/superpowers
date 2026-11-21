@@ -21,9 +21,23 @@
   <div class="wrap">
     <h1>executing-plans</h1>
     <p>Agent tự thực thi plan, từng task, ngay trong phiên này: không có implementer subagent cho mỗi task, không có reviewer cho mỗi task. Chỉ có <b>một lần review cả nhánh</b> bằng context mới ở cuối.</p>
-    <div class="chips"><span class="chip">Rẻ hơn <code>subagent-driven-development</code></span><span class="chip">Sổ ghi (ledger) thay cho trí nhớ</span><span class="chip">TDD là cổng kiểm từng task</span><span class="chip">verify-levels: đủ 3 loại test trước review cuối</span><span class="chip">Không dừng lại hỏi “tiếp nhé?”</span></div>
+    <div class="chips"><span class="chip">Rẻ hơn <code>subagent-driven-development</code></span><span class="chip">Sổ ghi (ledger) thay cho trí nhớ</span><span class="chip">TDD là cổng kiểm từng task</span><span class="chip">verify-levels: đủ tám level trước review cuối</span><span class="chip">Không dừng lại hỏi “tiếp nhé?”</span></div>
   </div>
 </header>
+<aside class="changed" id="changed">
+  <div class="wrap">
+    <div class="box">
+      <h2>THAY ĐỔI SO VỚI BẢN GỐC v7.0.2</h2>
+      <ul>
+        <li>Mục <b>Plan-Level Verification</b>: sau task cuối, trước review cuối, chạy <code>verify-levels</code>; exit khác 0 nghĩa là plan chưa xong.</li>
+        <li>Không nới dòng Test Strategy hay Quality Gates và không tắt tiếng gate; sửa một dòng lệnh là một ruling ghi vào ledger.</li>
+        <li>Đợt sửa sau review có commit thì chạy lại <code>verify-levels</code>.</li>
+      </ul>
+      <p class="diffcmd">Xem diff: <code>git diff 22f0b46..HEAD -- skills/executing-plans</code> · <a href="../changes.html#g-tests">Nhóm 3 · Ba loại test</a> · <a href="../changes.html#g-gates">Nhóm 4 · Gate chất lượng</a></p>
+    </div>
+  </div>
+</aside>
+
 
 <!-- ============ 1. DIAGRAM ============ -->
 <section id="diagram">
@@ -58,7 +72,7 @@
 <a class="node opt" href="#c-contract" aria-label="Hợp đồng hoàn thành đạt? - Test chạy · Expected đã so · Ruling đã ghi"><rect x="150" y="308" width="300" height="54" rx="10"/><text class="name" x="164" y="331">Hợp đồng hoàn thành đạt?</text><text class="sub" x="164" y="349">Test chạy · Expected đã so · Ruling đã ghi</text></a>
 <a class="node" href="#c-done" aria-label="task-done - Chạy test, ghi một dòng vào ledger"><rect x="150" y="406" width="300" height="54" rx="10"/><text class="name" x="164" y="429">task-done</text><text class="sub" x="164" y="447">Chạy test, ghi một dòng vào ledger</text></a>
 <a class="node opt" href="#c-done" aria-label="Còn task nào nữa? - Không dừng lại hỏi bạn giữa các task"><rect x="150" y="504" width="300" height="54" rx="10"/><text class="name" x="164" y="527">Còn task nào nữa?</text><text class="sub" x="164" y="545">Không dừng lại hỏi bạn giữa các task</text></a>
-<a class="node" href="#c-verify" aria-label="verify-levels - Unit + integration + e2e, evidence mới"><rect x="150" y="602" width="300" height="54" rx="10"/><text class="name" x="164" y="625">verify-levels</text><text class="sub" x="164" y="643">Unit + integration + e2e, evidence mới</text></a>
+<a class="node" href="#c-verify" aria-label="verify-levels - Unit + integration + e2e, evidence mới"><rect x="150" y="602" width="300" height="54" rx="10"/><text class="name" x="164" y="625">verify-levels</text><text class="sub" x="164" y="643">Gate, unit, integration, e2e, sonar</text></a>
 <a class="node" href="#c-final" aria-label="Review cả nhánh - Reviewer mới · model mạnh nhất"><rect x="150" y="700" width="300" height="54" rx="10"/><text class="name" x="164" y="723">Review cả nhánh</text><text class="sub" x="164" y="741">Reviewer mới · model mạnh nhất</text></a>
 <a class="node" href="#c-fix" aria-label="Sửa Critical/Important: MỘT đợt - Mỗi fix RED→GREEN, suite xanh"><rect x="150" y="798" width="300" height="54" rx="10"/><text class="name" x="164" y="821">Sửa Critical/Important: MỘT đợt</text><text class="sub" x="164" y="839">Mỗi fix RED→GREEN, suite xanh</text></a>
 <g class="node new" aria-label="finishing-a-development-branch - Merge, mở PR hoặc giữ nhánh"><rect x="150" y="896" width="300" height="54" rx="10"/><text class="name" x="164" y="919">finishing-a-development-branch</text><text class="sub" x="164" y="937">Merge, mở PR hoặc giữ nhánh</text></g></svg>
@@ -202,7 +216,7 @@
 
 <section>
   <div class="wrap">
-    <footer>Nguồn: <a href="../../skills/executing-plans/SKILL.md"><code>skills/executing-plans/SKILL.md</code></a> (346 dòng).</footer>
+    <footer>Nguồn: <a href="../../skills/executing-plans/SKILL.md"><code>skills/executing-plans/SKILL.md</code></a> (349 dòng).</footer>
   </div>
 </section>
 
