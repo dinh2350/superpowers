@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>writing-skills Explainer</title>
+<link rel="stylesheet" href="../assets/skill-detail.css">
+<link rel="stylesheet" href="../assets/sidebar.css">
+<script src="../assets/sidebar.js"></script>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="wrap">
+    <strong>writing-skills</strong>
+    <a href="#diagram">1 · Diagram</a><a href="#what">2 · Skill là gì</a><a href="#tdd">3 · TDD cho skill</a><a href="#form">4 · Dạng &amp; cách test</a><a href="#md">5 · SKILL.md &amp; checklist</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <h1>writing-skills</h1>
+    <p>Viết skill chính là TDD áp dụng cho tài liệu quy trình: chạy kịch bản áp lực với subagent khi chưa có skill (xem agent vi phạm thế nào), viết skill, kiểm lại, rồi bịt kẽ hở.</p>
+    <div class="chips"><span class="chip">Không có skill nào mà chưa có test fail trước</span><span class="chip">Áp dụng cả khi sửa skill có sẵn</span><span class="chip">Chọn dạng guidance khớp với loại lỗi</span><span class="chip">Mỗi skill một lần triển khai, không làm hàng loạt</span></div>
+  </div>
+</header>
+
+<!-- ============ 1. DIAGRAM ============ -->
+<section id="diagram">
+  <div class="wrap">
+    <h2><span class="secno">1</span>Diagram: RED → GREEN → REFACTOR cho skill</h2>
+    <p class="lead">Đi từ trên xuống. Đường bên trái là vòng REFACTOR: agent tìm ra cách lách mới thì bịt rồi test lại.</p>
+
+    <div class="diagram-grid">
+      <div class="diagram-box">
+        <p class="swipe-hint">← Vuốt ngang để xem hết diagram →</p>
+<svg class="flow" viewBox="0 0 560 678" role="group" aria-label="Sơ đồ writing-skills"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 z"/></marker></defs>
+<path class="arrow" d="M300 68 V112"/>
+<path class="arrow" d="M300 166 V210"/>
+<path class="arrow" d="M300 264 V308"/>
+<path class="arrow" d="M300 362 V406"/>
+<path class="arrow" d="M300 460 V504"/>
+<path class="arrow" d="M300 558 V602"/>
+<path class="arrow join" d="M150 531 H24"/>
+<path class="arrow" d="M24 531 V335 H150"/>
+<text class="note" x="308" y="94">có</text>
+<text class="note" x="308" y="584">tuân thủ</text>
+<text class="note" x="87" y="525" text-anchor="middle">bào chữa mới</text>
+<a class="node opt" href="#c-when" aria-label="Có nên tạo skill không? - Không hiển nhiên · dùng lại · áp dụng rộng"><rect x="150" y="14" width="300" height="54" rx="10"/><text class="name" x="164" y="37">Có nên tạo skill không?</text><text class="sub" x="164" y="55">Không hiển nhiên · dùng lại · áp dụng rộng</text></a>
+<a class="node" href="#c-red" aria-label="RED · Baseline không có skill - Chạy pressure scenario, ghi nguyên văn"><rect x="150" y="112" width="300" height="54" rx="10"/><text class="name" x="164" y="135">RED · Baseline không có skill</text><text class="sub" x="164" y="153">Chạy pressure scenario, ghi nguyên văn</text></a>
+<a class="node" href="#c-form" aria-label="Chọn dạng guidance - Khớp dạng với loại lỗi của baseline"><rect x="150" y="210" width="300" height="54" rx="10"/><text class="name" x="164" y="233">Chọn dạng guidance</text><text class="sub" x="164" y="251">Khớp dạng với loại lỗi của baseline</text></a>
+<a class="node" href="#c-green" aria-label="GREEN · Viết skill tối thiểu - Chỉ sửa đúng các vi phạm đã thấy"><rect x="150" y="308" width="300" height="54" rx="10"/><text class="name" x="164" y="331">GREEN · Viết skill tối thiểu</text><text class="sub" x="164" y="349">Chỉ sửa đúng các vi phạm đã thấy</text></a>
+<a class="node" href="#c-micro" aria-label="Micro-test câu chữ - Có control, 5+ lần, đọc từng match"><rect x="150" y="406" width="300" height="54" rx="10"/><text class="name" x="164" y="429">Micro-test câu chữ</text><text class="sub" x="164" y="447">Có control, 5+ lần, đọc từng match</text></a>
+<a class="node opt" href="#c-refactor" aria-label="Agent tuân thủ khi có skill? - Chạy lại cùng scenario, giờ có skill"><rect x="150" y="504" width="300" height="54" rx="10"/><text class="name" x="164" y="527">Agent tuân thủ khi có skill?</text><text class="sub" x="164" y="545">Chạy lại cùng scenario, giờ có skill</text></a>
+<a class="node new" href="#c-check" aria-label="Checklist triển khai - Mỗi skill một lần, không làm hàng loạt"><rect x="150" y="602" width="300" height="54" rx="10"/><text class="name" x="164" y="625">Checklist triển khai</text><text class="sub" x="164" y="643">Mỗi skill một lần, không làm hàng loạt</text></a></svg>
+        <div class="legend"><span><i></i>Bước của skill</span><span><i class="dash"></i>Nét đứt: điểm quyết định</span><span><i class="new"></i>Viền xanh: kết quả cuối</span></div>
+      </div>
+
+      <aside class="pains">
+        <h3>Nó giải quyết painpoint nào?</h3>
+        <p>Những lỗi mà từng phần của skill sinh ra để chặn.</p>
+<div class="pain-item"><q>Skill “rõ ràng” rồi mà agent vẫn không dùng được</q><div class="fix"><a class="skill-link" href="#c-red">RED</a>: chưa thấy agent fail thì chưa biết skill dạy đúng không</div></div><div class="pain-item"><q>Description tóm tắt quy trình nên agent làm theo bản tóm tắt thay vì đọc skill</q><div class="fix"><a class="skill-link" href="#c-md">Description chỉ nói khi nào dùng</a></div></div><div class="pain-item"><q>Dùng lệnh cấm cho lỗi sai hình dạng output, làm tệ hơn</q><div class="fix"><a class="skill-link" href="#c-form">Chọn dạng khớp với loại lỗi</a></div></div><div class="pain-item"><q>Viết nhiều skill một loạt mà không test từng cái</q><div class="fix"><a class="skill-link" href="#c-stop">Dừng, hoàn tất triển khai từng skill</a></div></div><div class="pain-item"><q>Ví dụ năm ngôn ngữ, code trong flowchart, nhãn chung chung</q><div class="fix"><a class="skill-link" href="#c-anti">Anti-patterns</a></div></div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section id="what">
+<div class="wrap">
+<h2><span class="secno">2</span>Skill là gì, khi nào tạo</h2>
+<p class="lead">Skill là hướng dẫn tham chiếu cho các kỹ thuật, pattern hay công cụ đã được chứng minh. Chỉ dẫn chính thức của Anthropic nằm ở <code>references/anthropic-best-practices.md</code>; skill này bổ sung các mẫu theo hướng TDD.</p>
+<div class="cards">
+<article class="card plain" id="c-what">
+<header><h4>Skill là gì</h4></header>
+<p class="row"><b class="lbl">Làm gì</b>Giúp agent sau này tìm và áp dụng cách làm hiệu quả. Skill là kỹ thuật, pattern, công cụ, tài liệu tham chiếu dùng lại được. Skill <b>không phải</b> truyện kể về cách bạn đã giải một vấn đề một lần.</p>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Loại</th><th>Ví dụ</th></tr></thead><tbody><tr><td>Technique: phương pháp cụ thể có các bước</td><td><code>condition-based-waiting</code>, <code>root-cause-tracing</code></td></tr><tr><td>Pattern: cách nghĩ về vấn đề</td><td><code>flatten-with-flags</code>, <code>test-invariants</code></td></tr><tr><td>Reference: tài liệu API, cú pháp, công cụ</td><td>Tài liệu về office docs</td></tr></tbody></table></div>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-when">
+<header><h4>Khi nào tạo</h4></header>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Nên tạo khi</th><th>Không tạo cho</th></tr></thead><tbody><tr><td>Kỹ thuật mà bản thân thấy không hiển nhiên</td><td>Giải pháp dùng một lần</td></tr><tr><td>Sẽ tham chiếu lại ở nhiều dự án</td><td>Thực hành chuẩn đã có tài liệu ở nơi khác</td></tr><tr><td>Pattern áp dụng rộng, không riêng dự án</td><td>Quy ước riêng của dự án (đặt trong file chỉ dẫn)</td></tr><tr><td>Người khác cũng được lợi</td><td>Ràng buộc cơ học: enforceable bằng regex hay validation thì tự động hóa, dành tài liệu cho các phán đoán</td></tr></tbody></table></div>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-struct">
+<header><h4>Thư mục và file</h4></header>
+<p class="row"><b class="lbl">Làm gì</b>Namespace phẳng: mọi skill nằm trong một namespace tìm kiếm được. <code>skills/&lt;tên-skill&gt;/SKILL.md</code> là bắt buộc, file phụ chỉ khi cần.</p>
+<ul><li>Tách file riêng cho: tài liệu tham chiếu nặng (100+ dòng), công cụ dùng lại (script, tiện ích, template).</li><li>Giữ inline: nguyên tắc, khái niệm, mẫu code (dưới 50 dòng), và mọi thứ còn lại.</li><li>Skill cá nhân nằm trong thư mục skills của runtime (<code>~/.claude/skills/</code> với Claude Code). Codex, Copilot CLI và Gemini CLI cũng nhận <code>~/.agents/skills/</code> như bí danh liên runtime.</li></ul>
+<p class="row">Gọi script đi kèm qua trình thông dịch trong văn bản (<code>bash scripts/tool.sh</code>, <code>node scripts/tool.js</code>), không bao giờ gọi bằng đường dẫn trần: một số công cụ đóng gói plugin của harness gỡ bit thực thi, và <code>scripts/tool.sh</code> trần sẽ lỗi <code>Permission denied</code> ở đó.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+</div>
+</div>
+</section>
+<section id="tdd">
+<div class="wrap">
+<h2><span class="secno">3</span>TDD cho tài liệu</h2>
+<p class="lead">Toàn bộ quá trình tạo skill đi theo RED-GREEN-REFACTOR. Luật sắt cũng giống TDD, và cần đã hiểu <code>test-driven-development</code> trước.</p>
+<div class="law">NO SKILL WITHOUT A FAILING TEST FIRST<small>Áp dụng cho skill MỚI và cả việc SỬA skill có sẵn. Viết skill trước khi test? Xóa, làm lại. Sửa skill mà không test cũng là cùng một vi phạm. Không ngoại lệ: kể cả “bổ sung đơn giản”, “chỉ thêm một mục”, “cập nhật tài liệu”.</small></div>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Khái niệm TDD</th><th>Khi tạo skill</th></tr></thead><tbody><tr><td>Test case</td><td>Pressure scenario với subagent</td></tr><tr><td>Production code</td><td>Tài liệu skill (<code>SKILL.md</code>)</td></tr><tr><td>Test fail (RED)</td><td>Agent vi phạm quy tắc khi chưa có skill (baseline)</td></tr><tr><td>Test pass (GREEN)</td><td>Agent tuân thủ khi có skill</td></tr><tr><td>Refactor</td><td>Bịt kẽ hở mà vẫn giữ tuân thủ</td></tr><tr><td>Viết test trước</td><td>Chạy baseline TRƯỚC khi viết skill</td></tr><tr><td>Xem nó fail</td><td>Ghi lại nguyên văn các lời bào chữa của agent</td></tr><tr><td>Code tối thiểu</td><td>Viết skill xử lý đúng các vi phạm đó</td></tr><tr><td>Xem nó pass</td><td>Xác nhận agent giờ tuân thủ</td></tr><tr><td>Vòng refactor</td><td>Tìm lời bào chữa mới → bịt → kiểm lại</td></tr></tbody></table></div>
+<div class="cards one">
+<article class="card plain" id="c-red">
+<header><span class="badge">R</span><h4>RED: baseline không có skill</h4></header>
+<p class="row"><b class="lbl">Làm gì</b>Chạy pressure scenario với subagent KHÔNG có skill. Ghi lại hành vi chính xác: họ chọn gì, dùng lời bào chữa nào (nguyên văn), áp lực nào kích hoạt vi phạm. Đây là bước “xem test fail”: phải thấy agent tự nhiên làm gì trước khi viết skill.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-green">
+<header><span class="badge">G</span><h4>GREEN: skill tối thiểu</h4></header>
+<p class="row"><b class="lbl">Làm gì</b>Viết skill xử lý đúng các lời bào chữa cụ thể đó. Đừng thêm nội dung cho trường hợp giả định. Chạy lại cùng scenario CÓ skill: agent giờ phải tuân thủ.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-refactor">
+<header><span class="badge">F</span><h4>REFACTOR: bịt kẽ hở</h4></header>
+<p class="row"><b class="lbl">Làm gì</b>Agent tìm ra một cách lách mới? Thêm phản bác tường minh. Test lại cho tới khi kín (bulletproof). Khi baseline là lỗi kỷ luật, đọc <code>references/bulletproofing.md</code> trước khi viết guidance: đóng kẽ hở, ranh giới tinh thần-câu chữ, bảng bào chữa, danh sách red flags.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-micro">
+<header><h4>Micro-test câu chữ trước khi chạy full scenario</h4></header>
+<p class="row"><b class="lbl">Làm gì</b>Chạy full scenario là cổng cuối nhưng chậm và đắt cho mỗi lần lặp. Hãy kiểm chính câu chữ bằng micro-test trước:</p>
+<ul><li><b>Một mẫu context mới mỗi lần gọi:</b> một API call thô, hoặc subagent một lần nếu không có API. System prompt là ngữ cảnh thực mà guidance sẽ sống trong đó (cả skill hay template, không phải guidance đứng riêng); tin nhắn người dùng là một task dễ kích hoạt lỗi.</li><li><b>Luôn có control không guidance.</b> Control không có lỗi thì không có gì để sửa: dừng, đừng viết guidance.</li><li><b>5+ lần cho mỗi biến thể.</b> Một mẫu đơn lẻ nói dối.</li><li><b>Đọc thủ công từng match được gắn cờ.</b> Chấm bằng chương trình được, nhưng echo của template và ví dụ phản mẫu được trích sẽ giả làm match; chỉ đếm tự động thì phóng đại cả lỗi lẫn thành công.</li><li><b>Phương sai là một chỉ số.</b> Guidance bắt đúng thì các lần chạy hội tụ về cùng một hình dạng. Năm cách hiểu khác nhau qua năm lần chạy nghĩa là câu chữ chưa ràng buộc: siết dạng trước khi thêm lời.</li></ul>
+<p class="row">Micro-test kiểm câu chữ; chúng không thay pressure scenario cho skill kỷ luật. Phương pháp kiểm thử đầy đủ (viết pressure scenario, các loại áp lực như thời gian, chi phí chìm, uy quyền, kiệt sức, bịt kẽ hở có hệ thống, meta-test) nằm trong <code>references/testing-skills-with-subagents.md</code>.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+</div>
+</div>
+</section>
+<section id="form">
+<div class="wrap">
+<h2><span class="secno">4</span>Chọn dạng guidance và cách test</h2>
+<p class="lead">Trước khi viết guidance, hãy phân loại lỗi của baseline. Dạng giúp bịt kín một loại lỗi có thể phản tác dụng với loại khác.</p>
+<div class="cards one">
+<article class="card plain" id="c-form">
+<header><h4>Khớp dạng với loại lỗi</h4></header>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Lỗi trong baseline</th><th>Dạng đúng</th><th>Dạng sai</th></tr></thead><tbody><tr><td>Bỏ qua hoặc vi phạm quy tắc dưới áp lực (biết là sai mà vẫn làm)</td><td>Cấm + bảng bào chữa + red flags (xem <code>references/bulletproofing.md</code>)</td><td>Hướng dẫn mềm (“prefer…”, “consider…”)</td></tr><tr><td>Tuân thủ nhưng output sai hình dạng (prompt phình, kết luận bị chôn, chép lại spec)</td><td>Công thức hoặc hợp đồng dương: nêu output LÀ gì, các phần và thứ tự</td><td>Danh sách cấm (“don’t restate”, “never narrate”)</td></tr><tr><td>Thiếu một phần tử bắt buộc ở thứ vốn đã làm ra</td><td>Cấu trúc: trường hoặc ô BẮT BUỘC trong template họ điền</td><td>Lời nhắc bằng văn xuôi gần template</td></tr><tr><td>Hành vi nên phụ thuộc điều kiện</td><td>Điều kiện gắn với một vị từ quan sát được (“nếu brief tồn tại thì tham chiếu nó”)</td><td>Quy tắc vô điều kiện cộng các mệnh đề miễn trừ</td></tr></tbody></table></div>
+<p class="row"><b>Vì sao lệnh cấm phản tác dụng với lỗi sai hình dạng:</b> dưới một động cơ cạnh tranh (“làm prompt tự đủ”), agent thương lượng với “đừng X”. Trong các thử nghiệm câu chữ đối đầu cho guidance viết dispatch prompt, nhánh cấm tạo ra nhiều nội dung không mong muốn hơn hẳn nhánh công thức, và có xu hướng tệ hơn cả nhóm không guidance. Hãy micro-test đúng trường hợp của mình thay vì giả định, và đừng mặc định với tay lấy lệnh cấm. Công thức không để lại gì để thương lượng.</p>
+<ul><li><b>Không có mệnh đề sắc thái.</b> “Đừng X trừ khi quan trọng” mở lại cuộc thương lượng: thêm đúng một mệnh đề sắc thái vào công thức thắng đã làm nó từ nhất quán thành nhiễu. Ngoại lệ thật thì viết thành điều kiện riêng gắn vào một vị từ quan sát được.</li><li><b>Mệnh đề miễn trừ không giới hạn được phạm vi.</b> “Giới hạn này không áp dụng cho code block” vẫn dập tắt code block. Nếu một phần output phải được miễn, hãy cấu trúc lại để quy tắc không với tới nó.</li></ul>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+</div>
+<div class="phase"><h3>Test theo loại skill</h3><span>Mỗi loại cần cách kiểm khác nhau</span></div>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Loại skill</th><th>Ví dụ</th><th>Test bằng</th><th>Thành công khi</th></tr></thead><tbody><tr><td>Kỷ luật (quy tắc, yêu cầu)</td><td><code>test-driven-development</code>, <code>verification-before-completion</code></td><td>Câu hỏi học thuật; pressure scenario; nhiều áp lực cùng lúc (thời gian + chi phí chìm + kiệt sức); tìm lời bào chữa rồi thêm phản bác</td><td>Agent tuân thủ quy tắc dưới áp lực tối đa</td></tr><tr><td>Technique (hướng dẫn cách làm)</td><td><code>condition-based-waiting</code>, <code>root-cause-tracing</code></td><td>Scenario áp dụng; scenario biến thể; test thiếu thông tin</td><td>Agent áp dụng thành công kỹ thuật vào tình huống mới</td></tr><tr><td>Pattern (mô hình tư duy)</td><td><code>reducing-complexity</code>, <code>information-hiding</code></td><td>Scenario nhận diện; scenario áp dụng; phản ví dụ</td><td>Agent nhận ra đúng khi nào và làm sao áp dụng</td></tr><tr><td>Reference (tài liệu, API)</td><td>Tài liệu API, tham chiếu lệnh, hướng dẫn thư viện</td><td>Scenario truy xuất; scenario áp dụng; test khoảng trống</td><td>Agent tìm và áp dụng đúng thông tin tham chiếu</td></tr></tbody></table></div>
+</div>
+</section>
+<section id="md">
+<div class="wrap">
+<h2><span class="secno">5</span>Viết SKILL.md, checklist, anti-pattern</h2>
+<p class="lead">Phần còn lại: cách viết description, ví dụ code, những điều không nên làm, và checklist triển khai cho mỗi skill.</p>
+<div class="cards">
+<article class="card plain" id="c-md">
+<header><h4>Description chỉ nói khi nào dùng</h4></header>
+<p class="row"><b class="lbl">Làm gì</b>Description nêu điều kiện kích hoạt và triệu chứng, bắt đầu bằng “Use when…”. <b>Không bao giờ</b> tóm tắt workflow của skill: agent đọc bản tóm tắt workflow sẽ làm theo nó thay vì đọc skill.</p>
+<p class="row">Khi viết hay đổi frontmatter, tên, description, hoặc cần cắt cỡ skill, đọc <code>references/discovery.md</code> (template SKILL.md, hướng dẫn description và từ khóa, đặt tên, ngân sách token, tham chiếu chéo). Thêm hay đổi flowchart thì đọc <code>references/flowcharts.md</code> trước.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-code">
+<header><h4>Ví dụ code</h4></header>
+<p class="row"><b class="lbl">Làm gì</b><b>Một ví dụ xuất sắc thắng nhiều ví dụ tầm thường.</b> Chọn ngôn ngữ phù hợp nhất: kỹ thuật test → TypeScript/JavaScript; debug hệ thống → Shell/Python; xử lý dữ liệu → Python.</p>
+<ul><li>Tốt: đầy đủ và chạy được, chú thích giải thích TẠI SAO, từ tình huống thật, thể hiện rõ pattern, sẵn sàng chỉnh (không phải template điền chỗ trống).</li><li>Không nên: cài bằng 5+ ngôn ngữ, tạo template điền chỗ trống, viết ví dụ gượng ép.</li></ul>
+<p class="row">Agent giỏi chuyển ngôn ngữ nên một ví dụ thật tốt là đủ.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-anti">
+<header><h4>Anti-patterns</h4></header>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Anti-pattern</th><th>Vì sao tệ</th></tr></thead><tbody><tr><td>❌ Ví dụ kể chuyện (“phiên 2025-10-03 ta thấy projectDir rỗng gây ra…”)</td><td>Quá cụ thể, không dùng lại được</td></tr><tr><td>❌ Loãng đa ngôn ngữ (<code>example-js.js</code>, <code>example-py.py</code>, <code>example-go.go</code>)</td><td>Chất lượng tầm thường, gánh nặng bảo trì</td></tr><tr><td>❌ Code trong flowchart</td><td>Không copy-paste được, khó đọc</td></tr><tr><td>❌ Nhãn chung chung (<code>helper1</code>, <code>step3</code>, <code>pattern4</code>)</td><td>Nhãn phải có ý nghĩa ngữ nghĩa</td></tr></tbody></table></div>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-stop">
+<header><h4>DỪNG trước khi sang skill tiếp theo</h4><span class="tag">Bắt buộc</span></header>
+<p class="row"><b class="lbl">Làm gì</b>Sau khi viết BẤT KỲ skill nào, PHẢI dừng và hoàn tất quy trình triển khai. Không được:</p>
+<ul><li>Tạo nhiều skill hàng loạt mà không test từng cái.</li><li>Sang skill tiếp theo trước khi skill hiện tại được xác minh.</li><li>Bỏ qua test vì “làm hàng loạt hiệu quả hơn”.</li></ul>
+<p class="row">Triển khai skill chưa test cũng như triển khai code chưa test: vi phạm tiêu chuẩn chất lượng.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+</div>
+<div class="cards one">
+<article class="card plain" id="c-check">
+<header><h4>Checklist tạo skill (TDD)</h4></header>
+<p class="row"><b class="lbl">Làm gì</b>Tạo một todo cho MỖI mục dưới đây.</p>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Pha</th><th>Mục</th></tr></thead><tbody><tr><td>RED</td><td>• Tạo pressure scenario (3+ áp lực kết hợp cho skill kỷ luật)<br>• Chạy KHÔNG có skill, ghi baseline nguyên văn<br>• Nhận ra pattern trong lời bào chữa và lỗi</td></tr><tr><td>GREEN</td><td>• Tên chỉ gồm chữ, số, dấu gạch ngang<br>• Frontmatter có <code>name</code> và <code>description</code> (tối đa 1024 ký tự)<br>• Description bắt đầu bằng “Use when…”, ngôi thứ ba, có triệu chứng cụ thể<br>• Từ khóa khắp nơi để tìm kiếm (lỗi, triệu chứng, công cụ)<br>• Overview rõ kèm core principle<br>• Xử lý đúng vi phạm baseline đã nhận ra ở RED<br>• Dạng guidance khớp loại lỗi<br>• Micro-test câu chữ với control (5+ lần, đọc từng match); không áp dụng cho skill thuần tham chiếu<br>• Code inline hoặc link file riêng; một ví dụ xuất sắc<br>• Chạy scenario CÓ skill: agent tuân thủ</td></tr><tr><td>REFACTOR</td><td>• Nhận ra lời bào chữa MỚI từ test<br>• Thêm phản bác tường minh (skill kỷ luật)<br>• Dựng bảng bào chữa từ mọi lần lặp; lập danh sách red flags<br>• Test lại tới khi kín</td></tr><tr><td>Chất lượng</td><td>• Flowchart nhỏ, chỉ khi quyết định không hiển nhiên<br>• Bảng tra nhanh; mục lỗi thường gặp<br>• Không kể chuyện<br>• File phụ chỉ cho công cụ hoặc tài liệu nặng</td></tr><tr><td>Triển khai</td><td>• Commit skill lên git và push lên fork (nếu có cấu hình)<br>• Cân nhắc đóng góp lại bằng PR (nếu hữu ích rộng)</td></tr></tbody></table></div>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-flow">
+<header><h4>Agent tương lai tìm skill thế nào</h4></header>
+<ul><li>Gặp vấn đề (“test chập chờn”).</li><li>Tìm skill (grep description, duyệt theo nhóm).</li><li>Thấy SKILL (description khớp).</li><li>Quét overview (có liên quan không?).</li><li>Đọc pattern (bảng tra nhanh).</li><li>Nạp ví dụ (chỉ khi đang cài).</li></ul>
+<p class="row">Tối ưu cho luồng này: đặt từ khóa tìm kiếm ở đầu và lặp lại thường xuyên.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+</div>
+<div class="phase"><h3>Những lời bào chữa để bỏ qua việc test</h3><span>Bảng Common Rationalizations của skill. Tất cả nghĩa là: test trước khi triển khai, không ngoại lệ</span></div>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Agent tự nhủ</th><th>Thực tế</th></tr></thead><tbody><tr><td>“Skill rõ ràng rồi”</td><td>Rõ với người viết không có nghĩa rõ với các agent khác. Hãy test.</td></tr><tr><td>“Chỉ là tài liệu tham chiếu”</td><td>Tài liệu tham chiếu cũng có khoảng trống và phần khó hiểu. Test việc truy xuất.</td></tr><tr><td>“Test là quá tay”</td><td>Skill chưa test thì luôn có vấn đề. 15 phút test tiết kiệm hàng giờ.</td></tr><tr><td>“Có vấn đề thì tôi mới test”</td><td>Vấn đề nghĩa là agent không dùng được skill. Test TRƯỚC khi triển khai.</td></tr><tr><td>“Test tẻ nhạt quá”</td><td>Test đỡ tẻ nhạt hơn nhiều so với debug một skill tồi trên production.</td></tr><tr><td>“Tôi tự tin skill tốt”</td><td>Quá tự tin thì chắc chắn có vấn đề. Cứ test.</td></tr><tr><td>“Review lý thuyết là đủ”</td><td>Đọc không bằng dùng. Test các tình huống áp dụng.</td></tr><tr><td>“Không có thời gian test”</td><td>Triển khai skill chưa test tốn nhiều thời gian sửa về sau hơn.</td></tr></tbody></table></div>
+</div>
+</section>
+
+<section>
+  <div class="wrap">
+    <footer>Nguồn: <a href="../../skills/writing-skills/SKILL.md"><code>skills/writing-skills/SKILL.md</code></a> (399 dòng).</footer>
+  </div>
+</section>
+
+</body>
+</html>

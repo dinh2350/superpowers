@@ -1,0 +1,207 @@
+/* Shared styles for explainer/skills-detail/*.html (skill explainer pages).
+   Pages also load assets/sidebar.css for the navigation sidebar. */
+  :root {
+    --bg: #f7f6f2;
+    --surface: #ffffff;
+    --ink: #1c1b19;
+    --muted: #67655e;
+    --line: #d8d5ca;
+    --accent: #4338ca;
+    --accent-soft: #ecebfd;
+    --new: #0f766e;
+    --new-soft: #dff2ef;
+    --pain: #b42318;
+    --pain-soft: #fdecea;
+    --code-bg: #efede6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #141413;
+      --surface: #1e1e1c;
+      --ink: #ecebe6;
+      --muted: #a3a097;
+      --line: #36352f;
+      --accent: #a9a4ff;
+      --accent-soft: #262540;
+      --new: #5eead4;
+      --new-soft: #12312d;
+      --pain: #ff9b8f;
+      --pain-soft: #3a1f1c;
+      --code-bg: #2a2a27;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  a { color: var(--accent); }
+  code, pre, .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  code { background: var(--code-bg); padding: 2px 6px; border-radius: 5px; font-size: .88em; }
+  pre.cmd {
+    margin: 4px 0 0; padding: 10px 12px; background: var(--code-bg); border-radius: 8px;
+    font-size: 12.5px; line-height: 1.55; overflow-x: auto; white-space: pre;
+  }
+
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+
+  /* top nav */
+  .topnav {
+    position: sticky; top: 0; z-index: 10;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .topnav .wrap { display: flex; gap: 20px; align-items: center; height: 52px; overflow-x: auto; white-space: nowrap; }
+  .topnav strong { font-size: 15px; margin-right: auto; }
+  .topnav a { text-decoration: none; color: var(--muted); font-size: 14px; font-weight: 500; }
+  .topnav a:hover { color: var(--accent); }
+
+  /* hero */
+  .hero { padding: 48px 0 8px; }
+  .hero h1 { font-size: clamp(30px, 5vw, 44px); line-height: 1.15; margin: 0 0 12px; letter-spacing: -.02em; }
+  .hero p { max-width: 66ch; font-size: 18px; color: var(--muted); margin: 0 0 16px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { font-size: 13px; padding: 4px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); }
+
+  section { padding: 44px 0 8px; }
+  section > .wrap > h2 { font-size: 26px; margin: 0 0 6px; letter-spacing: -.01em; }
+  .lead { color: var(--muted); margin: 0 0 24px; max-width: 72ch; }
+  .secno { color: var(--accent); font-weight: 700; margin-right: 8px; }
+
+  /* diagram */
+  .diagram-grid { display: grid; grid-template-columns: minmax(0, 560px) minmax(0, 1fr); gap: 32px; align-items: start; }
+  .diagram-box { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 16px 12px 12px; }
+  svg.flow { width: 100%; height: auto; display: block; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 12.5px; color: var(--muted); padding: 10px 8px 2px; }
+  .legend i { display: inline-block; width: 22px; height: 12px; border-radius: 4px; border: 1.5px solid var(--accent); vertical-align: -2px; margin-right: 6px; background: var(--surface); }
+  .legend i.dash { border-style: dashed; border-color: var(--muted); }
+  .legend i.new { border-color: var(--new); }
+
+  .flow .node { cursor: pointer; outline: none; }
+  .flow .node rect { fill: var(--surface); stroke: var(--accent); stroke-width: 1.5; transition: fill .12s; }
+  .flow .node.opt rect { stroke: var(--muted); stroke-dasharray: 5 4; }
+  .flow .node.new rect { stroke: var(--new); }
+  .flow .node:hover rect, .flow .node:focus-visible rect { fill: var(--accent-soft); stroke-width: 2.6; }
+  .flow .name { font: 600 12px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; fill: var(--ink); }
+  .flow .sub { font: 11.5px system-ui, -apple-system, "Segoe UI", sans-serif; fill: var(--muted); }
+  .flow .num circle { fill: var(--accent); }
+  .flow .num text { fill: #fff; font: 700 10px system-ui, sans-serif; text-anchor: middle; }
+  .flow .node.new .num circle { fill: var(--new); }
+  .flow .arrow { fill: none; stroke: var(--muted); stroke-width: 1.5; marker-end: url(#ah); }
+  .flow .arrow.join { marker-end: none; }
+  .flow #ah path { fill: var(--muted); }
+  .flow .note { font: italic 500 10.5px system-ui, sans-serif; fill: var(--muted); }
+  .flow .note.strong { font-style: normal; font-weight: 700; letter-spacing: .04em; fill: var(--accent); }
+
+  /* pain list */
+  .pains { position: sticky; top: 68px; }
+  .pains h3 { margin: 0 0 4px; font-size: 18px; }
+  .pains p { margin: 0 0 14px; color: var(--muted); font-size: 14px; }
+  .pain-item { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--pain); border-radius: 10px; padding: 10px 14px; margin-bottom: 10px; }
+  .pain-item q { display: block; quotes: none; font-weight: 600; font-size: 14.5px; line-height: 1.4; }
+  .pain-item .fix { margin-top: 6px; font-size: 13.5px; color: var(--muted); }
+  .skill-link {
+    display: inline-block; font: 600 12px ui-monospace, Menlo, Consolas, monospace;
+    background: var(--accent-soft); color: var(--accent); text-decoration: none;
+    padding: 2px 8px; border-radius: 6px; margin: 2px 4px 2px 0;
+  }
+  .skill-link:hover { text-decoration: underline; }
+
+  .callout { margin-top: 16px; padding: 12px 16px; border-radius: 12px; background: var(--accent-soft); font-size: 14.5px; }
+  .callout.warn { background: var(--pain-soft); }
+
+  /* parallel diagram */
+  .par { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 16px; }
+  .gitbar {
+    text-align: center; font: 600 13px ui-monospace, Menlo, Consolas, monospace;
+    background: var(--accent-soft); color: var(--accent); border-radius: 10px; padding: 8px 12px;
+  }
+  .gitbar small { display: block; font: 12.5px system-ui, sans-serif; color: var(--muted); }
+  .lanes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin: 14px 0; }
+  .lane { border: 1.5px dashed var(--line); border-radius: 12px; padding: 12px; }
+  .lane h3 { margin: 0 0 10px; font-size: 15px; }
+  .lstep { background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; font-size: 14px; }
+  .lstep small { display: block; color: var(--muted); font-size: 12.5px; }
+  .lstep.key { border-color: var(--new); background: var(--new-soft); }
+  .down { text-align: center; color: var(--muted); line-height: 1.5; font-size: 14px; }
+  .merge { text-align: center; padding: 8px 12px; border-radius: 10px; border: 1.5px solid var(--new); background: var(--new-soft); font-size: 14px; font-weight: 600; }
+
+  .vs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .vs .case { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; }
+  .vs .case.bad { border-left: 4px solid var(--pain); }
+  .vs .case.good { border-left: 4px solid var(--new); }
+  .vs h3 { margin: 0 0 8px; font-size: 16px; }
+  .vs .case.bad h3 { color: var(--pain); }
+  .vs .case.good h3 { color: var(--new); }
+  .vs ol { margin: 0; padding-left: 20px; font-size: 14.5px; }
+  .vs li + li { margin-top: 4px; }
+  .vs p { margin: 8px 0 0; font-size: 13.5px; color: var(--muted); }
+
+  /* skill cards */
+  .phase { margin: 32px 0 12px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
+  .phase h3 { margin: 0; font-size: 19px; }
+  .phase span { color: var(--muted); font-size: 14px; }
+  .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .cards.one { grid-template-columns: minmax(0, 1fr); }
+  .card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+    padding: 16px 18px 12px; scroll-margin-top: 72px; transition: box-shadow .2s, border-color .2s;
+  }
+  .card:target { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+  .card header { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .badge { display: inline-grid; place-items: center; min-width: 26px; height: 26px; padding: 0 6px; border-radius: 13px; background: var(--accent); color: #fff; font-weight: 700; font-size: 13px; }
+  .card h4 { margin: 0; font: 700 15px ui-monospace, Menlo, Consolas, monospace; word-break: break-word; }
+  .card.plain h4 { font: 700 15px/1.3 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  .tag { font-size: 11.5px; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--code-bg); color: var(--muted); }
+  .tag.new { background: var(--new-soft); color: var(--new); }
+  .row { margin: 0 0 9px; font-size: 14.5px; }
+  .row b.lbl { display: block; font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-bottom: 1px; }
+  .row.pain { background: var(--pain-soft); border-radius: 8px; padding: 7px 10px; }
+  .row.pain b.lbl { color: var(--pain); }
+  .card ul { margin: 0 0 9px; padding-left: 20px; font-size: 14.5px; }
+  .card li + li { margin-top: 3px; }
+  .back { font-size: 12.5px; text-decoration: none; color: var(--muted); display: inline-block; margin-top: 2px; }
+  .back:hover { color: var(--accent); }
+
+  /* tables */
+  .tbl-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; }
+  .card .tbl-wrap { margin: 4px 0 12px; }
+  table.tbl { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 480px; }
+  .tbl th, .tbl td { text-align: left; vertical-align: top; padding: 8px 14px; border-bottom: 1px solid var(--line); }
+  .tbl th { font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+  .tbl tr:last-child td { border-bottom: 0; }
+  .tbl td:first-child { white-space: nowrap; }
+  .tbl.wrapfirst td:first-child { white-space: normal; }
+  .tbl-note { margin: 8px 4px 0; font-size: 13px; color: var(--muted); }
+
+  footer { margin: 48px 0 64px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13.5px; }
+
+  .swipe-hint { display: none; font-size: 12.5px; color: var(--muted); margin: 0 0 8px 4px; }
+
+  @media (max-width: 600px) {
+    .diagram-box { overflow-x: auto; }
+    svg.flow { min-width: 520px; }
+    .swipe-hint { display: block; }
+    .lanes, .vs { grid-template-columns: minmax(0, 1fr); }
+  }
+
+  @media (max-width: 900px) {
+    .diagram-grid { grid-template-columns: minmax(0, 1fr); }
+    .pains { position: static; }
+    .cards { grid-template-columns: minmax(0, 1fr); }
+  }
+
+  /* ---- additions for the generated skill pages ---- */
+  .flow g.node { cursor: default; }
+  .flow g.node:hover rect { fill: var(--surface); stroke-width: 1.5; }
+  .law {
+    margin: 0 0 18px; padding: 14px 18px; border-radius: 12px;
+    border: 1.5px solid var(--pain); background: var(--pain-soft);
+    font: 700 15px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color: var(--ink);
+  }
+  .law small { display: block; margin-top: 6px; font: 500 13.5px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--muted); }

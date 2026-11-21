@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>finishing-a-development-branch Explainer</title>
+<link rel="stylesheet" href="../assets/skill-detail.css">
+<link rel="stylesheet" href="../assets/sidebar.css">
+<script src="../assets/sidebar.js"></script>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="wrap">
+    <strong>finishing-a-development-branch</strong>
+    <a href="#diagram">1 · Diagram</a><a href="#steps">2 · Bước 1–4</a><a href="#options">3 · Step 5</a><a href="#cleanup">4 · Step 6</a><a href="#flags">5 · Bào chữa</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <h1>finishing-a-development-branch</h1>
+    <p>Khi implement xong và test xanh, skill này đưa bạn một menu để quyết định tích hợp công việc: merge local, mở PR, hoặc giữ nguyên. Quyết định là của bạn, agent chỉ thực hiện và dọn dẹp.</p>
+    <div class="chips"><span class="chip">Verify test → Detect → Menu → Thực hiện → Dọn dẹp</span><span class="chip">Đúng 3 lựa chọn (2 nếu detached HEAD)</span><span class="chip">Discard chỉ khi bạn gõ <code>discard</code></span><span class="chip">Không bao giờ <code>--force</code> tự ý</span></div>
+  </div>
+</header>
+
+<!-- ============ 1. DIAGRAM ============ -->
+<section id="diagram">
+  <div class="wrap">
+    <h2><span class="secno">1</span>Diagram: từ test xanh tới tích hợp</h2>
+    <p class="lead">Đi từ trên xuống. Ba nhánh ở giữa là ba lựa chọn của bạn ở Step 5; chỉ nhánh merge local đi tiếp vào bước dọn worktree.</p>
+
+    <div class="diagram-grid">
+      <div class="diagram-box">
+        <p class="swipe-hint">← Vuốt ngang để xem hết diagram →</p>
+<svg class="flow" viewBox="0 0 560 580" role="group" aria-label="Sơ đồ finishing-a-development-branch"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 z"/></marker></defs>
+<path class="arrow" d="M300 68 V112"/>
+<path class="arrow" d="M300 166 V210"/>
+<path class="arrow" d="M300 264 V308"/>
+<path class="arrow" d="M300 362 V384 H124 V406"/>
+<path class="arrow" d="M300 362 V384 H300 V406"/>
+<path class="arrow" d="M300 362 V384 H476 V406"/>
+<path class="arrow" d="M124 460 V482 H300 V504"/>
+<text class="note" x="117" y="378" text-anchor="end">merge</text>
+<text class="note" x="308" y="398">PR</text>
+<text class="note" x="483" y="378">giữ</text>
+<a class="node" href="#c-s1" aria-label="Chạy full test - Đỏ → báo lỗi và DỪNG"><rect x="150" y="14" width="300" height="54" rx="10"/><text class="name" x="164" y="37">Chạy full test</text><text class="sub" x="164" y="55">Đỏ → báo lỗi và DỪNG</text><g class="num"><circle cx="150" cy="14" r="10"/><text x="150" y="17.5">1</text></g></a>
+<a class="node" href="#c-s2" aria-label="Phát hiện môi trường - GIT_DIR, GIT_COMMON, WORKTREE_PATH"><rect x="150" y="112" width="300" height="54" rx="10"/><text class="name" x="164" y="135">Phát hiện môi trường</text><text class="sub" x="164" y="153">GIT_DIR, GIT_COMMON, WORKTREE_PATH</text><g class="num"><circle cx="150" cy="112" r="10"/><text x="150" y="115.5">2</text></g></a>
+<a class="node" href="#c-s3" aria-label="Xác định base branch - Không chắc thì hỏi, xác nhận trước"><rect x="150" y="210" width="300" height="54" rx="10"/><text class="name" x="164" y="233">Xác định base branch</text><text class="sub" x="164" y="251">Không chắc thì hỏi, xác nhận trước</text><g class="num"><circle cx="150" cy="210" r="10"/><text x="150" y="213.5">3</text></g></a>
+<a class="node opt" href="#c-s4" aria-label="Đưa menu, chờ bạn chọn - Quyết định tích hợp là của bạn"><rect x="150" y="308" width="300" height="54" rx="10"/><text class="name" x="164" y="331">Đưa menu, chờ bạn chọn</text><text class="sub" x="164" y="349">Quyết định tích hợp là của bạn</text><g class="num"><circle cx="150" cy="308" r="10"/><text x="150" y="311.5">4</text></g></a>
+<a class="node" href="#c-o1" aria-label="1 · Merge local - Test lại sau merge"><rect x="48" y="406" width="152" height="54" rx="10"/><text class="name" x="62" y="429">1 · Merge local</text><text class="sub" x="62" y="447">Test lại sau merge</text></a>
+<a class="node" href="#c-o2" aria-label="2 · Push + PR - Giữ worktree"><rect x="224" y="406" width="152" height="54" rx="10"/><text class="name" x="238" y="429">2 · Push + PR</text><text class="sub" x="238" y="447">Giữ worktree</text></a>
+<a class="node" href="#c-o3" aria-label="3 · Giữ nguyên - Branch + worktree"><rect x="400" y="406" width="152" height="54" rx="10"/><text class="name" x="414" y="429">3 · Giữ nguyên</text><text class="sub" x="414" y="447">Branch + worktree</text></a>
+<a class="node" href="#c-s6" aria-label="Dọn workspace - Chỉ khi merge local hoặc discard"><rect x="150" y="504" width="300" height="54" rx="10"/><text class="name" x="164" y="527">Dọn workspace</text><text class="sub" x="164" y="545">Chỉ khi merge local hoặc discard</text><g class="num"><circle cx="150" cy="504" r="10"/><text x="150" y="507.5">6</text></g></a></svg>
+        <div class="legend"><span><i></i>Bước của skill</span><span><i class="dash"></i>Nét đứt: điểm bạn quyết</span></div>
+      </div>
+
+      <aside class="pains">
+        <h3>Nó giải quyết painpoint nào?</h3>
+        <p>Những lỗi mà từng phần của skill sinh ra để chặn.</p>
+<div class="pain-item"><q>Merge khi test còn đỏ</q><div class="fix"><a class="skill-link" href="#c-s1">Step 1</a>: đỏ thì dừng, menu chỉ hiện sau khi suite xanh</div></div><div class="pain-item"><q>Tự quyết merge vì “chắc họ muốn thế”</q><div class="fix"><a class="skill-link" href="#c-s4">Menu</a>: quyết định tích hợp là của bạn</div></div><div class="pain-item"><q>Merge nhầm vào base branch sai</q><div class="fix"><a class="skill-link" href="#c-s3">Step 3</a>: xác nhận fork point trước khi merge</div></div><div class="pain-item"><q>Xóa worktree còn file chưa commit</q><div class="fix"><a class="skill-link" href="#c-s6">Step 6</a>: bị từ chối thì không <code>--force</code>, hỏi bạn</div></div><div class="pain-item"><q>Hiểu “ừ bỏ đi” là đồng ý xóa hết</q><div class="fix"><a class="skill-link" href="#c-discard">Discard</a>: chỉ từ <code>discard</code> gõ đúng mới tính</div></div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section id="steps">
+<div class="wrap">
+<h2><span class="secno">2</span>Bốn bước đầu: kiểm tra và hỏi</h2>
+<p class="lead">Chưa có gì bị thay đổi ở bốn bước này. Agent kiểm tra, rồi hỏi bạn.</p>
+<div class="cards one">
+<article class="card plain" id="c-s1">
+<header><span class="badge">1</span><h4>Verify tests</h4></header>
+<p class="row"><b class="lbl">Làm gì</b>Chạy test suite đầy đủ của dự án (<code>npm test</code> / <code>cargo test</code> / <code>pytest</code> / <code>go test ./...</code>). Nếu <b>test fail</b>, báo các lỗi và dừng: menu chỉ hiện sau khi suite xanh. Pass thì sang Step 2.</p>
+<pre class="cmd">Tests failing (&lt;N&gt; failures). Must fix before completing:
+
+[Show failures]</pre>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-s2">
+<header><span class="badge">2</span><h4>Detect environment</h4></header>
+<pre class="cmd">GIT_DIR=$(cd "$(git rev-parse --git-dir)" 2&gt;/dev/null &amp;&amp; pwd -P)
+GIT_COMMON=$(cd "$(git rev-parse --git-common-dir)" 2&gt;/dev/null &amp;&amp; pwd -P)
+# Chụp ngay bây giờ, khi còn trong workspace: Step 5 đổi thư mục
+# trước khi dọn dẹp (Step 6) cần giá trị này
+WORKTREE_PATH=$(git rev-parse --show-toplevel)</pre>
+<p class="row"><b class="lbl">Làm gì</b>Kết quả quyết định menu nào hiện ra và cách dọn dẹp:</p>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Trạng thái</th><th>Menu</th><th>Dọn dẹp</th></tr></thead><tbody><tr><td><code>GIT_DIR == GIT_COMMON</code> (repo thường)</td><td>3 lựa chọn chuẩn</td><td>Không có worktree để dọn</td></tr><tr><td><code>GIT_DIR != GIT_COMMON</code>, có tên branch</td><td>3 lựa chọn chuẩn</td><td>Theo nguồn gốc (xem Step 6)</td></tr><tr><td><code>GIT_DIR != GIT_COMMON</code>, detached HEAD</td><td>Rút gọn còn 2 lựa chọn (không merge)</td><td>Do bên ngoài quản lý: để nguyên</td></tr></tbody></table></div>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-s3">
+<header><span class="badge">3</span><h4>Xác định base branch</h4></header>
+<p class="row"><b class="lbl">Làm gì</b>Base branch là nhánh mà công việc này tách ra: thường được nêu trong plan, trong hội thoại, hoặc là upstream của nhánh. Chưa biết thì hỏi: “This branch split from &lt;đoán tốt nhất&gt; - is that correct?”.</p>
+<p class="row"><b class="lbl">Dùng khi</b>Xác nhận trước khi merge: merge nhầm base rất tốn để gỡ.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-s4">
+<header><span class="badge">4</span><h4>Đưa menu</h4><span class="tag new">Chờ bạn chọn</span></header>
+<p class="row"><b class="lbl">Làm gì</b>Đưa đúng các lựa chọn dưới đây, ngắn gọn, mỗi lựa chọn đều lấy từ danh sách. Việc bỏ công việc (discard) chỉ xảy ra khi chính bạn yêu cầu. Rồi chờ câu trả lời: quyết định tích hợp là của bạn.</p>
+<p class="row"><b class="lbl">Repo thường, hoặc worktree có tên branch</b></p>
+<pre class="cmd">Implementation complete. What would you like to do?
+
+1. Merge back to &lt;base-branch&gt; locally
+2. Push and create a Pull Request
+3. Keep the branch as-is (I'll handle it later)
+
+Which option?</pre>
+<p class="row"><b class="lbl">Detached HEAD</b></p>
+<pre class="cmd">Implementation complete. You're on a detached HEAD (externally managed workspace).
+
+1. Push as new branch and create a Pull Request
+2. Keep as-is (I'll handle it later)
+
+Which option?</pre>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+</div>
+</div>
+</section>
+<section id="options">
+<div class="wrap">
+<h2><span class="secno">3</span>Thực hiện lựa chọn (Step 5)</h2>
+<p class="lead">Chỉ làm đúng lựa chọn bạn đã chọn. Bảng cuối mục tóm tắt hậu quả của từng lựa chọn.</p>
+<div class="cards one">
+<article class="card plain" id="c-o1">
+<header><span class="badge">1</span><h4>Merge local</h4></header>
+<pre class="cmd"># Lấy root repo chính để an toàn về thư mục hiện tại
+MAIN_ROOT=$(git -C "$(git rev-parse --git-common-dir)/.." rev-parse --show-toplevel)
+cd "$MAIN_ROOT"
+
+# Merge trước: xác nhận thành công rồi mới xóa gì
+git checkout &lt;base-branch&gt;
+git pull
+git merge &lt;feature-branch&gt;
+
+# Chạy test trên kết quả đã merge
+&lt;test command&gt;</pre>
+<p class="row">Test fail trên kết quả merge thì dừng, để nguyên worktree và branch rồi điều tra: chưa push gì nên merge chỉ ở local và khôi phục được. Kết quả merge xanh thì dọn worktree (Step 6), rồi xóa branch:</p>
+<pre class="cmd">git branch -d &lt;feature-branch&gt;</pre>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-o2">
+<header><span class="badge">2</span><h4>Push và tạo PR</h4></header>
+<pre class="cmd">git push -u origin &lt;feature-branch&gt;
+# Từ detached HEAD, đặt tên branch mới trên remote:
+# git push origin HEAD:refs/heads/&lt;new-branch&gt;</pre>
+<p class="row">Rồi tạo pull/merge request vào base branch bằng công cụ của forge (CLI nếu có, hoặc URL tạo mới mà đa số forge in ra khi push), theo template và quy ước PR của repo nếu có, và báo URL cho bạn. <b>Giữ worktree</b>: bạn sẽ sửa theo phản hồi PR ở đó.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-o3">
+<header><span class="badge">3</span><h4>Giữ nguyên</h4></header>
+<p class="row">Báo: “Keeping branch &lt;name&gt;. Worktree preserved at &lt;path&gt;.”</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-discard">
+<header><h4>Discard (chỉ khi bạn yêu cầu)</h4><span class="tag">Cẩn thận</span></header>
+<p class="row"><b class="lbl">Làm gì</b>Con đường này chỉ tồn tại để đáp lại một yêu cầu rõ ràng là vứt công việc đi. Phải xác nhận trước:</p>
+<pre class="cmd">This will permanently delete:
+- Branch &lt;name&gt;
+- All commits: &lt;commit-list&gt;
+- Worktree at &lt;path&gt;
+
+Type 'discard' to confirm.</pre>
+<p class="row">Chờ đúng xác nhận đó. Khi có, lấy <code>MAIN_ROOT</code> rồi <code>cd</code> ra khỏi worktree, dọn worktree (Step 6) và xóa cưỡng bức branch:</p>
+<pre class="cmd">git branch -D &lt;feature-branch&gt;</pre>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+</div>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Lựa chọn</th><th>Merge</th><th>Push</th><th>Giữ worktree</th><th>Dọn branch</th></tr></thead><tbody><tr><td>1. Merge local</td><td>có</td><td>—</td><td>—</td><td>có</td></tr><tr><td>2. Tạo PR</td><td>—</td><td>có</td><td>có</td><td>—</td></tr><tr><td>3. Giữ nguyên</td><td>—</td><td>—</td><td>có</td><td>—</td></tr><tr><td>Discard (chỉ khi bạn yêu cầu)</td><td>—</td><td>—</td><td>—</td><td>có (force)</td></tr></tbody></table></div>
+</div>
+</section>
+<section id="cleanup">
+<div class="wrap">
+<h2><span class="secno">4</span>Dọn worktree (Step 6)</h2>
+<p class="lead">Chạy cho lựa chọn 1 và discard đã xác nhận. Lựa chọn 2 và 3 luôn giữ worktree. Việc gỡ worktree phải chạy từ ngoài worktree, và dùng các giá trị <code>GIT_DIR</code>, <code>GIT_COMMON</code>, <code>WORKTREE_PATH</code> đã chụp ở Step 2.</p>
+<div class="cards one">
+<article class="card plain" id="c-s6">
+<header><span class="badge">6</span><h4>Quy tắc dọn dẹp</h4></header>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Điều kiện</th><th>Làm gì</th></tr></thead><tbody><tr><td><code>GIT_DIR == GIT_COMMON</code></td><td>Repo thường, không có worktree để dọn. Xong.</td></tr><tr><td><code>WORKTREE_PATH</code> nằm dưới <code>.worktrees/</code> hoặc <code>worktrees/</code></td><td>Superpowers tạo worktree này nên việc dọn là của skill: <code>git worktree remove "$WORKTREE_PATH"</code> rồi <code>git worktree prune</code> (tự chữa: dọn các đăng ký cũ).</td></tr><tr><td>Nơi khác</td><td>Môi trường chủ sở hữu workspace này: để nguyên. Nền tảng có tool thoát workspace thì dùng nó.</td></tr></tbody></table></div>
+<p class="row"><b class="lbl">Nếu việc gỡ bị từ chối</b>Thông báo <code>contains modified or untracked files</code> nghĩa là worktree chứa file không tồn tại ở đâu khác: plan, ghi chú hay scratch chưa commit. <b>Không bao giờ <code>--force</code> tự ý.</b> Cho bạn thấy cái gì đang nguy hiểm và hỏi:</p>
+<pre class="cmd">git -C "$WORKTREE_PATH" status --porcelain -uall</pre>
+<pre class="cmd">Worktree removal refused — these files were never committed:
+
+&lt;file list&gt;
+
+1. Commit them to &lt;branch&gt; before cleanup
+2. Move them into &lt;main repo root&gt;
+3. Delete them (unrecoverable)
+
+Which?</pre>
+<p class="row">Thực hiện lựa chọn của bạn, rồi mới gỡ worktree.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+</div>
+</div>
+</section>
+<section id="flags">
+<div class="wrap">
+<h2><span class="secno">5</span>Những lời bào chữa hay gặp</h2>
+<p class="lead">Bảng Common Rationalizations của skill.</p>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Agent tự nhủ</th><th>Thực tế</th></tr></thead><tbody><tr><td>“Test đã pass lúc nãy trong phiên”</td><td>Chạy suite trên cây sắp tích hợp. Một lần xanh chỉ chứng minh cho cây mà nó đã chạy.</td></tr><tr><td>“Họ rõ ràng muốn merge”</td><td>Tích hợp là quyết định của bạn. Đưa menu và chờ.</td></tr><tr><td>“Họ có vẻ xong tính năng này, tôi gợi ý bỏ nó”</td><td>Menu đã đầy đủ như viết. Discard chỉ xảy ra khi bạn yêu cầu bằng lời rõ ràng.</td></tr><tr><td>“‘Ừ, bỏ đi’ tính là xác nhận”</td><td>Chỉ từ <code>discard</code> gõ đúng mới cho phép xóa.</td></tr><tr><td>“PR lên rồi, worktree là rác”</td><td>Sửa theo phản hồi PR diễn ra trong worktree đó. Nó ở lại tới khi công việc được merge.</td></tr><tr><td>“Worktree khác này có vẻ cũ, dọn luôn”</td><td>Chỉ dọn worktree dưới <code>.worktrees/</code> hoặc <code>worktrees/</code>. Mọi thứ khác thuộc về môi trường chủ.</td></tr><tr><td>“Gỡ bị từ chối, <code>--force</code> chỉ là hoàn tất việc dọn”</td><td>Từ chối nghĩa là có file chỉ tồn tại trong worktree đó. <code>--force</code> hủy chúng vĩnh viễn. Cho bạn thấy và hỏi.</td></tr><tr><td>“Kết quả merge fail chắc là flaky”</td><td>Kết quả merge fail dừng mọi thứ. Branch và worktree ở nguyên trong lúc điều tra.</td></tr><tr><td>“Base branch hiển nhiên là main”</td><td>Xác nhận fork point hoặc hỏi. Merge nhầm base rất tốn để gỡ.</td></tr><tr><td>“Push bị từ chối, force-push sẽ xong”</td><td>Push bị từ chối nghĩa là remote đã đổi. Điều tra; chỉ force-push khi bạn yêu cầu rõ ràng.</td></tr></tbody></table></div>
+</div>
+</section>
+
+<section>
+  <div class="wrap">
+    <footer>Nguồn: <a href="../../skills/finishing-a-development-branch/SKILL.md"><code>skills/finishing-a-development-branch/SKILL.md</code></a> (225 dòng).</footer>
+  </div>
+</section>
+
+</body>
+</html>

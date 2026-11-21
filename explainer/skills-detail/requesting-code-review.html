@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>requesting-code-review Explainer</title>
+<link rel="stylesheet" href="../assets/skill-detail.css">
+<link rel="stylesheet" href="../assets/sidebar.css">
+<script src="../assets/sidebar.js"></script>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="wrap">
+    <strong>requesting-code-review</strong>
+    <a href="#diagram">1 · Diagram</a><a href="#when">2 · Khi nào</a><a href="#how">3 · Cách xin</a><a href="#flags">4 · Red Flags</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <h1>requesting-code-review</h1>
+    <p>Giao một reviewer subagent soi công việc để bắt lỗi trước khi chúng lan ra. Reviewer chỉ nhận ngữ cảnh được dựng riêng cho nó, không bao giờ thấy lịch sử phiên của agent.</p>
+    <div class="chips"><span class="chip">Review sớm, review thường xuyên</span><span class="chip">Bắt buộc: sau mỗi task, sau tính năng lớn, trước khi merge</span><span class="chip">Reviewer là subagent <code>general-purpose</code></span><span class="chip">Reviewer sai thì phản biện bằng lý lẽ</span></div>
+  </div>
+</header>
+
+<!-- ============ 1. DIAGRAM ============ -->
+<section id="diagram">
+  <div class="wrap">
+    <h2><span class="secno">1</span>Diagram: một lần xin review</h2>
+    <p class="lead">Đi từ trên xuống. Nhánh cuối là hai cách đáp lại phản hồi của reviewer: sửa theo mức độ, hoặc phản biện khi reviewer sai.</p>
+
+    <div class="diagram-grid">
+      <div class="diagram-box">
+        <p class="swipe-hint">← Vuốt ngang để xem hết diagram →</p>
+<svg class="flow" viewBox="0 0 560 580" role="group" aria-label="Sơ đồ requesting-code-review"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 z"/></marker></defs>
+<path class="arrow" d="M300 68 V112"/>
+<path class="arrow" d="M300 166 V210"/>
+<path class="arrow" d="M300 264 V308"/>
+<path class="arrow" d="M300 362 V384 H175 V406"/>
+<path class="arrow" d="M300 362 V384 H425 V406"/>
+<path class="arrow" d="M175 460 V482 H300 V504"/>
+<path class="arrow join" d="M425 460 V482 H300"/>
+<text class="note" x="168" y="378" text-anchor="end">đúng</text>
+<text class="note" x="432" y="378">reviewer sai</text>
+<a class="node" href="#when" aria-label="Vừa xong task / tính năng lớn - Hoặc sắp merge vào main"><rect x="150" y="14" width="300" height="54" rx="10"/><text class="name" x="164" y="37">Vừa xong task / tính năng lớn</text><text class="sub" x="164" y="55">Hoặc sắp merge vào main</text></a>
+<a class="node" href="#c-how" aria-label="Lấy BASE_SHA và HEAD_SHA - Phạm vi commit cần review"><rect x="150" y="112" width="300" height="54" rx="10"/><text class="name" x="164" y="135">Lấy BASE_SHA và HEAD_SHA</text><text class="sub" x="164" y="153">Phạm vi commit cần review</text></a>
+<a class="node" href="#c-how" aria-label="Giao reviewer subagent - general-purpose + template code-reviewer.md"><rect x="150" y="210" width="300" height="54" rx="10"/><text class="name" x="164" y="233">Giao reviewer subagent</text><text class="sub" x="164" y="251">general-purpose + template code-reviewer.md</text></a>
+<a class="node" href="#c-act" aria-label="Reviewer trả kết quả - Strengths · Issues · Assessment"><rect x="150" y="308" width="300" height="54" rx="10"/><text class="name" x="164" y="331">Reviewer trả kết quả</text><text class="sub" x="164" y="349">Strengths · Issues · Assessment</text></a>
+<a class="node" href="#c-act" aria-label="Sửa theo mức độ - Minor thì ghi lại làm sau"><rect x="60" y="406" width="230" height="54" rx="10"/><text class="name" x="74" y="429">Sửa theo mức độ</text><text class="sub" x="74" y="447">Minor thì ghi lại làm sau</text></a>
+<a class="node" href="#c-act" aria-label="Phản biện - Lý lẽ + code hoặc test"><rect x="310" y="406" width="230" height="54" rx="10"/><text class="name" x="324" y="429">Phản biện</text><text class="sub" x="324" y="447">Lý lẽ + code hoặc test</text></a>
+<g class="node new" aria-label="Tiếp tục - Task kế tiếp, hoặc merge"><rect x="150" y="504" width="300" height="54" rx="10"/><text class="name" x="164" y="527">Tiếp tục</text><text class="sub" x="164" y="545">Task kế tiếp, hoặc merge</text></g></svg>
+        <div class="legend"><span><i></i>Bước của skill</span><span><i class="new"></i>Viền xanh: kết quả cuối</span></div>
+      </div>
+
+      <aside class="pains">
+        <h3>Nó giải quyết painpoint nào?</h3>
+        <p>Những lỗi mà từng phần của skill sinh ra để chặn.</p>
+<div class="pain-item"><q>Lỗi nhỏ ở task 2 âm thầm lan sang task 3, 4, 5</q><div class="fix"><a class="skill-link" href="#when">Review sớm, review thường xuyên</a></div></div><div class="pain-item"><q>Tự đọc diff của mình, đốt mất context cần để điều phối</q><div class="fix"><a class="skill-link" href="#c-how">Reviewer subagent</a>: diff và đánh giá nằm trong context của nó, chỉ phát hiện quay về</div></div><div class="pain-item"><q>Reviewer thấy cả lịch sử phiên nên bị kéo theo suy nghĩ của chính agent</q><div class="fix">Ngữ cảnh dựng riêng, không bao giờ là lịch sử phiên</div></div><div class="pain-item"><q>Bỏ review vì “nhỏ thôi”</q><div class="fix"><a class="skill-link" href="#flags">Red Flags</a>: không bao giờ bỏ</div></div><div class="pain-item"><q>Gật đầu với reviewer dù họ sai</q><div class="fix"><a class="skill-link" href="#c-act">Phản biện có lý lẽ</a>, kèm code hoặc test chứng minh</div></div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section id="when">
+<div class="wrap">
+<h2><span class="secno">2</span>Khi nào xin review</h2>
+<p class="lead">Nguyên tắc cốt lõi: review sớm, review thường xuyên.</p>
+<div class="cards">
+<article class="card plain" id="c-mand">
+<header><h4>Bắt buộc</h4><span class="tag new">Luôn làm</span></header>
+<ul><li>Sau mỗi task trong subagent-driven development.</li><li>Sau khi hoàn thành một tính năng lớn.</li><li>Trước khi merge vào main.</li></ul>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-opt">
+<header><h4>Tùy chọn nhưng đáng giá</h4></header>
+<ul><li>Khi bị kẹt (cần góc nhìn mới).</li><li>Trước khi refactor (lấy baseline).</li><li>Sau khi sửa một bug phức tạp.</li></ul>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+</div>
+</div>
+</section>
+<section id="how">
+<div class="wrap">
+<h2><span class="secno">3</span>Cách xin review</h2>
+<p class="lead">Ba bước: lấy SHA, giao reviewer, hành động theo phản hồi.</p>
+<div class="cards">
+<article class="card plain" id="c-how">
+<header><span class="badge">1-2</span><h4>Lấy SHA và giao reviewer</h4></header>
+<p class="row"><b class="lbl">1 · Lấy git SHA</b></p>
+<pre class="cmd">BASE_SHA=$(git rev-parse HEAD~1)  # hoặc: git merge-base origin/main HEAD
+HEAD_SHA=$(git rev-parse HEAD)</pre>
+<p class="row"><b class="lbl">2 · Giao reviewer</b>Giao một subagent <code>general-purpose</code>, điền vào template <code>code-reviewer.md</code>:</p>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Placeholder</th><th>Nội dung</th></tr></thead><tbody><tr><td><code>{DESCRIPTION}</code></td><td>Tóm tắt ngắn cái bạn vừa làm.</td></tr><tr><td><code>{PLAN_OR_REQUIREMENTS}</code></td><td>Nó phải làm gì.</td></tr><tr><td><code>{BASE_SHA}</code></td><td>Commit bắt đầu.</td></tr><tr><td><code>{HEAD_SHA}</code></td><td>Commit kết thúc.</td></tr></tbody></table></div>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-act">
+<header><span class="badge">3</span><h4>Hành động theo phản hồi</h4></header>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Mức độ</th><th>Làm gì</th></tr></thead><tbody><tr><td>Critical</td><td>Sửa ngay.</td></tr><tr><td>Important</td><td>Sửa trước khi đi tiếp.</td></tr><tr><td>Minor</td><td>Ghi lại để làm sau.</td></tr><tr><td>Reviewer sai</td><td>Phản biện bằng lý lẽ kỹ thuật: cho xem code hoặc test chứng minh nó chạy, hoặc xin làm rõ.</td></tr></tbody></table></div>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+</div>
+<div class="cards one">
+<article class="card plain" id="c-example">
+<header><h4>Ví dụ trong skill</h4></header>
+<pre class="cmd">[Vừa xong Task 2: thêm hàm verify]
+
+BASE_SHA=$(git log --oneline | grep "Task 1" | head -1 | cut -d' ' -f1)
+HEAD_SHA=$(git rev-parse HEAD)
+
+[Giao reviewer subagent]
+  DESCRIPTION: Added verifyIndex() and repairIndex() with 4 issue types
+  PLAN_OR_REQUIREMENTS: Task 2 from docs/superpowers/plans/deployment-plan.md
+  BASE_SHA: a7981ec
+  HEAD_SHA: 3df7661
+
+[Reviewer trả về]:
+  Strengths: Clean architecture, real tests
+  Issues:
+    Important: Missing progress indicators
+    Minor: Magic number (100) for reporting interval
+  Assessment: Ready to proceed
+
+[Sửa progress indicators, rồi sang Task 3]</pre>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+</div>
+</div>
+</section>
+<section id="flags">
+<div class="wrap">
+<h2><span class="secno">4</span>Red Flags và bào chữa</h2>
+<p class="lead">Những điều không bao giờ làm, và cách xử lý khi reviewer sai.</p>
+<div class="cards">
+<article class="card plain" id="c-never">
+<header><h4>Không bao giờ</h4></header>
+<ul><li>Bỏ review vì “nó đơn giản”.</li><li>Phớt lờ lỗi Critical.</li><li>Đi tiếp khi còn lỗi Important chưa sửa.</li><li>Tranh cãi với feedback kỹ thuật đúng.</li></ul>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-wrong">
+<header><h4>Nếu reviewer sai</h4></header>
+<ul><li>Phản biện bằng lý lẽ kỹ thuật.</li><li>Cho xem code hoặc test chứng minh nó chạy.</li><li>Xin làm rõ.</li></ul>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+</div>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Agent tự nhủ</th><th>Thực tế</th></tr></thead><tbody><tr><td>“Tôi tự xem diff cho nhanh thay vì giao reviewer”</td><td>Agent là người điều phối: xem diff tại chỗ đốt mất context cần để tiếp tục điều khiển công việc. Giao reviewer subagent: diff và việc đánh giá nằm trong context của nó, chỉ phát hiện quay về.</td></tr><tr><td>“Reviewer cần cả lịch sử phiên của tôi mới hiểu thay đổi”</td><td>Đưa nó ngữ cảnh được dựng riêng, không bao giờ là lịch sử phiên. Như vậy reviewer tập trung vào sản phẩm công việc, không phải suy nghĩ của agent.</td></tr></tbody></table></div>
+</div>
+</section>
+
+<section>
+  <div class="wrap">
+    <footer>Nguồn: <a href="../../skills/requesting-code-review/SKILL.md"><code>skills/requesting-code-review/SKILL.md</code></a> (95 dòng).</footer>
+  </div>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>verification-before-completion Explainer</title>
+<link rel="stylesheet" href="../assets/skill-detail.css">
+<link rel="stylesheet" href="../assets/sidebar.css">
+<script src="../assets/sidebar.js"></script>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="wrap">
+    <strong>verification-before-completion</strong>
+    <a href="#diagram">1 · Diagram</a><a href="#law">2 · Luật &amp; Gate</a><a href="#claims">3 · Bằng chứng</a><a href="#flags">4 · Red Flags</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <h1>verification-before-completion</h1>
+    <p>Bằng chứng trước, tuyên bố sau. Agent không được nói “xong”, “pass”, “đã sửa” khi chưa chạy lệnh kiểm chứng ngay trong tin nhắn đó và đọc output của nó.</p>
+    <div class="chips"><span class="chip">Luật sắt: không tuyên bố khi chưa có bằng chứng mới</span><span class="chip">Áp dụng cả với từ đồng nghĩa và hàm ý</span><span class="chip">Không tin báo cáo “success” của agent khác</span><span class="chip">Trước commit, PR và task kế</span></div>
+  </div>
+</header>
+
+<!-- ============ 1. DIAGRAM ============ -->
+<section id="diagram">
+  <div class="wrap">
+    <h2><span class="secno">1</span>Diagram: cổng kiểm chứng trước mỗi tuyên bố</h2>
+    <p class="lead">Năm bước, bỏ bước nào cũng là nói dối chứ không phải kiểm chứng. Nhánh cuối là hai kết cục: claim không đứng vững, hoặc đứng vững và được nói kèm bằng chứng.</p>
+
+    <div class="diagram-grid">
+      <div class="diagram-box">
+        <p class="swipe-hint">← Vuốt ngang để xem hết diagram →</p>
+<svg class="flow" viewBox="0 0 560 580" role="group" aria-label="Sơ đồ verification-before-completion"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 z"/></marker></defs>
+<path class="arrow" d="M300 68 V112"/>
+<path class="arrow" d="M300 166 V210"/>
+<path class="arrow" d="M300 264 V308"/>
+<path class="arrow" d="M300 362 V406"/>
+<path class="arrow" d="M300 460 V482 H175 V504"/>
+<path class="arrow" d="M300 460 V482 H425 V504"/>
+<text class="note" x="168" y="476" text-anchor="end">KHÔNG</text>
+<text class="note" x="432" y="476">CÓ</text>
+<a class="node" href="#c-when" aria-label="Sắp tuyên bố một trạng thái - “xong”, “pass”, “đã sửa”, “build ok”"><rect x="150" y="14" width="300" height="54" rx="10"/><text class="name" x="164" y="37">Sắp tuyên bố một trạng thái</text><text class="sub" x="164" y="55">“xong”, “pass”, “đã sửa”, “build ok”</text></a>
+<a class="node" href="#c-gate" aria-label="IDENTIFY - Lệnh nào chứng minh claim này?"><rect x="150" y="112" width="300" height="54" rx="10"/><text class="name" x="164" y="135">IDENTIFY</text><text class="sub" x="164" y="153">Lệnh nào chứng minh claim này?</text><g class="num"><circle cx="150" cy="112" r="10"/><text x="150" y="115.5">1</text></g></a>
+<a class="node" href="#c-gate" aria-label="RUN - Chạy lệnh ĐẦY ĐỦ, mới, trong tin nhắn này"><rect x="150" y="210" width="300" height="54" rx="10"/><text class="name" x="164" y="233">RUN</text><text class="sub" x="164" y="251">Chạy lệnh ĐẦY ĐỦ, mới, trong tin nhắn này</text><g class="num"><circle cx="150" cy="210" r="10"/><text x="150" y="213.5">2</text></g></a>
+<a class="node" href="#c-gate" aria-label="READ - Đọc hết output, exit code, đếm lỗi"><rect x="150" y="308" width="300" height="54" rx="10"/><text class="name" x="164" y="331">READ</text><text class="sub" x="164" y="349">Đọc hết output, exit code, đếm lỗi</text><g class="num"><circle cx="150" cy="308" r="10"/><text x="150" y="311.5">3</text></g></a>
+<a class="node opt" href="#c-gate" aria-label="VERIFY - Output có xác nhận claim không?"><rect x="150" y="406" width="300" height="54" rx="10"/><text class="name" x="164" y="429">VERIFY</text><text class="sub" x="164" y="447">Output có xác nhận claim không?</text><g class="num"><circle cx="150" cy="406" r="10"/><text x="150" y="409.5">4</text></g></a>
+<a class="node" href="#c-gate" aria-label="Nói trạng thái thật - Kèm bằng chứng"><rect x="60" y="504" width="230" height="54" rx="10"/><text class="name" x="74" y="527">Nói trạng thái thật</text><text class="sub" x="74" y="545">Kèm bằng chứng</text></a>
+<a class="node new" href="#c-gate" aria-label="Nói claim - Kèm bằng chứng"><rect x="310" y="504" width="230" height="54" rx="10"/><text class="name" x="324" y="527">Nói claim</text><text class="sub" x="324" y="545">Kèm bằng chứng</text><g class="num"><circle cx="310" cy="504" r="10"/><text x="310" y="507.5">5</text></g></a></svg>
+        <div class="legend"><span><i></i>Bước của gate</span><span><i class="dash"></i>Nét đứt: điểm quyết định</span><span><i class="new"></i>Viền xanh: được phép tuyên bố</span></div>
+      </div>
+
+      <aside class="pains">
+        <h3>Nó giải quyết painpoint nào?</h3>
+        <p>Những lỗi mà từng phần của skill sinh ra để chặn.</p>
+<div class="pain-item"><q>Nói “xong rồi, test pass” mà chưa hề chạy</q><div class="fix"><a class="skill-link" href="#law">Luật sắt</a>: không claim khi chưa có bằng chứng mới</div></div><div class="pain-item"><q>Dùng “should”, “probably”, “seems to”</q><div class="fix"><a class="skill-link" href="#flags">Red Flags</a>: lời lẽ ngụ ý thành công cũng bị cấm</div></div><div class="pain-item"><q>Linter pass nên coi như build pass</q><div class="fix"><a class="skill-link" href="#claims">Mỗi claim cần đúng loại bằng chứng</a></div></div><div class="pain-item"><q>Tin báo cáo “success” của agent con</q><div class="fix"><a class="skill-link" href="#c-patterns">Kiểm VCS diff</a> rồi báo trạng thái thật</div></div><div class="pain-item"><q>Viết test hồi quy nhưng chưa từng thấy nó đỏ</q><div class="fix">Cần đủ chu trình red-green</div></div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section id="law">
+<div class="wrap">
+<h2><span class="secno">2</span>Luật sắt và Gate Function</h2>
+<p class="lead">“Vi phạm câu chữ của luật này là vi phạm tinh thần của nó.”</p>
+<div class="law">NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE<small>Chưa chạy lệnh kiểm chứng trong tin nhắn này thì không được nói nó pass.</small></div>
+<div class="cards one">
+<article class="card plain" id="c-gate">
+<header><h4>Gate Function: 5 bước trước mọi claim</h4></header>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>#</th><th>Bước</th><th>Làm gì</th></tr></thead><tbody><tr><td>1</td><td>IDENTIFY</td><td>Lệnh nào chứng minh claim này?</td></tr><tr><td>2</td><td>RUN</td><td>Chạy lệnh <b>đầy đủ</b>, mới, trọn vẹn.</td></tr><tr><td>3</td><td>READ</td><td>Đọc toàn bộ output, kiểm exit code, đếm số lỗi.</td></tr><tr><td>4</td><td>VERIFY</td><td>Output có xác nhận claim không? Không: nói trạng thái thật kèm bằng chứng. Có: nói claim kèm bằng chứng.</td></tr><tr><td>5</td><td>ONLY THEN</td><td>Mới được nói claim.</td></tr></tbody></table></div>
+<p class="row">Bỏ bất kỳ bước nào là nói dối, không phải kiểm chứng.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+</div>
+</div>
+</section>
+<section id="claims">
+<div class="wrap">
+<h2><span class="secno">3</span>Claim nào cần bằng chứng gì</h2>
+<p class="lead">Mỗi loại tuyên bố đòi một loại bằng chứng riêng. Cột bên phải là những thứ hay bị lấy nhầm làm bằng chứng.</p>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Claim</th><th>Cần</th><th>Không đủ</th></tr></thead><tbody><tr><td>Test pass</td><td>Output của lệnh test: 0 lỗi</td><td>Lần chạy trước, “chắc là pass”</td></tr><tr><td>Linter sạch</td><td>Output linter: 0 lỗi</td><td>Kiểm một phần, suy ra từ chỗ khác</td></tr><tr><td>Build thành công</td><td>Lệnh build: exit 0</td><td>Linter pass, log trông ổn</td></tr><tr><td>Bug đã sửa</td><td>Chạy lại đúng triệu chứng ban đầu: pass</td><td>Đã đổi code, cho là xong</td></tr><tr><td>Test hồi quy hoạt động</td><td>Đã kiểm chu trình red-green</td><td>Test pass một lần</td></tr><tr><td>Agent đã hoàn thành</td><td>VCS diff cho thấy thay đổi</td><td>Agent báo “success”</td></tr><tr><td>Đáp ứng yêu cầu</td><td>Checklist từng dòng</td><td>Test pass</td></tr></tbody></table></div>
+<div class="cards one">
+<article class="card plain" id="c-patterns">
+<header><h4>Mẫu đúng và mẫu sai</h4></header>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Tình huống</th><th>Đúng ✅</th><th>Sai ❌</th></tr></thead><tbody><tr><td>Test</td><td>Chạy lệnh test → thấy 34/34 pass → nói “All tests pass”</td><td>“Should pass now” / “Looks correct”</td></tr><tr><td>Test hồi quy (TDD red-green)</td><td>Viết → chạy (pass) → <b>revert fix</b> → chạy (PHẢI FAIL) → khôi phục → chạy (pass)</td><td>“Tôi đã viết test hồi quy” mà chưa kiểm red-green</td></tr><tr><td>Build</td><td>Chạy build → thấy exit 0 → nói “Build passes”</td><td>“Linter passed” (linter không kiểm biên dịch)</td></tr><tr><td>Yêu cầu</td><td>Đọc lại plan → lập checklist → kiểm từng mục → báo thiếu sót hoặc hoàn tất</td><td>“Test pass, phase xong”</td></tr><tr><td>Giao việc cho agent</td><td>Agent báo success → kiểm VCS diff → xác minh thay đổi → báo trạng thái thật</td><td>Tin báo cáo của agent</td></tr></tbody></table></div>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+</div>
+</div>
+</section>
+<section id="flags">
+<div class="wrap">
+<h2><span class="secno">4</span>Khi nào áp dụng, Red Flags, bào chữa</h2>
+<p class="lead">Quy tắc áp dụng cho câu chữ chính xác, diễn đạt khác và từ đồng nghĩa, hàm ý thành công, và bất kỳ lời nào gợi ý rằng việc đã xong hay đã đúng.</p>
+<div class="cards">
+<article class="card plain" id="c-when">
+<header><h4>Luôn áp dụng trước</h4></header>
+<ul><li>Bất kỳ biến thể nào của tuyên bố thành công hay hoàn thành.</li><li>Bất kỳ biểu hiện hài lòng nào.</li><li>Bất kỳ phát biểu tích cực nào về trạng thái công việc.</li><li>Commit, tạo PR, hoàn thành task.</li><li>Chuyển sang task kế.</li><li>Giao việc cho agent.</li></ul>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-flags">
+<header><h4>Red Flags: dừng lại</h4></header>
+<ul><li>Dùng “should”, “probably”, “seems to”.</li><li>Bày tỏ hài lòng trước khi kiểm chứng (“Great!”, “Perfect!”, “Done!”…).</li><li>Sắp commit/push/PR mà chưa kiểm chứng.</li><li>Tin báo cáo thành công của agent.</li><li>Dựa vào kiểm chứng một phần.</li><li>Nghĩ “chỉ lần này thôi”.</li><li>Mệt và muốn xong việc.</li><li><b>Bất kỳ cách nói nào ngụ ý thành công mà chưa chạy kiểm chứng.</b></li></ul>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+</div>
+<div class="phase"><h3>Những lời bào chữa hay gặp</h3><span>Bảng Rationalization Prevention của skill</span></div>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Agent tự nhủ</th><th>Thực tế</th></tr></thead><tbody><tr><td>“Giờ chắc chạy được rồi”</td><td>CHẠY kiểm chứng.</td></tr><tr><td>“Tôi tự tin”</td><td>Tự tin không phải bằng chứng.</td></tr><tr><td>“Chỉ lần này thôi”</td><td>Không có ngoại lệ.</td></tr><tr><td>“Linter pass rồi”</td><td>Linter không phải compiler.</td></tr><tr><td>“Agent báo thành công”</td><td>Kiểm chứng độc lập.</td></tr><tr><td>“Tôi mệt”</td><td>Mệt mỏi không phải lý do.</td></tr><tr><td>“Kiểm một phần là đủ”</td><td>Kiểm một phần chẳng chứng minh gì.</td></tr><tr><td>“Đổi cách nói thì luật không áp dụng”</td><td>Tinh thần quan trọng hơn câu chữ.</td></tr></tbody></table></div>
+</div>
+</section>
+
+<section>
+  <div class="wrap">
+    <footer>Nguồn: <a href="../../skills/verification-before-completion/SKILL.md"><code>skills/verification-before-completion/SKILL.md</code></a> (120 dòng).</footer>
+  </div>
+</section>
+
+</body>
+</html>

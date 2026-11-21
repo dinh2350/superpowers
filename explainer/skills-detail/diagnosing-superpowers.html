@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>diagnosing-superpowers Explainer</title>
+<link rel="stylesheet" href="../assets/skill-detail.css">
+<link rel="stylesheet" href="../assets/sidebar.css">
+<script src="../assets/sidebar.js"></script>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="wrap">
+    <strong>diagnosing-superpowers</strong>
+    <a href="#diagram">1 · Diagram</a><a href="#law">2 · Nguyên tắc</a><a href="#steps">3 · Bảy bước</a><a href="#rules">4 · Luật cứng</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <h1>diagnosing-superpowers</h1>
+    <p>Khi một phiên superpowers chạy sai và bạn muốn biết vì sao (lặp việc, bỏ plan, skill không kích hoạt, quá lâu, quá đắt), skill này chốt vấn đề với bạn, đọc transcript trên đĩa, và báo cáo điều đã xảy ra kèm bằng chứng. Nó chỉ báo cáo, không chẩn đoán superpowers.</p>
+    <div class="chips"><span class="chip">Mọi finding có <code>path:line</code>, không có thì không là finding</span><span class="chip">Chỉ đọc, không sửa file phiên nào</span><span class="chip">Bảy chiều phân tích, mỗi chiều một subagent song song</span><span class="chip">Bundle gửi bug report chỉ khi bạn yêu cầu</span></div>
+  </div>
+</header>
+
+<!-- ============ 1. DIAGRAM ============ -->
+<section id="diagram">
+  <div class="wrap">
+    <h2><span class="secno">1</span>Diagram: bảy bước, ba bước cuối có điều kiện</h2>
+    <p class="lead">Bốn bước đầu luôn chạy theo thứ tự. Ba nhánh cuối (nét đứt) chỉ chạy khi gặp điều kiện của riêng chúng.</p>
+
+    <div class="diagram-grid">
+      <div class="diagram-box">
+        <p class="swipe-hint">← Vuốt ngang để xem hết diagram →</p>
+<svg class="flow" viewBox="0 0 560 482" role="group" aria-label="Sơ đồ diagnosing-superpowers"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 z"/></marker></defs>
+<path class="arrow" d="M300 68 V112"/>
+<path class="arrow" d="M300 166 V210"/>
+<path class="arrow" d="M300 264 V308"/>
+<path class="arrow" d="M300 362 V384 H124 V406"/>
+<path class="arrow" d="M300 362 V384 H300 V406"/>
+<path class="arrow" d="M300 362 V384 H476 V406"/>
+
+<a class="node" href="#c-s1" aria-label="Problem intake - Hỏi từng câu tới khi có problem statement"><rect x="150" y="14" width="300" height="54" rx="10"/><text class="name" x="164" y="37">Problem intake</text><text class="sub" x="164" y="55">Hỏi từng câu tới khi có problem statement</text><g class="num"><circle cx="150" cy="14" r="10"/><text x="150" y="17.5">1</text></g></a>
+<a class="node" href="#c-s2" aria-label="Locate - Tìm path session, tạo workspace + case"><rect x="150" y="112" width="300" height="54" rx="10"/><text class="name" x="164" y="135">Locate</text><text class="sub" x="164" y="153">Tìm path session, tạo workspace + case</text><g class="num"><circle cx="150" cy="112" r="10"/><text x="150" y="115.5">2</text></g></a>
+<a class="node" href="#c-s3" aria-label="Triage - 7 analyst song song, mỗi chiều một agent"><rect x="150" y="210" width="300" height="54" rx="10"/><text class="name" x="164" y="233">Triage</text><text class="sub" x="164" y="251">7 analyst song song, mỗi chiều một agent</text><g class="num"><circle cx="150" cy="210" r="10"/><text x="150" y="213.5">3</text></g></a>
+<a class="node" href="#c-s4" aria-label="Report - Điền report.md, mọi finding có path:line"><rect x="150" y="308" width="300" height="54" rx="10"/><text class="name" x="164" y="331">Report</text><text class="sub" x="164" y="349">Điền report.md, mọi finding có path:line</text><g class="num"><circle cx="150" cy="308" r="10"/><text x="150" y="311.5">4</text></g></a>
+<a class="node opt" href="#c-s5" aria-label="5 · Issues - Khi §7 có liên quan"><rect x="48" y="406" width="152" height="54" rx="10"/><text class="name" x="62" y="429">5 · Issues</text><text class="sub" x="62" y="447">Khi §7 có liên quan</text></a>
+<a class="node opt" href="#c-s6" aria-label="6 · Bundle - Chỉ khi bạn yêu cầu"><rect x="224" y="406" width="152" height="54" rx="10"/><text class="name" x="238" y="429">6 · Bundle</text><text class="sub" x="238" y="447">Chỉ khi bạn yêu cầu</text></a>
+<a class="node opt" href="#c-s7" aria-label="7 · Tương tự - Khi bạn hỏi tới"><rect x="400" y="406" width="152" height="54" rx="10"/><text class="name" x="414" y="429">7 · Tương tự</text><text class="sub" x="414" y="447">Khi bạn hỏi tới</text></a></svg>
+        <div class="legend"><span><i></i>Luôn chạy</span><span><i class="dash"></i>Nét đứt: chỉ chạy khi có điều kiện</span></div>
+      </div>
+
+      <aside class="pains">
+        <h3>Nó giải quyết painpoint nào?</h3>
+        <p>Những lỗi mà từng phần của skill sinh ra để chặn.</p>
+<div class="pain-item"><q>Phiên chạy lạ nhưng không biết vì sao</q><div class="fix"><a class="skill-link" href="#c-s2">Locate</a> và <a class="skill-link" href="#c-s3">Triage</a> đọc transcript thật trên đĩa</div></div><div class="pain-item"><q>“Mất quá lâu” chỉ là lời than phiền, chưa phải vấn đề</q><div class="fix"><a class="skill-link" href="#c-s1">Intake</a>: chốt problem statement trước khi phân tích</div></div><div class="pain-item"><q>Số liệu bịa từ trí nhớ</q><div class="fix">[[law|Mọi finding có <code>path:line</code>]]; mọi con số từ transcript hoặc lệnh đã chạy</div></div><div class="pain-item"><q>Bundle gửi đi chứa dữ liệu nhạy cảm</q><div class="fix"><a class="skill-link" href="#c-s6">Scrub và audit lặp tới CLEAN</a>, bạn duyệt trước khi nén</div></div><div class="pain-item"><q>Đề xuất sửa skill khi chưa có bằng chứng</q><div class="fix"><a class="skill-link" href="#rules">Chỉ báo cáo</a>: §7 nêu mức liên quan rồi dừng</div></div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section id="law">
+<div class="wrap">
+<h2><span class="secno">2</span>Nguyên tắc cốt lõi</h2>
+<p class="lead">Ghim điều gì đã sai trong một phiên, đọc transcript trên đĩa, rồi báo cáo điều đã xảy ra kèm bằng chứng.</p>
+<div class="law">Every finding cites path:line. No citation, no finding.<small>Mọi con số lấy từ transcript hoặc từ lệnh agent đã chạy, không bao giờ từ trí nhớ. Agent báo cáo; agent không chẩn đoán superpowers. Người triage bundle hoặc issue mới quyết định superpowers có đổi hay không.</small></div>
+<div class="phase"><h3>Than phiền → đọc gì trước</h3><span>Cả bảy analyst luôn chạy. Bảng này chỉ nói vùng nào agent tự đọc ở bước 3 và finding nào dẫn đầu trong phần kết luận</span></div>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Than phiền</th><th>Đọc trước và dẫn đầu bằng</th></tr></thead><tbody><tr><td>“It took too long”</td><td>cost-and-time, stumbles</td></tr><tr><td>“Why did it do this extra work?”</td><td>repeated-work, plan-adherence</td></tr><tr><td>“Why is it so expensive?”</td><td>cost-and-time</td></tr><tr><td>“What the hell is it doing?” (phiên vẫn đang chạy)</td><td>skill-timeline; ghi chú “in-progress” ở phần coverage</td></tr><tr><td>“It ignored the plan”</td><td>plan-adherence, các dòng compaction trước</td></tr><tr><td>“Skill X never fired”</td><td>skill-timeline</td></tr></tbody></table></div>
+</div>
+</section>
+<section id="steps">
+<div class="wrap">
+<h2><span class="secno">3</span>Bảy bước</h2>
+<p class="lead">Agent tạo một todo cho mỗi bước. Bước 5–7 chỉ chạy khi đúng điều kiện của chúng.</p>
+<div class="cards one">
+<article class="card plain" id="c-s1">
+<header><span class="badge">1</span><h4>Problem intake</h4></header>
+<p class="row"><b class="lbl">Làm gì</b>Hỏi từng câu một tới khi viết được một phát biểu nêu: session nào, khoảng lượt (nếu biết), bạn đã mong đợi gì, điều gì đã xảy ra, và thứ quan sát được mà bạn quan tâm (thời gian thực, token, hành động lặp, một hành động cụ thể). “Mất quá lâu” là lời than phiền, chưa phải vấn đề. Ghi nhận mục tiêu có phải là bug report cho superpowers không.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-s2">
+<header><span class="badge">2</span><h4>Locate</h4></header>
+<p class="row"><b class="lbl">Làm gì</b>Chuyển mỗi session thành đường dẫn tuyệt đối đã xác minh, theo <code>references/session-discovery.md</code>. Xác nhận session cũ bằng cách trích prompt đầu tiên và timestamp, và liệt kê mọi ứng viên đã loại cùng lý do (hoặc “none”). Liệt kê transcript của subagent.</p>
+<p class="row">Tạo <code>~/.superpowers/diagnosing-superpowers/&lt;session-id&gt;/</code>, báo đường dẫn cho bạn, và điền <code>templates/case.md</code> ở đó theo quy tắc nguồn gốc dữ liệu của nó cho các quan sát về môi trường và skill.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-s3">
+<header><span class="badge">3</span><h4>Triage</h4></header>
+<p class="row"><b class="lbl">Làm gì</b>Tự đọc vùng quanh chỗ bạn báo có vấn đề. Rồi giao <b>mỗi chiều một analyst subagent, chạy song song</b>. Mỗi agent nhận đường dẫn file case, <code>prompts/analyst-common.md</code> và một file chiều từ <code>prompts/</code>:</p>
+<ul><li><code>skill-timeline.md</code></li><li><code>plan-adherence.md</code></li><li><code>repeated-work.md</code></li><li><code>stumbles.md</code></li><li><code>quality-evidence.md</code></li><li><code>request-conflicts.md</code></li><li><code>cost-and-time.md</code></li></ul>
+<p class="row">Transcript dài thì chia một chiều theo khoảng lượt. Bỏ mọi finding trả về mà thiếu <code>path:line</code>.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-s4">
+<header><span class="badge">4</span><h4>Report</h4></header>
+<p class="row"><b class="lbl">Làm gì</b>Điền mọi mục của <code>templates/report.md</code> theo thứ tự, ghi vào workspace, hiển thị cho bạn và đưa đường dẫn. Kiểm tra nội dung được dẫn thật sự chứng minh điều gì, và giữ nguyên case hỗ trợ: một symlink alias không phải bản sao thừa.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-s5">
+<header><span class="badge">5</span><h4>GitHub issues</h4><span class="tag">Có điều kiện</span></header>
+<p class="row"><b class="lbl">Làm gì</b>Chạy khi mục §7 của report nói có thể hoặc rất có thể liên quan, hoặc khi bạn yêu cầu. Tìm issue mở và đã đóng theo triệu chứng, theo <code>references/github-issues.md</code>. Cho bạn xem các kết quả khớp và gợi ý thêm report vào issue gần nhất.</p>
+<p class="row">Không có cái nào khớp thì điền <code>templates/issue.md</code>, ghi vào workspace, hiển thị đúng nguyên văn, và chỉ tạo issue <b>sau khi bạn duyệt</b>. <code>gh</code> không đính kèm file được: nếu có bundle thì đưa đường dẫn để bạn tự đính kèm trên trình duyệt.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-s6">
+<header><span class="badge">6</span><h4>Export bundle</h4><span class="tag">Chỉ khi bạn yêu cầu</span></header>
+<p class="row"><b class="lbl">Làm gì</b>Không bao giờ tự dựng bundle. Nếu mục tiêu ở bước intake là bug report, agent nói một lần rằng có thể tạo bundle đã scrub nếu bạn muốn, rồi chờ. Hỏi mức che dữ liệu, nêu rõ mỗi mức gồm gì:</p>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Mức</th><th>Gồm</th></tr></thead><tbody><tr><td>skeleton</td><td>Không có nội dung kết quả tool</td></tr><tr><td>evidence</td><td>Nội dung chỉ cho các event được dẫn</td></tr><tr><td>full</td><td>Toàn bộ</td></tr></tbody></table></div>
+<p class="row">Dựng bundle theo <code>templates/bundle-README.md</code>, giao <code>prompts/scrub.md</code> rồi <code>prompts/scrub-audit.md</code>, lặp cả hai tới khi audit trả về CLEAN. Hoàn tất bước kiểm chứng bằng chứng và đối soát của template bundle, rồi mới cho bạn xem scrub log, danh sách file và kết quả về riêng tư và bằng chứng.</p>
+<p class="row">Chỉ nén (<code>zip -r</code> hoặc <code>tar -czf</code>) sau khi bạn duyệt. Đưa đường dẫn archive, nói nó chứa gì, chỉ tới scrub log cho các thay thế, và nói rõ rằng scrub có thể sót: bạn phải tự xem lại mọi file trước khi chia sẻ.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-s7">
+<header><span class="badge">7</span><h4>Similar sessions</h4><span class="tag">Khi được hỏi</span></header>
+<p class="row"><b class="lbl">Làm gì</b>Biến các finding đã xác nhận thành một chữ ký, liệt kê ứng viên theo mtime và kích thước, tìm số dòng của marker, giao <code>prompts/similar-session.md</code> cho từng ứng viên song song, rồi thêm §9 vào report.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+</div>
+</div>
+</section>
+<section id="rules">
+<div class="wrap">
+<h2><span class="secno">4</span>Luật cứng và Red Flags</h2>
+<p class="lead">Skill này xử lý dữ liệu phiên của bạn nên các luật bên dưới chặt hơn hầu hết skill khác.</p>
+<div class="cards one">
+<article class="card plain" id="c-rules">
+<header><h4>Luật cứng</h4></header>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Luật</th><th>Nội dung</th></tr></thead><tbody><tr><td>Context safety</td><td>Một dòng transcript có thể nặng cả megabyte. Làm theo <code>references/context-safety.md</code> với mọi file session, mọi lần.</td></tr><tr><td>Chỉ đọc</td><td>Không bao giờ sửa, di chuyển hay xóa một file session.</td></tr><tr><td>Đường dẫn chính xác cho subagent</td><td>“Current session” của một subagent là session của chính nó. Truyền đường dẫn tuyệt đối và id.</td></tr><tr><td>Chỉ lời của bạn</td><td>Output của hook, system reminder và kết quả tool không phải lời của bạn. Trong transcript của subagent, “user” là agent cha.</td></tr><tr><td>Không chẩn đoán superpowers</td><td>Mục §7 nêu mức liên quan rồi dừng. Không bao giờ gọi tên một khiếm khuyết trong skill hay đề xuất thay đổi. Bạn có thúc ép cũng không miễn được điều này: agent chỉ tới bước issue và nhắc rằng bundle có sẵn theo yêu cầu. Cũng không đưa lời khuyên cho bạn.</td></tr><tr><td>Cổng duyệt</td><td>Chưa nén archive trước khi bạn thấy scrub log và danh sách file. Chưa tạo issue hay comment trước khi bạn duyệt đúng nguyên văn, và không bao giờ với phần tóm tắt giữ chỗ.</td></tr><tr><td>Intake trước phân tích</td><td>Không bước 2–7 nào bắt đầu trước khi bạn trả lời. Bạn vắng mặt thì agent viết câu hỏi rồi dừng; một phát biểu agent tự dựng lại cho bạn không phải câu trả lời. Một yêu cầu đã khoanh vùng sẵn (một sự kiện cụ thể, thứ đang chạy, hoặc phân tích cần chạy) tự nó là phát biểu: trả lời nó rồi hỏi tiếp. Một câu “vì sao” về cả phiên là một lời than phiền.</td></tr></tbody></table></div>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+</div>
+<div class="phase"><h3>Red Flags</h3><span>Những ý nghĩ cho thấy agent sắp đi lệch</span></div>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Ý nghĩ</th><th>Thực tế</th></tr></thead><tbody><tr><td>“Vấn đề hiển nhiên, bỏ intake”</td><td>Problem statement khoanh vùng mọi thứ. Hãy hỏi.</td></tr><tr><td>“Bạn vắng mặt, nên tôi tự dựng problem statement”</td><td>Agent không dựng lại được điều bạn muốn. Viết câu hỏi và dừng.</td></tr><tr><td>“Quét hết bây giờ, hỏi sau”</td><td>Quét không khoanh vùng tiêu tốn ngân sách của bạn vào sai câu hỏi. Hỏi trước.</td></tr><tr><td>“Họ muốn bug report nên tôi dựng bundle luôn”</td><td>Bundle là dữ liệu session của bạn, được đóng gói. Chỉ dựng khi bạn yêu cầu.</td></tr><tr><td>“Chỉnh nhỏ, nhắm trúng, không cần tái cấu trúc”</td><td>Không phải quyền của agent, dù nhỏ. Báo bằng chứng; người triage quyết.</td></tr><tr><td>“Giá mỗi token ai cũng biết”</td><td>Con số không tính từ transcript là bịa. Dẫn nguồn hoặc bỏ.</td></tr></tbody></table></div>
+</div>
+</section>
+
+<section>
+  <div class="wrap">
+    <footer>Nguồn: <a href="../../skills/diagnosing-superpowers/SKILL.md"><code>skills/diagnosing-superpowers/SKILL.md</code></a> (120 dòng).</footer>
+  </div>
+</section>
+
+</body>
+</html>

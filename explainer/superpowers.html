@@ -475,6 +475,7 @@
         <p class="row"><b>Làm gì</b>Nạp ở đầu phiên. Bắt agent kiểm tra skill phù hợp trước mọi phản hồi, kể cả câu hỏi làm rõ. Chỉ cần 1% khả năng skill áp dụng là phải gọi.</p>
         <p class="row"><b>Dùng khi</b>Tự động ở mọi cuộc hội thoại. Bạn không cần gọi.</p>
         <a class="back" href="#diagram">↑ Về diagram</a>
+        <a class="back" href="skills-detail/using-superpowers.html">Xem chi tiết →</a>
       </article>
     </div>
 
@@ -509,6 +510,7 @@
         <p class="row"><b>Làm gì</b>Biến design thành các task nhỏ (2–5 phút), mỗi task có đường dẫn file chính xác, code đầy đủ và bước kiểm tra. Lưu ở <code>docs/superpowers/plans/</code>.</p>
         <p class="row"><b>Dùng khi</b>Đã có spec được duyệt cho việc nhiều bước, trước khi đụng code.</p>
         <a class="back" href="#diagram">↑ Về diagram</a>
+        <a class="back" href="skills-detail/writing-plans.html">Xem chi tiết →</a>
       </article>
     </div>
 
@@ -521,6 +523,7 @@
         <p class="row"><b>Làm gì</b>Mỗi task giao cho một subagent mới (context sạch). Sau đó review 2 lớp: đúng spec trước, chất lượng code sau. Cuối cùng review cả nhánh. Chạy liên tục, không hỏi “tiếp nhé?”.</p>
         <p class="row"><b>Dùng khi</b>Đã có plan và môi trường có subagent. Chất lượng cao nhất nhưng tốn token hơn.</p>
         <a class="back" href="#diagram">↑ Về diagram</a>
+        <a class="back" href="skills-detail/subagent-driven-development.html">Xem chi tiết →</a>
       </article>
 
       <article class="card" id="s-executing-plans">
@@ -529,6 +532,7 @@
         <p class="row"><b>Làm gì</b>Agent tự làm tuần tự trong phiên hiện tại. TDD là cổng kiểm từng task, có sổ ghi (ledger) để không quên, và một review mới cho cả nhánh ở cuối.</p>
         <p class="row"><b>Dùng khi</b>Bạn chọn chạy inline để tiết kiệm, hoặc môi trường không có subagent.</p>
         <a class="back" href="#diagram">↑ Về diagram</a>
+        <a class="back" href="skills-detail/executing-plans.html">Xem chi tiết →</a>
       </article>
 
       <article class="card" id="s-test-driven-development">
@@ -537,6 +541,7 @@
         <p class="row"><b>Làm gì</b>Red → Green → Refactor: viết test, xem nó fail, viết code tối thiểu cho pass. Code viết trước test thì xoá đi làm lại.</p>
         <p class="row"><b>Dùng khi</b>Mọi feature, bugfix, refactor. Ngoại lệ (prototype bỏ đi, code sinh tự động, file config) phải hỏi bạn.</p>
         <a class="back" href="#diagram">↑ Về diagram</a>
+        <a class="back" href="skills-detail/test-driven-development.html">Xem chi tiết →</a>
       </article>
 
       <article class="card" id="s-requesting-code-review">
@@ -545,6 +550,7 @@
         <p class="row"><b>Làm gì</b>Giao một subagent reviewer (chỉ nhận mô tả và khoảng commit, không thấy lịch sử phiên) soi theo plan. Báo lỗi theo mức độ, lỗi Critical chặn tiến độ.</p>
         <p class="row"><b>Dùng khi</b>Sau mỗi task, sau tính năng lớn, trước khi merge. Cũng dùng được khi bị kẹt.</p>
         <a class="back" href="#diagram">↑ Về diagram</a>
+        <a class="back" href="skills-detail/requesting-code-review.html">Xem chi tiết →</a>
       </article>
     </div>
 
@@ -557,6 +563,7 @@
         <p class="row"><b>Làm gì</b>Luật: không tuyên bố hoàn thành khi chưa có output mới từ lệnh kiểm chứng. Chạy lệnh, đọc kết quả, rồi mới được nói.</p>
         <p class="row"><b>Dùng khi</b>Ngay trước khi báo hoàn thành, commit hoặc mở PR.</p>
         <a class="back" href="#diagram">↑ Về diagram</a>
+        <a class="back" href="skills-detail/verification-before-completion.html">Xem chi tiết →</a>
       </article>
 
       <article class="card" id="s-verifying-ai-generated-code">
@@ -565,6 +572,7 @@
         <p class="row"><b>Làm gì</b>Kiểm theo tầng: static → unit → integration → e2e. Test do một subagent khác viết từ design (không thấy code). E2e phải có bằng chứng (screenshot, video, trace). Tầng nào không chạy được thì báo “not verified”, không giấu.</p>
         <p class="row"><b>Dùng khi</b>Lúc lên plan cho thay đổi người dùng nhìn thấy (viết e2e sớm), và khi sắp báo xong.</p>
         <a class="back" href="#diagram">↑ Về diagram</a>
+        <a class="back" href="skills-detail/verifying-ai-generated-code.html">Xem chi tiết →</a>
       </article>
     </div>
 
@@ -577,6 +585,7 @@
         <p class="row"><b>Làm gì</b>Chạy full test. Nếu xanh thì đưa 3 lựa chọn: merge, mở PR hoặc giữ nhánh. Sau đó dọn worktree.</p>
         <p class="row"><b>Dùng khi</b>Implement xong và test pass.</p>
         <a class="back" href="#diagram">↑ Về diagram</a>
+        <a class="back" href="skills-detail/finishing-a-development-branch.html">Xem chi tiết →</a>
       </article>
     </div>
 
@@ -589,6 +598,7 @@
         <p class="row"><b>Làm gì</b>4 pha: điều tra root cause → phân tích pattern → giả thuyết và thử → sửa. Luật: chưa có root cause thì không được sửa.</p>
         <p class="row"><b>Dùng khi</b>Mọi bug, test fail, lỗi build, vấn đề hiệu năng. Đặc biệt khi đang gấp hoặc đã sửa một hai lần không được.</p>
         <a class="back" href="#diagram">↑ Về diagram</a>
+        <a class="back" href="skills-detail/systematic-debugging.html">Xem chi tiết →</a>
       </article>
 
       <article class="card" id="s-receiving-code-review">
@@ -597,6 +607,7 @@
         <p class="row"><b>Làm gì</b>Đọc → hiểu → kiểm chứng với codebase → đánh giá → trả lời kỹ thuật hoặc phản biện có lý do → sửa từng ý và test từng ý.</p>
         <p class="row"><b>Dùng khi</b>Nhận feedback từ review (người hoặc reviewer subagent), nhất là feedback mơ hồ hoặc đáng ngờ.</p>
         <a class="back" href="#diagram">↑ Về diagram</a>
+        <a class="back" href="skills-detail/receiving-code-review.html">Xem chi tiết →</a>
       </article>
 
       <article class="card" id="s-dispatching-parallel-agents">
@@ -605,6 +616,7 @@
         <p class="row"><b>Làm gì</b>Mỗi nhóm vấn đề độc lập giao một agent, chạy đồng thời. Context của từng agent được dựng riêng.</p>
         <p class="row"><b>Dùng khi</b>Có từ 2 việc trở lên, không dùng chung state và không phụ thuộc thứ tự (ví dụ 3 file test fail do 3 nguyên nhân khác nhau).</p>
         <a class="back" href="#diagram">↑ Về diagram</a>
+        <a class="back" href="skills-detail/dispatching-parallel-agents.html">Xem chi tiết →</a>
       </article>
     </div>
 
@@ -617,6 +629,7 @@
         <p class="row"><b>Làm gì</b>Áp dụng TDD cho tài liệu: chạy kịch bản áp lực với subagent khi chưa có skill (xem nó sai), viết skill, kiểm lại, bịt kẽ hở.</p>
         <p class="row"><b>Dùng khi</b>Tạo hoặc sửa skill của riêng bạn.</p>
         <a class="back" href="#diagram">↑ Về diagram</a>
+        <a class="back" href="skills-detail/writing-skills.html">Xem chi tiết →</a>
       </article>
 
       <article class="card" id="s-diagnosing-superpowers">
@@ -625,6 +638,7 @@
         <p class="row"><b>Làm gì</b>Đọc transcript, báo cáo kèm dẫn chứng theo dòng (<code>path:line</code>). Có thể đóng gói bundle đã che dữ liệu nhạy cảm để gửi bug report.</p>
         <p class="row"><b>Dùng khi</b>Bạn nói: “figure out what went wrong with superpowers in this session”.</p>
         <a class="back" href="#diagram">↑ Về diagram</a>
+        <a class="back" href="skills-detail/diagnosing-superpowers.html">Xem chi tiết →</a>
       </article>
     </div>
   </div>

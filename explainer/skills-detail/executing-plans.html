@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>executing-plans Explainer</title>
+<link rel="stylesheet" href="../assets/skill-detail.css">
+<link rel="stylesheet" href="../assets/sidebar.css">
+<script src="../assets/sidebar.js"></script>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="wrap">
+    <strong>executing-plans</strong>
+    <a href="#diagram">1 · Diagram</a><a href="#choose">2 · Khi nào dùng</a><a href="#loop">3 · Vòng lặp</a><a href="#final">4 · Review cuối</a><a href="#stops">5 · Luật &amp; bào chữa</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <h1>executing-plans</h1>
+    <p>Agent tự thực thi plan, từng task, ngay trong phiên này: không có implementer subagent cho mỗi task, không có reviewer cho mỗi task. Chỉ có <b>một lần review cả nhánh</b> bằng context mới ở cuối.</p>
+    <div class="chips"><span class="chip">Rẻ hơn <code>subagent-driven-development</code></span><span class="chip">Sổ ghi (ledger) thay cho trí nhớ</span><span class="chip">TDD là cổng kiểm từng task</span><span class="chip">Không dừng lại hỏi “tiếp nhé?”</span></div>
+  </div>
+</header>
+
+<!-- ============ 1. DIAGRAM ============ -->
+<section id="diagram">
+  <div class="wrap">
+    <h2><span class="secno">1</span>Diagram: vòng lặp của một plan</h2>
+    <p class="lead">Đi từ trên xuống. Hai đường bên trái là hai vòng lặp: làm lại step khi hợp đồng chưa đạt, và quay về task kế khi còn task.</p>
+
+    <div class="diagram-grid">
+      <div class="diagram-box">
+        <p class="swipe-hint">← Vuốt ngang để xem hết diagram →</p>
+<svg class="flow" viewBox="0 0 560 874" role="group" aria-label="Sơ đồ executing-plans"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 z"/></marker></defs>
+<path class="arrow" d="M300 68 V112"/>
+<path class="arrow" d="M300 166 V210"/>
+<path class="arrow" d="M300 264 V308"/>
+<path class="arrow" d="M300 362 V406"/>
+<path class="arrow" d="M300 460 V504"/>
+<path class="arrow" d="M300 558 V602"/>
+<path class="arrow" d="M300 656 V700"/>
+<path class="arrow" d="M300 754 V798"/>
+<path class="arrow join" d="M150 335 H40"/>
+<path class="arrow" d="M40 335 V237 H150"/>
+<path class="arrow join" d="M150 531 H24"/>
+<path class="arrow" d="M24 531 V139 H150"/>
+<text class="note" x="308" y="388">đạt</text>
+<text class="note" x="308" y="584">hết task</text>
+<text class="note" x="95" y="329" text-anchor="middle">chưa đủ</text>
+<text class="note" x="87" y="525" text-anchor="middle">còn</text>
+<a class="node" href="#c-setup" aria-label="Setup - Worktree · ledger · đọc plan + spec"><rect x="150" y="14" width="300" height="54" rx="10"/><text class="name" x="164" y="37">Setup</text><text class="sub" x="164" y="55">Worktree · ledger · đọc plan + spec</text></a>
+<a class="node" href="#c-take" aria-label="task-start - Lấy brief + BASE, đọc brief"><rect x="150" y="112" width="300" height="54" rx="10"/><text class="name" x="164" y="135">task-start</text><text class="sub" x="164" y="153">Lấy brief + BASE, đọc brief</text></a>
+<a class="node" href="#c-work" aria-label="Làm từng step theo TDD - Chạy lệnh, so output với Expected"><rect x="150" y="210" width="300" height="54" rx="10"/><text class="name" x="164" y="233">Làm từng step theo TDD</text><text class="sub" x="164" y="251">Chạy lệnh, so output với Expected</text></a>
+<a class="node opt" href="#c-contract" aria-label="Hợp đồng hoàn thành đạt? - Test chạy · Expected đã so · Ruling đã ghi"><rect x="150" y="308" width="300" height="54" rx="10"/><text class="name" x="164" y="331">Hợp đồng hoàn thành đạt?</text><text class="sub" x="164" y="349">Test chạy · Expected đã so · Ruling đã ghi</text></a>
+<a class="node" href="#c-done" aria-label="task-done - Chạy test, ghi một dòng vào ledger"><rect x="150" y="406" width="300" height="54" rx="10"/><text class="name" x="164" y="429">task-done</text><text class="sub" x="164" y="447">Chạy test, ghi một dòng vào ledger</text></a>
+<a class="node opt" href="#c-done" aria-label="Còn task nào nữa? - Không dừng lại hỏi bạn giữa các task"><rect x="150" y="504" width="300" height="54" rx="10"/><text class="name" x="164" y="527">Còn task nào nữa?</text><text class="sub" x="164" y="545">Không dừng lại hỏi bạn giữa các task</text></a>
+<a class="node" href="#c-final" aria-label="Review cả nhánh - Reviewer mới · model mạnh nhất"><rect x="150" y="602" width="300" height="54" rx="10"/><text class="name" x="164" y="625">Review cả nhánh</text><text class="sub" x="164" y="643">Reviewer mới · model mạnh nhất</text></a>
+<a class="node" href="#c-fix" aria-label="Sửa Critical/Important: MỘT đợt - Mỗi fix RED→GREEN, suite xanh"><rect x="150" y="700" width="300" height="54" rx="10"/><text class="name" x="164" y="723">Sửa Critical/Important: MỘT đợt</text><text class="sub" x="164" y="741">Mỗi fix RED→GREEN, suite xanh</text></a>
+<g class="node new" aria-label="finishing-a-development-branch - Merge, mở PR hoặc giữ nhánh"><rect x="150" y="798" width="300" height="54" rx="10"/><text class="name" x="164" y="821">finishing-a-development-branch</text><text class="sub" x="164" y="839">Merge, mở PR hoặc giữ nhánh</text></g></svg>
+        <div class="legend"><span><i></i>Bước của skill</span><span><i class="dash"></i>Nét đứt: điểm quyết định</span><span><i class="new"></i>Viền xanh: skill chạy tiếp theo</span></div>
+      </div>
+
+      <aside class="pains">
+        <h3>Nó giải quyết painpoint nào?</h3>
+        <p>Những lỗi mà từng phần của skill sinh ra để chặn.</p>
+<div class="pain-item"><q>Subagent cho từng task tốn token, vì mỗi lần phải đọc lại codebase từ đầu</q><div class="fix">Một context của chính agent, cộng một reviewer ở cuối</div></div><div class="pain-item"><q>Quên đang ở task nào sau compaction, làm lại task đã commit</q><div class="fix"><a class="skill-link" href="#c-setup">Ledger</a>: tin ledger và <code>git log</code> hơn trí nhớ</div></div><div class="pain-item"><q>Lệch plan mà không ai biết</q><div class="fix">Mọi chỗ lệch phải có dòng <code>Ruling:</code> trong ledger</div></div><div class="pain-item"><q>Dừng lại hỏi “tiếp nhé?” sau mỗi task</q><div class="fix"><a class="skill-link" href="#stops">Chỉ 4 điều được dừng agent</a></div></div><div class="pain-item"><q>Tự đọc diff của mình rồi tuyên bố ổn</q><div class="fix"><a class="skill-link" href="#c-final">Reviewer mới ở cuối</a>, không thay bằng tự đọc</div></div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section id="choose">
+<div class="wrap">
+<h2><span class="secno">2</span>Khi nào dùng, so với subagent-driven</h2>
+<p class="lead">Cả hai chạy trong phiên này, dùng chung workspace và ledger, và không dừng giữa các task. Khác nhau ở chỗ ai làm và ai review.</p>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th></th><th>executing-plans (inline)</th><th>subagent-driven-development</th></tr></thead><tbody><tr><td>Ai làm task</td><td>Chính agent này</td><td>Một subagent mới cho mỗi task</td></tr><tr><td>Review</td><td>Một lần, cả nhánh, ở cuối</td><td>Sau mỗi task (spec + chất lượng), cộng một lần cả nhánh ở cuối</td></tr><tr><td>Chi phí</td><td>Một context (của agent) + một reviewer</td><td>Một context mới cho mỗi task và mỗi review</td></tr><tr><td>Điểm yếu</td><td>Không có context mới và con mắt thứ hai cho từng task. Plan dài thì task cuối nhận được ít sự chú ý nhất</td><td>Tốn token hơn</td></tr><tr><td>Hợp khi</td><td>Bạn chọn chạy inline, hoặc harness không có subagent tool</td><td>Bạn muốn cổng review ở mọi task, hoặc plan đủ dài để các task cuối chạy trên context đã bị nén</td></tr></tbody></table></div>
+<div class="cards">
+<article class="card plain" id="c-when">
+<header><h4>Ba điều kiện để dùng</h4></header>
+<ul><li>Bạn có plan từ <code>writing-plans</code> và đã chọn chạy inline ở bước bàn giao.</li><li>Harness không có subagent tool (xem các file trong <code>using-superpowers/references/</code>). Không bao giờ bịa ra một lần dispatch: chạy plan tại chỗ.</li><li>Các task phần lớn độc lập, cùng điều kiện với <code>subagent-driven-development</code>.</li></ul>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-model">
+<header><h4>Model nào là đủ</h4></header>
+<p class="row"><b class="lbl">Làm gì</b>Plan đặc tả đầy đủ thì chạy inline gần như chỉ là chép lại và test, nên chạy tốt trên model tầm trung. Chỗ duy nhất model mạnh nhất đáng tiền là bước review cuối, và skill dispatch riêng bước đó.</p>
+<p class="row"><b class="lbl">Dùng khi</b>Agent nên nói điều này với bạn khi bạn chọn inline.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+</div>
+</div>
+</section>
+<section id="loop">
+<div class="wrap">
+<h2><span class="secno">3</span>Vòng lặp mỗi task</h2>
+<p class="lead">Setup một lần, rồi bốn bước cho mỗi task. Số trong badge khớp với các node trên diagram.</p>
+<div class="phase"><h3>Chuẩn bị</h3><span>Làm một lần trước Task 1</span></div>
+<div class="cards one">
+<article class="card plain" id="c-setup">
+<header><h4>Setup: workspace, ledger, pre-flight</h4></header>
+<p class="row pain"><b class="lbl">Vấn đề</b>Trí nhớ hội thoại không sống qua compaction. Agent mất dấu sẽ làm lại những task đã có commit, tốn đúng phần context của chính nó.</p>
+<p class="row"><b class="lbl">Làm gì</b>Ngoài todo (chỉ là bản xem trực tiếp), agent giữ một <b>ledger</b> làm bản ghi thật:</p>
+<ul><li>Dùng <code>using-git-worktrees</code> để có workspace cô lập. Không bắt đầu trên main/master khi bạn chưa đồng ý rõ.</li><li>Chạy <code>sdd-workspace PLAN_FILE</code> (đường dẫn tuyệt đối): in ra thư mục git-ignored <code>&lt;repo-root&gt;/.superpowers/sdd/&lt;plan-basename&gt;/</code> chứa ledger, brief và review package của <b>riêng plan này</b>. Không đụng thư mục của plan khác.</li><li>Ledger nằm ở <code>&lt;workspace&gt;/progress.md</code>, dòng đầu nêu file plan (<code># SDD ledger — plan: &lt;đường dẫn&gt;</code>). Dòng đầu khớp plan của agent thì task nào có dòng <code>Task &lt;N&gt;: complete</code> là đã xong, tiếp tục từ task đầu tiên chưa có dòng đó. Dòng đầu nêu plan khác thì để nguyên và bắt đầu ledger mới.</li><li>Sau compaction: tin ledger và <code>git log</code> hơn trí nhớ. <code>git clean -fdx</code> sẽ xóa workspace; khi đó khôi phục từ <code>git log</code>.</li><li>Workspace và ledger dùng chung định dạng với <code>subagent-driven-development</code>, nên plan có thể đổi người thực thi giữa chừng.</li></ul>
+<p class="row"><b class="lbl">Đọc plan</b>Đọc plan một lần, ghi lại ngữ cảnh và Global Constraints, tạo một todo cho mỗi task. Plan có nêu Spec thì đọc cả spec: spec là thẩm quyền, plan là lập luận, xung đột trong plan giải quyết theo spec. Không tới được spec thì ghi chú vào ledger, và mọi ruling lúc đó chỉ là tạm.</p>
+<p class="row"><b class="lbl">Bắt buộc</b>Nạp <code>test-driven-development</code> ngay, trước Task 1. Dù các step của plan đã ghi “viết test fail trước”, vẫn phải đọc skill đó.</p>
+<p class="row"><b class="lbl">Pre-flight</b>Trước Task 1, quét plan tìm xung đột giữa các task theo khối Interfaces. Với mỗi task dùng thứ mà task trước tạo ra, ghi một dòng ledger: hai task, thứ được tạo so với thứ được dùng, và phát hiện. Task không chung gì thì không có dòng; plan mà các task không chung gì ghi đúng một dòng <code>Pre-flight: no shared interfaces</code>. Mỗi xung đột phải ra ruling theo spec và ghi cạnh dòng đó.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+</div>
+<div class="phase"><h3>Với mỗi task</h3><span>Bốn bước</span></div>
+<div class="cards one">
+<article class="card plain" id="c-take">
+<header><span class="badge">1</span><h4>Lấy task</h4></header>
+<p class="row"><b class="lbl">Làm gì</b>Chạy <code>scripts/task-start PLAN_FILE N</code>: một lệnh in ra đường dẫn brief và BASE (commit mà phạm vi task được cắt từ đó). Đọc brief cho <b>mọi</b> task, kể cả task đã nhớ từ lúc setup: trí nhớ chỉ là bản tóm tắt, còn brief có giá trị, chữ ký và test case chính xác. Rồi đánh dấu todo là in_progress.</p>
+<ul><li>Mọi thứ in ra và mọi kết quả tool nằm lại trong context tới hết phiên. Output test dài thì chuyển vào file trong workspace và chỉ đọc phần đuôi; đọc brief chứ không đọc cả plan.</li><li>Mỗi lệnh tool là một lượt đọc lại toàn bộ context, nên ghi sổ đi kèm công việc: dòng ledger nằm cùng lệnh với commit, không có lệnh riêng.</li></ul>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-work">
+<header><span class="badge">2</span><h4>Làm từng step</h4></header>
+<p class="row"><b class="lbl">Làm gì</b>Các step của plan đã theo thứ tự RED-GREEN. Đi đúng thứ tự đó dưới <code>test-driven-development</code>: code của step test được viết và chạy trước. Thấy nó fail là một step, không phải thủ tục. Test pass trước khi có phần cài là một phát hiện về chính cái test.</p>
+<p class="row"><b class="lbl">Mỗi step có lệnh đều có dòng <code>Expected:</code></b>Chạy lệnh, đọc output, so sánh. Ba kết quả:</p>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Kết quả</th><th>Làm gì</th></tr></thead><tbody><tr><td>Khớp</td><td>Sang step tiếp theo.</td></tr><tr><td>Code sai</td><td>Dùng <code>systematic-debugging</code>. Tìm nguyên nhân; không vá triệu chứng cho output khớp.</td></tr><tr><td>Plan sai (step mâu thuẫn spec, interface của task trước không khớp thứ task này dùng, lệnh không thể chạy)</td><td>Ra ruling bằng thay đổi nhỏ nhất đủ thỏa spec, ghi ledger <code>Task &lt;N&gt;: Ruling: &lt;phát hiện&gt; — &lt;quyết định và lý do&gt;</code>, rồi tiếp tục. Ruling được mang theo chứ không dựa vào trí nhớ: task sau chạm cùng interface sẽ đọc nó từ ledger.</td></tr></tbody></table></div>
+<p class="row">Commit theo đúng các step commit của plan. Một task có nhiều commit là bình thường: phạm vi review được cắt từ BASE, không bao giờ là <code>HEAD~1</code>.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-contract">
+<header><span class="badge">3</span><h4>Hợp đồng hoàn thành</h4></header>
+<p class="row"><b class="lbl">Làm gì</b>Trước khi ghi dòng ledger của task, cả bốn điều sau phải đúng, có bằng chứng trong phiên này chứ không phải suy ra từ việc diff trông ổn:</p>
+<ul><li>Mọi test mà brief nêu đều tồn tại và đã chạy trong task này, và agent đã đọc output.</li><li>Lần chạy test cuối của task đã pass. <code>task-done</code> chính là lần chạy đó, và nó ghi lệnh cùng kết quả vào dòng ledger.</li><li>Mọi dòng <code>Expected:</code> của brief đã được so với output thật.</li><li>Mọi chỗ lệch khỏi brief đều có dòng <code>Ruling:</code> trong ledger.</li></ul>
+<p class="row"><code>verification-before-completion</code> chi phối việc tuyên bố này. Thiếu một mục là task chưa xong: làm nốt.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-done">
+<header><span class="badge">4</span><h4>Hoàn tất task</h4></header>
+<p class="row"><b class="lbl">Làm gì</b>Chạy <code>scripts/task-done PLAN_FILE N BASE -- &lt;lệnh test&gt;</code> với lệnh test mà brief nêu cho cả task. Nó chạy test, giữ toàn bộ output trong workspace, in phần đuôi, và <b>chỉ khi pass</b> mới thêm dòng hoàn thành vào ledger:</p>
+<pre class="cmd">Task &lt;N&gt;: complete (commits &lt;base7&gt;..&lt;head7&gt;, tests: &lt;command&gt; → &lt;result&gt;)</pre>
+<p class="row">Lần chạy fail không ghi gì: task chưa hoàn thành. Khi đã ghi, đánh dấu todo complete và sang task kế.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+</div>
+</div>
+</section>
+<section id="final">
+<div class="wrap">
+<h2><span class="secno">4</span>Review cuối và kết thúc</h2>
+<p class="lead">Đây là lần duy nhất cả lượt chạy mua được một context mới. Không bỏ qua, và không thay bằng việc tự đọc diff của mình.</p>
+<div class="cards one">
+<article class="card plain" id="c-final">
+<header><h4>Review cả nhánh</h4></header>
+<p class="row"><b class="lbl">Làm gì</b>Chạy <code>review-package PLAN_FILE MERGE_BASE HEAD</code> (MERGE_BASE là commit mà nhánh bắt đầu, ví dụ <code>git merge-base main HEAD</code>) rồi review từ file nó in ra.</p>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Có subagent tool?</th><th>Làm gì</th></tr></thead><tbody><tr><td>Có</td><td>Dispatch reviewer trên model <b>mạnh nhất</b> hiện có, vì review cả nhánh là việc cần phán đoán. Dùng <code>code-reviewer.md</code> của <code>requesting-code-review</code>. Đưa cho nó: đường dẫn package, đường dẫn plan và spec, nguyên văn mục Review Focus của plan (nếu có), và chỉ tới các dòng <code>Ruling:</code> trong ledger. Chỉ định model rõ ràng: bỏ trống thì nó kế thừa model của phiên, có thể không phải model mạnh nhất.</td></tr><tr><td>Không</td><td>Đọc <code>code-reviewer.md</code> và tự review theo package, như một lượt riêng sau dòng ledger của task cuối. Ghi <code>Final review: self-review (no subagent tool)</code> vào ledger và nói rõ trong tin nhắn cuối: tự review của tác giả yếu hơn reviewer mới, và bạn quyết định thế đã đủ để merge hay chưa.</td></tr></tbody></table></div>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-fix">
+<header><h4>Phân loại, rồi sửa trong MỘT đợt</h4></header>
+<p class="row"><b class="lbl">Làm gì</b>Phân loại trước khi hành động. Nhãn mức độ của reviewer chỉ là gợi ý, cổng là của agent. Mục “Declined to judge” cũng là của agent: mỗi dòng là một ruling, ghi ledger dạng <code>Final: Ruling: …</code>. Chấm lại theo <b>hậu quả</b>: gắn nhãn Minor chỉ vì spec im lặng là đang chấm spec, không phải chấm tác động.</p>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Loại</th><th>Xử lý</th></tr></thead><tbody><tr><td>Critical, Important</td><td>Vào đợt sửa duy nhất. Mỗi fix: viết test tái hiện, thấy nó fail, làm cho pass, rồi chạy cả suite. Ghi <code>Final: fixed &lt;finding&gt; — &lt;test&gt; RED→GREEN, suite &lt;N&gt;/&lt;N&gt;</code>. Không dispatch review lại: các test phủ đã trả lời “đã xử lý”, lần chạy suite đã trả lời “không làm hỏng gì”.</td></tr><tr><td>Minor</td><td>Ghi ledger <code>Final: minor (deferred): …</code> và đưa vào mục “Deferred minors” của tin nhắn cuối. Không bao giờ vào đợt sửa, không thành ruling.</td></tr><tr><td>Quyết định không sửa</td><td>Là một ruling: <code>Final: Ruling: &lt;finding&gt; — &lt;vì sao giữ code&gt; — &lt;chi phí nếu sai&gt;</code>, và tới tay bạn trong danh sách ruling. Không có đợt sửa thứ hai.</td></tr></tbody></table></div>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-finish">
+<header><h4>Kết thúc</h4></header>
+<p class="row"><b class="lbl">Làm gì</b>Trước khi xóa bất cứ gì, gom <b>mọi</b> dòng ledger chứa <code>Ruling:</code> vào tin nhắn cuối dưới mục “Rulings I made”, theo thứ tự đã ra, mỗi dòng kèm chi phí nếu sai. Mọi dòng <code>minor (deferred)</code> vào mục “Deferred minors”. Cả hai danh sách phải đầy đủ. Tin nhắn cuối là nơi duy nhất những quyết định agent đã thay bạn đưa ra, và những phát hiện nó chọn không xử lý, tới được bạn.</p>
+<p class="row">Khi review cuối sạch và các fix đã commit: xóa thư mục workspace của plan này (git history giờ là bản ghi). Thư mục của plan khác thì để yên. Cuối cùng gọi <code>finishing-a-development-branch</code>.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+</div>
+</div>
+</section>
+<section id="stops">
+<div class="wrap">
+<h2><span class="secno">5</span>Luật chạy liên tục và những lời bào chữa</h2>
+<p class="lead">Plan đã làm phần suy nghĩ. Agent thực thi nó đúng như viết, chứng minh từng step bằng test mà nó đã thấy fail rồi pass, và để lại bản ghi sống sót qua việc chính nó quên.</p>
+<div class="cards">
+<article class="card plain" id="c-rulings">
+<header><h4>Ruling, không phải dừng lại</h4></header>
+<p class="row"><b class="lbl">Làm gì</b>Spec là thẩm quyền, plan là lập luận, phán đoán của agent giải quyết điều cả hai chưa trả lời. Xung đột, mơ hồ, lỗi trong plan: agent tự quyết, ghi ledger <code>Ruling: &lt;quyết định&gt; — &lt;vì sao&gt; — &lt;chi phí nếu sai&gt;</code>, rồi đi tiếp.</p>
+<p class="row"><b class="lbl">Dùng khi</b>Lệch plan mà không có ruling trong ledger là một quyết định đưa ra trong bí mật.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-stops">
+<header><h4>Bốn điều được dừng agent</h4></header>
+<ul><li>Một thao tác không thể hoàn tác hoặc có tính hủy diệt.</li><li>Một hành động nhạy cảm về bảo mật.</li><li>Một tác dụng phụ ngoài worktree này mà thông lệ là phải hỏi trước (merge, push lên nhánh dùng chung, publish).</li><li>Một plan hỏng tới mức mọi đường đi tiếp đều là đoán.</li></ul>
+<p class="row">Chỉ bốn điều này. Giữa các task agent không dừng lại hỏi “có nên tiếp tục không?”: bạn chọn inline để tiết kiệm, không phải để trả lời câu đó sau mỗi task. Giữa các lệnh tool, agent chỉ nói tối đa một dòng ngắn.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+</div>
+<div class="phase"><h3>Những lời bào chữa hay gặp</h3><span>Bảng Common Rationalizations của skill</span></div>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Agent tự nhủ</th><th>Thực tế</th></tr></thead><tbody><tr><td>“Tôi nhớ Task N nói gì”</td><td>Agent chỉ nhớ một bản tóm tắt. Brief có giá trị chính xác. Đọc nó.</td></tr><tr><td>“Code trong plan đúng rồi, khỏi xem test fail”</td><td>Test chưa từng thấy fail thì không chứng minh gì. Đó là một step. Chạy nó.</td></tr><tr><td>“Cuối task chạy cả suite một lần thay vì từng step”</td><td>Chạy từng step là cách biết step nào làm hỏng. Lần chạy cuối task là hợp đồng, không phải thứ thay thế.</td></tr><tr><td>“Plan sai chỗ này, tôi cứ làm điều đúng”</td><td>Làm điều đúng và ghi ruling vào ledger. Lệch mà không ghi là quyết định trong bí mật.</td></tr><tr><td>“Vài task nữa tôi mới ghi ledger”</td><td>Compaction không đợi lúc thuận tiện. Mỗi task một dòng, cùng tin nhắn với commit.</td></tr><tr><td>“Để tôi hỏi trước khi sang task tiếp”</td><td>Bạn chọn inline để tiết kiệm. Câu hỏi tiến độ tiêu tốn thời gian của bạn. Chỉ bốn điều được dừng agent.</td></tr><tr><td>“Tôi đã đọc kỹ diff của mình, reviewer cuối là thừa”</td><td>Cùng tác giả, cùng điểm mù. Reviewer là context mới duy nhất mà lượt chạy này mua được.</td></tr><tr><td>“Chắc pass, thay đổi này tầm thường”</td><td>“Chắc” không phải bằng chứng. Hợp đồng đòi lệnh và output của nó.</td></tr><tr><td>“Subagent chậm và đắt, bỏ luôn review cuối”</td><td>Inline đã bỏ review từng task rồi. Một review cả nhánh là mức sàn, không phải mức trần.</td></tr><tr><td>“Reviewer nói Minor thì là Minor”</td><td>Nhãn đó chấm sự im lặng của spec. Hãy chấm điều mà người dùng nhận được. Chấm lại rồi mới quyết.</td></tr><tr><td>“Fix hiển nhiên, khỏi cần test fail trước”</td><td>Test fail trước là bằng chứng duy nhất rằng phát hiện là thật và giờ đã hết. Không có nó chỉ có một cái diff và một hy vọng.</td></tr><tr><td>“Tôi sửa luôn mấy cái Minor khi đang ở đó”</td><td>Mỗi Minor sửa là một test, một fix và một lần chạy suite mà bạn không yêu cầu. Ghi vào ledger; bạn quyết.</td></tr></tbody></table></div>
+</div>
+</section>
+
+<section>
+  <div class="wrap">
+    <footer>Nguồn: <a href="../../skills/executing-plans/SKILL.md"><code>skills/executing-plans/SKILL.md</code></a> (323 dòng).</footer>
+  </div>
+</section>
+
+</body>
+</html>

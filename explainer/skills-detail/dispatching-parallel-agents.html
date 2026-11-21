@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>dispatching-parallel-agents Explainer</title>
+<link rel="stylesheet" href="../assets/skill-detail.css">
+<link rel="stylesheet" href="../assets/sidebar.css">
+<script src="../assets/sidebar.js"></script>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="wrap">
+    <strong>dispatching-parallel-agents</strong>
+    <a href="#diagram">1 · Diagram</a><a href="#when">2 · Khi nào dùng</a><a href="#pattern">3 · Bốn bước</a><a href="#mistakes">4 · Lỗi &amp; ví dụ</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <h1>dispatching-parallel-agents</h1>
+    <p>Khi có từ 2 việc độc lập trở lên, giao mỗi việc cho một agent riêng và để chúng chạy đồng thời, thay vì điều tra lần lượt. Mỗi agent nhận ngữ cảnh được dựng riêng, không thừa kế lịch sử phiên.</p>
+    <div class="chips"><span class="chip">Một agent cho mỗi vùng vấn đề độc lập</span><span class="chip">Nhiều lệnh dispatch trong một response = song song</span><span class="chip">Không dùng khi lỗi liên quan nhau hoặc dùng chung state</span><span class="chip">Xong phải review, check xung đột, chạy cả suite</span></div>
+  </div>
+</header>
+
+<!-- ============ 1. DIAGRAM ============ -->
+<section id="diagram">
+  <div class="wrap">
+    <h2><span class="secno">1</span>Diagram: từ nhiều lỗi tới các agent song song</h2>
+    <p class="lead">Đi từ trên xuống. Chỉ nhánh “có” mới tới dispatch song song; nhánh “không” quay về một agent hoặc tuần tự.</p>
+
+    <div class="diagram-grid">
+      <div class="diagram-box">
+        <p class="swipe-hint">← Vuốt ngang để xem hết diagram →</p>
+<svg class="flow" viewBox="0 0 560 580" role="group" aria-label="Sơ đồ dispatching-parallel-agents"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 z"/></marker></defs>
+<path class="arrow" d="M300 68 V112"/>
+<path class="arrow" d="M300 166 V188 H175 V210"/>
+<path class="arrow" d="M300 166 V188 H425 V210"/>
+<path class="arrow" d="M425 264 V286 H300 V308"/>
+<path class="arrow" d="M300 362 V406"/>
+<path class="arrow" d="M300 460 V504"/>
+<text class="note" x="168" y="182" text-anchor="end">không</text>
+<text class="note" x="432" y="182">có</text>
+<a class="node" href="#c-when" aria-label="Nhiều lỗi hoặc việc cùng lúc - Ví dụ: 3 file test fail"><rect x="150" y="14" width="300" height="54" rx="10"/><text class="name" x="164" y="37">Nhiều lỗi hoặc việc cùng lúc</text><text class="sub" x="164" y="55">Ví dụ: 3 file test fail</text></a>
+<a class="node opt" href="#c-when" aria-label="Chúng độc lập với nhau? - Sửa cái này có đụng cái kia không?"><rect x="150" y="112" width="300" height="54" rx="10"/><text class="name" x="164" y="135">Chúng độc lập với nhau?</text><text class="sub" x="164" y="153">Sửa cái này có đụng cái kia không?</text></a>
+<a class="node" href="#c-not" aria-label="Một agent / tuần tự - Liên quan hoặc dùng chung state"><rect x="60" y="210" width="230" height="54" rx="10"/><text class="name" x="74" y="233">Một agent / tuần tự</text><text class="sub" x="74" y="251">Liên quan hoặc dùng chung state</text></a>
+<a class="node" href="#c-pattern" aria-label="Chia theo vùng vấn đề - Mỗi vùng là một domain độc lập"><rect x="310" y="210" width="230" height="54" rx="10"/><text class="name" x="324" y="233">Chia theo vùng vấn đề</text><text class="sub" x="324" y="251">Mỗi vùng là một domain độc lập</text><g class="num"><circle cx="310" cy="210" r="10"/><text x="310" y="213.5">1</text></g></a>
+<a class="node" href="#c-task" aria-label="Tạo task tập trung cho mỗi agent - Phạm vi · mục tiêu · ràng buộc · output"><rect x="150" y="308" width="300" height="54" rx="10"/><text class="name" x="164" y="331">Tạo task tập trung cho mỗi agent</text><text class="sub" x="164" y="349">Phạm vi · mục tiêu · ràng buộc · output</text><g class="num"><circle cx="150" cy="308" r="10"/><text x="150" y="311.5">2</text></g></a>
+<a class="node" href="#c-dispatch" aria-label="Dispatch trong CÙNG một response - Nhiều lệnh một message = song song"><rect x="150" y="406" width="300" height="54" rx="10"/><text class="name" x="164" y="429">Dispatch trong CÙNG một response</text><text class="sub" x="164" y="447">Nhiều lệnh một message = song song</text><g class="num"><circle cx="150" cy="406" r="10"/><text x="150" y="409.5">3</text></g></a>
+<a class="node new" href="#c-verify" aria-label="Review và tích hợp - Đọc tóm tắt, xung đột, chạy full suite"><rect x="150" y="504" width="300" height="54" rx="10"/><text class="name" x="164" y="527">Review và tích hợp</text><text class="sub" x="164" y="545">Đọc tóm tắt, xung đột, chạy full suite</text><g class="num"><circle cx="150" cy="504" r="10"/><text x="150" y="507.5">4</text></g></a></svg>
+        <div class="legend"><span><i></i>Bước của skill</span><span><i class="dash"></i>Nét đứt: điểm quyết định</span><span><i class="new"></i>Viền xanh: kết quả cuối</span></div>
+      </div>
+
+      <aside class="pains">
+        <h3>Nó giải quyết painpoint nào?</h3>
+        <p>Những lỗi mà từng phần của skill sinh ra để chặn.</p>
+<div class="pain-item"><q>Nhiều lỗi độc lập mà điều tra lần lượt thì phí thời gian</q><div class="fix"><a class="skill-link" href="#c-dispatch">Dispatch song song</a> trong cùng một response</div></div><div class="pain-item"><q>Giao quá rộng (“fix all the tests”) nên agent bị lạc</q><div class="fix"><a class="skill-link" href="#c-task">Phạm vi cụ thể</a>: một file test hoặc một subsystem</div></div><div class="pain-item"><q>Không đưa ngữ cảnh nên agent không biết lỗi ở đâu</q><div class="fix">Dán thông báo lỗi và tên test vào prompt (<a class="skill-link" href="#mistakes">bảng lỗi</a>)</div></div><div class="pain-item"><q>Không đặt ràng buộc nên agent refactor tất cả</q><div class="fix">Ràng buộc như “Do NOT change production code”</div></div><div class="pain-item"><q>Ghép kết quả mà không kiểm, trong khi agent có thể mắc lỗi hệ thống</q><div class="fix"><a class="skill-link" href="#c-verify">Review, check xung đột, chạy full suite, spot check</a></div></div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section id="when">
+<div class="wrap">
+<h2><span class="secno">2</span>Khi nào dùng, khi nào không</h2>
+<p class="lead">Nguyên tắc cốt lõi: một agent cho mỗi vùng vấn đề độc lập, và để chúng làm việc đồng thời.</p>
+<div class="cards">
+<article class="card plain" id="c-when">
+<header><h4>Dùng khi</h4><span class="tag new">Song song</span></header>
+<ul><li>3+ file test fail với root cause khác nhau.</li><li>Nhiều subsystem hỏng độc lập.</li><li>Mỗi vấn đề hiểu được mà không cần ngữ cảnh từ vấn đề khác.</li><li>Không có state dùng chung giữa các cuộc điều tra.</li></ul>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-not">
+<header><h4>Không dùng khi</h4></header>
+<ul><li>Các lỗi liên quan nhau (sửa cái này có thể sửa luôn cái khác): điều tra chung trước.</li><li>Cần hiểu toàn bộ trạng thái hệ thống.</li><li>Các agent sẽ cản trở nhau (sửa cùng file, dùng chung tài nguyên).</li><li>Debug thăm dò: chưa biết cái gì đang hỏng.</li></ul>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+</div>
+</div>
+</section>
+<section id="pattern">
+<div class="wrap">
+<h2><span class="secno">3</span>Mẫu bốn bước</h2>
+<p class="lead">Từ việc chia vùng tới việc ghép kết quả.</p>
+<div class="cards one">
+<article class="card plain" id="c-pattern">
+<header><span class="badge">1</span><h4>Xác định các vùng độc lập</h4></header>
+<p class="row"><b class="lbl">Làm gì</b>Nhóm lỗi theo thứ đang hỏng. Ví dụ: file A test luồng duyệt tool; file B test hành vi hoàn tất batch; file C test chức năng hủy. Mỗi vùng độc lập: sửa phần duyệt tool không ảnh hưởng test hủy.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-task">
+<header><span class="badge">2</span><h4>Tạo task tập trung cho từng agent</h4></header>
+<ul><li><b>Phạm vi cụ thể:</b> một file test hoặc một subsystem.</li><li><b>Mục tiêu rõ:</b> làm cho các test này pass.</li><li><b>Ràng buộc:</b> đừng đổi code khác.</li><li><b>Output mong đợi:</b> tóm tắt đã tìm thấy và đã sửa gì.</li></ul>
+<p class="row"><b class="lbl">Prompt tốt là</b>Tập trung (một vùng vấn đề), tự đủ (mọi ngữ cảnh cần để hiểu vấn đề), và cụ thể về output (agent phải trả về gì). Ví dụ:</p>
+<pre class="cmd">Fix the 3 failing tests in src/agents/agent-tool-abort.test.ts:
+
+1. "should abort tool with partial output capture" - expects 'interrupted at' in message
+2. "should handle mixed completed and aborted tools" - fast tool aborted instead of completed
+3. "should properly track pendingToolCount" - expects 3 results but gets 0
+
+These are timing/race condition issues. Your task:
+
+1. Read the test file and understand what each test verifies
+2. Identify root cause - timing issues or actual bugs?
+3. Fix by:
+   - Replacing arbitrary timeouts with event-based waiting
+   - Fixing bugs in abort implementation if found
+   - Adjusting test expectations if testing changed behavior
+
+Do NOT just increase timeouts - find the real issue.
+
+Return: Summary of what you found and what you fixed.</pre>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-dispatch">
+<header><span class="badge">3</span><h4>Dispatch song song</h4></header>
+<p class="row"><b class="lbl">Làm gì</b>Phát tất cả các lệnh dispatch subagent trong <b>cùng một response</b>: chúng chạy song song.</p>
+<pre class="cmd">Subagent (general-purpose): "Fix agent-tool-abort.test.ts failures"
+Subagent (general-purpose): "Fix batch-completion-behavior.test.ts failures"
+Subagent (general-purpose): "Fix tool-approval-race-conditions.test.ts failures"
+# Cả ba chạy đồng thời.</pre>
+<p class="row">Nhiều lệnh dispatch trong một response = chạy song song. Mỗi response một lệnh = tuần tự.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-verify">
+<header><span class="badge">4</span><h4>Review và tích hợp</h4></header>
+<ul><li><b>Đọc tóm tắt</b> của từng agent, hiểu đã đổi gì.</li><li><b>Kiểm tra xung đột:</b> các agent có sửa cùng đoạn code không?</li><li><b>Chạy full test suite</b> để xác nhận các fix chạy cùng nhau.</li><li><b>Spot check:</b> agent có thể mắc lỗi hệ thống.</li></ul>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+</div>
+</div>
+</section>
+<section id="mistakes">
+<div class="wrap">
+<h2><span class="secno">4</span>Lỗi hay gặp và ví dụ thật</h2>
+<p class="lead">Bảng Common Mistakes và một ví dụ thật từ một phiên làm việc.</p>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Lỗi</th><th>Cách đúng</th></tr></thead><tbody><tr><td>Quá rộng: “Fix all the tests” (agent bị lạc)</td><td>Cụ thể: “Fix agent-tool-abort.test.ts” (phạm vi tập trung).</td></tr><tr><td>Không ngữ cảnh: “Fix the race condition” (agent không biết ở đâu)</td><td>Có ngữ cảnh: dán thông báo lỗi và tên test.</td></tr><tr><td>Không ràng buộc: agent có thể refactor mọi thứ</td><td>Có ràng buộc: “Do NOT change production code” hoặc “Fix tests only”.</td></tr><tr><td>Output mơ hồ: “Fix it” (không biết đã đổi gì)</td><td>Output cụ thể: “Return summary of root cause and changes”.</td></tr></tbody></table></div>
+<div class="cards one">
+<article class="card plain" id="c-example">
+<header><h4>Ví dụ thật: 6 test fail trên 3 file sau một đợt refactor lớn</h4></header>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>File</th><th>Lỗi</th><th>Agent đã làm gì</th></tr></thead><tbody><tr><td><code>agent-tool-abort.test.ts</code></td><td>3 lỗi (timing)</td><td>Thay timeout bằng chờ theo sự kiện.</td></tr><tr><td><code>batch-completion-behavior.test.ts</code></td><td>2 lỗi (tool không chạy)</td><td>Sửa lỗi cấu trúc event (threadId đặt sai chỗ).</td></tr><tr><td><code>tool-approval-race-conditions.test.ts</code></td><td>1 lỗi (execution count = 0)</td><td>Thêm bước chờ tool async chạy xong.</td></tr></tbody></table></div>
+<p class="row"><b>Quyết định:</b> các vùng độc lập (logic abort tách khỏi hoàn tất batch, tách khỏi race condition). <b>Tích hợp:</b> mọi fix độc lập, không xung đột, cả suite xanh.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+</div>
+</div>
+</section>
+
+<section>
+  <div class="wrap">
+    <footer>Nguồn: <a href="../../skills/dispatching-parallel-agents/SKILL.md"><code>skills/dispatching-parallel-agents/SKILL.md</code></a> (167 dòng).</footer>
+  </div>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>systematic-debugging Explainer</title>
+<link rel="stylesheet" href="../assets/skill-detail.css">
+<link rel="stylesheet" href="../assets/sidebar.css">
+<script src="../assets/sidebar.js"></script>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="wrap">
+    <strong>systematic-debugging</strong>
+    <a href="#diagram">1 · Diagram</a><a href="#iron">2 · Luật &amp; khi nào</a><a href="#phases">3 · Bốn pha</a><a href="#arch">4 · ≥ 3 lần fail</a><a href="#flags">5 · Red Flags</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <h1>systematic-debugging</h1>
+    <p>Luôn tìm root cause trước khi thử sửa: vá triệu chứng là thất bại. Skill đi qua bốn pha, và chưa xong Phase 1 thì chưa được đề xuất bản sửa nào.</p>
+    <div class="chips"><span class="chip">Luật sắt: không sửa khi chưa điều tra root cause</span><span class="chip">Bốn pha, xong pha này mới sang pha sau</span><span class="chip">Sửa thất bại 3 lần → nghi ngờ kiến trúc</span><span class="chip">Dùng cả khi đang gấp và việc “đơn giản”</span></div>
+  </div>
+</header>
+
+<!-- ============ 1. DIAGRAM ============ -->
+<section id="diagram">
+  <div class="wrap">
+    <h2><span class="secno">1</span>Diagram: bốn pha điều tra</h2>
+    <p class="lead">Đi từ trên xuống. Đường bên trái hẹp là “giả thuyết sai thì lập giả thuyết mới”; đường ngoài cùng là “bản sửa chưa chạy thì quay về Phase 1”.</p>
+
+    <div class="diagram-grid">
+      <div class="diagram-box">
+        <p class="swipe-hint">← Vuốt ngang để xem hết diagram →</p>
+<svg class="flow" viewBox="0 0 560 678" role="group" aria-label="Sơ đồ systematic-debugging"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 z"/></marker></defs>
+<path class="arrow" d="M300 68 V112"/>
+<path class="arrow" d="M300 166 V210"/>
+<path class="arrow" d="M300 264 V308"/>
+<path class="arrow" d="M300 362 V406"/>
+<path class="arrow" d="M300 460 V504"/>
+<path class="arrow" d="M300 558 V580 H175 V602"/>
+<path class="arrow" d="M300 558 V580 H425 V602"/>
+<path class="arrow join" d="M150 335 H40"/>
+<path class="arrow" d="M40 335 V237 H150"/>
+<path class="arrow join" d="M150 531 H24"/>
+<path class="arrow" d="M24 531 V41 H150"/>
+<text class="note" x="308" y="388">đúng</text>
+<text class="note" x="168" y="574" text-anchor="end">có</text>
+<text class="note" x="432" y="574">≥ 3 lần fail</text>
+<text class="note" x="95" y="329" text-anchor="middle">sai</text>
+<text class="note" x="87" y="525" text-anchor="middle">chưa, &lt; 3 lần</text>
+<a class="node" href="#c-p1" aria-label="Phase 1 · Tìm root cause - Đọc lỗi, tái hiện, xem thay đổi gần đây"><rect x="150" y="14" width="300" height="54" rx="10"/><text class="name" x="164" y="37">Phase 1 · Tìm root cause</text><text class="sub" x="164" y="55">Đọc lỗi, tái hiện, xem thay đổi gần đây</text></a>
+<a class="node" href="#c-p2" aria-label="Phase 2 · Phân tích pattern - Tìm code chạy đúng, so khác biệt"><rect x="150" y="112" width="300" height="54" rx="10"/><text class="name" x="164" y="135">Phase 2 · Phân tích pattern</text><text class="sub" x="164" y="153">Tìm code chạy đúng, so khác biệt</text></a>
+<a class="node" href="#c-p3" aria-label="Phase 3 · Giả thuyết và thử - Một giả thuyết, đổi nhỏ nhất, một biến"><rect x="150" y="210" width="300" height="54" rx="10"/><text class="name" x="164" y="233">Phase 3 · Giả thuyết và thử</text><text class="sub" x="164" y="251">Một giả thuyết, đổi nhỏ nhất, một biến</text></a>
+<a class="node opt" href="#c-p3" aria-label="Giả thuyết đúng? - Sai → giả thuyết MỚI, đừng chồng thêm fix"><rect x="150" y="308" width="300" height="54" rx="10"/><text class="name" x="164" y="331">Giả thuyết đúng?</text><text class="sub" x="164" y="349">Sai → giả thuyết MỚI, đừng chồng thêm fix</text></a>
+<a class="node" href="#c-p4" aria-label="Phase 4 · Sửa - Test fail trước → MỘT fix → verify"><rect x="150" y="406" width="300" height="54" rx="10"/><text class="name" x="164" y="429">Phase 4 · Sửa</text><text class="sub" x="164" y="447">Test fail trước → MỘT fix → verify</text></a>
+<a class="node opt" href="#c-p4" aria-label="Bản sửa có chạy? - Test pass, không hỏng test khác"><rect x="150" y="504" width="300" height="54" rx="10"/><text class="name" x="164" y="527">Bản sửa có chạy?</text><text class="sub" x="164" y="545">Test pass, không hỏng test khác</text></a>
+<g class="node new" aria-label="Xong: kiểm chứng - verification-before-completion"><rect x="60" y="602" width="230" height="54" rx="10"/><text class="name" x="74" y="625">Xong: kiểm chứng</text><text class="sub" x="74" y="643">verification-before-completion</text></g>
+<a class="node" href="#c-arch" aria-label="Dừng: bàn kiến trúc - Khi đã sửa thất bại ≥ 3 lần"><rect x="310" y="602" width="230" height="54" rx="10"/><text class="name" x="324" y="625">Dừng: bàn kiến trúc</text><text class="sub" x="324" y="643">Khi đã sửa thất bại ≥ 3 lần</text></a></svg>
+        <div class="legend"><span><i></i>Bước của skill</span><span><i class="dash"></i>Nét đứt: điểm quyết định</span><span><i class="new"></i>Viền xanh: skill chạy tiếp theo</span></div>
+      </div>
+
+      <aside class="pains">
+        <h3>Nó giải quyết painpoint nào?</h3>
+        <p>Những lỗi mà từng phần của skill sinh ra để chặn.</p>
+<div class="pain-item"><q>Sửa bug bằng cách đoán, “thử đổi X xem sao”</q><div class="fix"><a class="skill-link" href="#c-p3">Phase 3</a>: một giả thuyết, một biến mỗi lần</div></div><div class="pain-item"><q>Vá triệu chứng, càng sửa càng rối</q><div class="fix"><a class="skill-link" href="#iron">Luật sắt</a>: chưa có root cause thì không sửa</div></div><div class="pain-item"><q>Sửa nhiều thứ cùng lúc nên không biết cái nào có tác dụng</q><div class="fix"><a class="skill-link" href="#c-p4">Một fix tại một thời điểm</a>, có test fail trước</div></div><div class="pain-item"><q>Đã sửa 2–3 lần vẫn lỗi mà cứ sửa tiếp</q><div class="fix"><a class="skill-link" href="#c-arch">Từ 3 lần fail</a>: dừng và nghi ngờ kiến trúc</div></div><div class="pain-item"><q>Dưới áp lực thời gian thì bỏ quy trình</q><div class="fix">Quy trình nhanh hơn xáo trộn thử-sai (<a class="skill-link" href="#flags">bảng bào chữa</a>)</div></div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section id="iron">
+<div class="wrap">
+<h2><span class="secno">2</span>Luật sắt và khi nào dùng</h2>
+<p class="lead">“Vi phạm câu chữ của quy trình này là vi phạm tinh thần của việc debug.”</p>
+<div class="law">NO FIXES WITHOUT ROOT CAUSE INVESTIGATION FIRST<small>Chưa hoàn thành Phase 1 thì không được đề xuất bản sửa.</small></div>
+<div class="cards">
+<article class="card plain" id="c-use">
+<header><h4>Dùng cho mọi vấn đề kỹ thuật</h4></header>
+<ul><li>Test fail</li><li>Bug trên production</li><li>Hành vi bất ngờ</li><li>Vấn đề hiệu năng</li><li>Build fail</li><li>Vấn đề tích hợp</li></ul>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-esp">
+<header><h4>Đặc biệt nên dùng khi</h4></header>
+<ul><li>Đang chịu áp lực thời gian (khẩn cấp càng dễ sinh đoán mò)</li><li>“Chỉ một fix nhanh” có vẻ hiển nhiên</li><li>Đã thử nhiều bản sửa</li><li>Bản sửa trước không có tác dụng</li><li>Chưa hiểu hết vấn đề</li></ul>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-dont">
+<header><h4>Không được bỏ qua khi</h4></header>
+<ul><li>Vấn đề trông đơn giản (bug đơn giản cũng có root cause)</li><li>Đang vội (vội chắc chắn dẫn tới làm lại)</li><li>Sếp muốn sửa NGAY (có hệ thống nhanh hơn xáo trộn thử-sai)</li></ul>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+</div>
+</div>
+</section>
+<section id="phases">
+<div class="wrap">
+<h2><span class="secno">3</span>Bốn pha</h2>
+<p class="lead">Phải hoàn thành từng pha trước khi sang pha sau.</p>
+<div class="cards one">
+<article class="card plain" id="c-p1">
+<header><span class="badge">1</span><h4>Root Cause Investigation</h4><span class="tag new">Trước mọi bản sửa</span></header>
+<ul><li><b>Đọc kỹ thông báo lỗi.</b> Đừng lướt qua lỗi hay cảnh báo, chúng thường chứa đúng lời giải. Đọc trọn stack trace, ghi lại số dòng, đường dẫn file, mã lỗi.</li><li><b>Tái hiện ổn định.</b> Kích hoạt được một cách tin cậy không? Các bước chính xác là gì? Lần nào cũng xảy ra? Không tái hiện được thì thu thêm dữ liệu, đừng đoán.</li><li><b>Xem thay đổi gần đây.</b> Cái gì thay đổi có thể gây ra lỗi? Git diff, commit gần đây, dependency mới, đổi config, khác biệt môi trường.</li><li><b>Thu bằng chứng trong hệ thống nhiều thành phần</b> (CI → build → signing, API → service → database). Trước khi đề xuất sửa, thêm công cụ chẩn đoán tại MỖI ranh giới giữa các thành phần: ghi dữ liệu vào, dữ liệu ra, kiểm cấu hình và môi trường có truyền xuống không, kiểm trạng thái từng tầng. Chạy một lần để thấy NÓ GÃY Ở ĐÂU, phân tích bằng chứng để xác định thành phần lỗi, rồi mới điều tra thành phần đó.</li><li><b>Lần theo luồng dữ liệu</b> khi lỗi nằm sâu trong call stack: giá trị xấu bắt nguồn từ đâu? Cái gì gọi nó với giá trị xấu? Lần ngược lên tới khi gặp nguồn. Sửa ở nguồn, không ở triệu chứng (xem <code>root-cause-tracing.md</code>).</li></ul>
+<p class="row"><b class="lbl">Ví dụ hệ thống nhiều tầng</b>Mỗi tầng in ra trạng thái của nó, để thấy chính xác tầng nào làm mất giá trị:</p>
+<pre class="cmd"># Layer 1: Workflow
+echo "=== Secrets available in workflow: ==="
+echo "IDENTITY: $([ -n "${IDENTITY:-}" ] &amp;&amp; echo SET || echo UNSET)"
+
+# Layer 2: Build script
+echo "=== Env vars in build script: ==="
+printenv IDENTITY &gt;/dev/null 2&gt;&amp;1 &amp;&amp; echo "IDENTITY in environment" || echo "IDENTITY not in environment"
+
+# Layer 3: Signing script
+echo "=== Keychain state: ==="
+security list-keychains
+security find-identity -v
+
+# Layer 4: Actual signing
+codesign --sign "$IDENTITY" --verbose=4 "$APP"</pre>
+<p class="row">Kết quả cho thấy tầng nào gãy: secrets → workflow ✓, workflow → build ✗.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-p2">
+<header><span class="badge">2</span><h4>Pattern Analysis</h4></header>
+<ul><li><b>Tìm ví dụ chạy đúng:</b> code tương tự đang chạy tốt trong cùng codebase. Cái gì chạy đúng mà giống cái đang hỏng?</li><li><b>So với tham chiếu:</b> đang cài một pattern thì đọc bản tham chiếu TRỌN VẸN, từng dòng, đừng lướt. Hiểu hết pattern trước khi áp dụng.</li><li><b>Liệt kê mọi khác biệt</b> giữa cái chạy đúng và cái hỏng, dù nhỏ. Đừng giả định “cái đó không quan trọng”.</li><li><b>Hiểu dependency:</b> nó cần thành phần, cấu hình, môi trường nào, và giả định điều gì.</li></ul>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-p3">
+<header><span class="badge">3</span><h4>Hypothesis and Testing</h4></header>
+<p class="row"><b class="lbl">Làm gì</b>Theo phương pháp khoa học:</p>
+<ul><li><b>Một giả thuyết:</b> nói rõ “tôi nghĩ X là root cause vì Y”. Viết ra. Cụ thể, không mơ hồ.</li><li><b>Thử tối thiểu:</b> thay đổi NHỎ NHẤT có thể để kiểm giả thuyết. Một biến một lần. Không sửa nhiều thứ cùng lúc.</li><li><b>Kiểm trước khi đi tiếp:</b> có tác dụng thì sang Phase 4. Không thì lập giả thuyết MỚI. KHÔNG chồng thêm fix lên trên.</li><li><b>Khi chưa biết:</b> nói “tôi chưa hiểu X”. Đừng giả vờ biết. Hỏi giúp, hoặc nghiên cứu thêm.</li></ul>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-p4">
+<header><span class="badge">4</span><h4>Implementation</h4></header>
+<p class="row"><b class="lbl">Làm gì</b>Sửa root cause, không sửa triệu chứng:</p>
+<ul><li><b>Tạo test fail:</b> bản tái hiện đơn giản nhất, tự động nếu được (script một lần nếu chưa có framework). BẮT BUỘC có trước khi sửa. Dùng <code>test-driven-development</code> để viết test fail cho đúng.</li><li><b>Một fix duy nhất:</b> xử lý root cause đã xác định. MỘT thay đổi một lần, không “tiện tay” cải thiện, không gộp refactor.</li><li><b>Verify:</b> test pass? Không hỏng test khác? Vấn đề thực sự hết? Dùng <code>verification-before-completion</code> trước khi tuyên bố thành công.</li><li><b>Fix không chạy:</b> DỪNG. Đếm xem đã thử mấy bản sửa. Dưới 3 thì quay về Phase 1 và phân tích lại với thông tin mới. Từ 3 trở lên thì dừng và nghi ngờ kiến trúc. KHÔNG thử bản sửa thứ 4 khi chưa bàn về kiến trúc.</li></ul>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+</div>
+<div class="phase"><h3>Tra nhanh</h3><span>Bảng Quick Reference của skill</span></div>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Pha</th><th>Hoạt động chính</th><th>Tiêu chí thành công</th></tr></thead><tbody><tr><td>1. Root Cause</td><td>Đọc lỗi, tái hiện, xem thay đổi, thu bằng chứng</td><td>Hiểu CÁI GÌ và TẠI SAO</td></tr><tr><td>2. Pattern</td><td>Tìm ví dụ chạy đúng, so sánh</td><td>Xác định được các khác biệt</td></tr><tr><td>3. Hypothesis</td><td>Lập giả thuyết, thử tối thiểu</td><td>Được xác nhận, hoặc có giả thuyết mới</td></tr><tr><td>4. Implementation</td><td>Tạo test, sửa, verify</td><td>Bug hết, test pass</td></tr></tbody></table></div>
+</div>
+</section>
+<section id="arch">
+<div class="wrap">
+<h2><span class="secno">4</span>Khi sửa thất bại 3 lần</h2>
+<p class="lead">Từ lần thứ ba trở đi, vấn đề không còn là một giả thuyết sai mà là kiến trúc sai.</p>
+<div class="cards">
+<article class="card plain" id="c-arch">
+<header><h4>Nghi ngờ kiến trúc</h4><span class="tag">Dừng</span></header>
+<p class="row"><b class="lbl">Làm gì</b>Dấu hiệu của vấn đề kiến trúc:</p>
+<ul><li>Mỗi bản sửa lại làm lộ ra state dùng chung, coupling, hoặc vấn đề mới ở chỗ khác.</li><li>Bản sửa đòi “refactor lớn” mới cài được.</li><li>Mỗi bản sửa lại sinh triệu chứng mới ở nơi khác.</li></ul>
+<p class="row"><b class="lbl">Làm gì</b>Dừng và hỏi lại nền tảng:</p>
+<ul><li>Pattern này có thật sự vững không?</li><li>Có phải ta đang giữ nó chỉ vì quán tính?</li><li>Nên refactor kiến trúc, hay tiếp tục vá triệu chứng?</li></ul>
+<p class="row"><b>Bàn với bạn trước khi thử thêm bản sửa nào.</b> Đây không phải một giả thuyết thất bại: đây là kiến trúc sai.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-noroot">
+<header><h4>Khi quy trình cho thấy “không có root cause”</h4></header>
+<p class="row"><b class="lbl">Làm gì</b>Nếu điều tra có hệ thống cho thấy vấn đề thật sự do môi trường, phụ thuộc thời điểm, hoặc từ bên ngoài, thì quy trình đã hoàn thành. Ghi lại đã điều tra gì, cài cách xử lý phù hợp (retry, timeout, thông báo lỗi), và thêm giám sát hoặc log cho lần điều tra sau.</p>
+<p class="row"><b class="lbl">Dùng khi</b><b>Nhưng:</b> 95% các ca “không có root cause” là điều tra chưa đủ.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-tech">
+<header><h4>Kỹ thuật hỗ trợ</h4></header>
+<ul><li><code>root-cause-tracing.md</code>: lần ngược lỗi qua call stack tới nguồn gốc.</li><li><code>defense-in-depth.md</code>: thêm kiểm tra ở nhiều tầng sau khi tìm ra root cause.</li><li><code>condition-based-waiting.md</code>: thay timeout tùy ý bằng polling theo điều kiện.</li></ul>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+</div>
+</div>
+</section>
+<section id="flags">
+<div class="wrap">
+<h2><span class="secno">5</span>Red Flags, tín hiệu từ bạn, bào chữa</h2>
+<p class="lead">Gặp bất kỳ điều nào dưới đây nghĩa là DỪNG và quay về Phase 1.</p>
+<div class="cards">
+<article class="card plain" id="c-flags">
+<header><h4>Red Flags</h4></header>
+<ul><li>“Sửa tạm đã, điều tra sau.”</li><li>“Thử đổi X xem sao.”</li><li>“Thêm vài thay đổi rồi chạy test.”</li><li>“Bỏ qua test, tôi tự kiểm tay.”</li><li>“Chắc là X, để tôi sửa cái đó.”</li><li>“Tôi chưa hiểu hết nhưng cái này có thể được.”</li><li>“Pattern nói X nhưng tôi sẽ chỉnh khác đi.”</li><li>Liệt kê các bản sửa mà chưa điều tra.</li><li>Đề xuất giải pháp trước khi lần theo luồng dữ liệu.</li><li><b>“Thử thêm một bản sửa nữa”</b> khi đã thử từ 2 lần trở lên.</li><li><b>Mỗi bản sửa lại lộ ra vấn đề mới ở chỗ khác.</b></li></ul>
+<p class="row">Đã thất bại từ 3 bản sửa: nghi ngờ kiến trúc.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-signals">
+<header><h4>Tín hiệu từ bạn cho thấy agent đang làm sai</h4></header>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Bạn nói</th><th>Nghĩa là</th></tr></thead><tbody><tr><td>“Is that not happening?”</td><td>Agent đã giả định mà không kiểm chứng.</td></tr><tr><td>“Will it show us…?”</td><td>Lẽ ra phải thêm bước thu bằng chứng.</td></tr><tr><td>“Stop guessing”</td><td>Agent đang đề xuất sửa mà chưa hiểu.</td></tr><tr><td>“Ultra-think this”</td><td>Hãy hỏi lại nền tảng, không chỉ triệu chứng.</td></tr><tr><td>“We’re stuck?” (bực)</td><td>Cách tiếp cận hiện tại không hiệu quả.</td></tr></tbody></table></div>
+<p class="row">Thấy các tín hiệu này: DỪNG, quay về Phase 1.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+</div>
+<div class="phase"><h3>Những lời bào chữa hay gặp</h3><span>Bảng Common Rationalizations của skill</span></div>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Agent tự nhủ</th><th>Thực tế</th></tr></thead><tbody><tr><td>“Vấn đề đơn giản, khỏi cần quy trình”</td><td>Vấn đề đơn giản cũng có root cause. Quy trình nhanh với bug đơn giản.</td></tr><tr><td>“Khẩn cấp, không có thời gian cho quy trình”</td><td>Debug có hệ thống NHANH HƠN xáo trộn thử-và-sai.</td></tr><tr><td>“Thử cái này trước rồi điều tra sau”</td><td>Bản sửa đầu tiên đặt ra khuôn mẫu. Làm đúng ngay từ đầu.</td></tr><tr><td>“Tôi sẽ viết test sau khi xác nhận fix chạy”</td><td>Bản sửa không có test thì không bền. Test trước mới chứng minh được.</td></tr><tr><td>“Sửa nhiều thứ cùng lúc cho nhanh”</td><td>Không tách được cái nào có tác dụng, và còn gây bug mới.</td></tr><tr><td>“Tài liệu tham chiếu dài quá, tôi chỉnh pattern theo ý”</td><td>Hiểu một phần chắc chắn sinh bug. Đọc trọn vẹn.</td></tr><tr><td>“Tôi thấy vấn đề rồi, để tôi sửa”</td><td>Thấy triệu chứng không phải là hiểu root cause.</td></tr><tr><td>“Thử thêm một bản sửa nữa” (sau 2+ lần thất bại)</td><td>Từ 3 lần thất bại là vấn đề kiến trúc. Hãy nghi ngờ pattern, đừng sửa lần nữa.</td></tr></tbody></table></div>
+</div>
+</section>
+
+<section>
+  <div class="wrap">
+    <footer>Nguồn: <a href="../../skills/systematic-debugging/SKILL.md"><code>skills/systematic-debugging/SKILL.md</code></a> (283 dòng).</footer>
+  </div>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>receiving-code-review Explainer</title>
+<link rel="stylesheet" href="../assets/skill-detail.css">
+<link rel="stylesheet" href="../assets/sidebar.css">
+<script src="../assets/sidebar.js"></script>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="wrap">
+    <strong>receiving-code-review</strong>
+    <a href="#diagram">1 · Diagram</a><a href="#process">2 · Quy trình</a><a href="#source">3 · Theo nguồn</a><a href="#when">4 · Phản biện &amp; thứ tự</a><a href="#ack">5 · Ví dụ</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <h1>receiving-code-review</h1>
+    <p>Nhận feedback review cần đánh giá kỹ thuật, không phải diễn cảm xúc. Kiểm chứng trước khi làm, hỏi trước khi giả định; đúng về kỹ thuật quan trọng hơn dễ chịu về xã giao.</p>
+    <div class="chips"><span class="chip">Kiểm chứng trước, làm sau</span><span class="chip">Cấm “You’re absolutely right!”</span><span class="chip">Chưa rõ mục nào thì chưa làm mục nào</span><span class="chip">Mỗi lần một mục, test từng mục</span></div>
+  </div>
+</header>
+
+<!-- ============ 1. DIAGRAM ============ -->
+<section id="diagram">
+  <div class="wrap">
+    <h2><span class="secno">1</span>Diagram: sáu bước nhận feedback</h2>
+    <p class="lead">Đi từ trên xuống. Nhánh cuối cho thấy cả hai kết cục đều hợp lệ: feedback đúng thì sửa, feedback sai hoặc chưa chắc thì phản biện hoặc hỏi.</p>
+
+    <div class="diagram-grid">
+      <div class="diagram-box">
+        <p class="swipe-hint">← Vuốt ngang để xem hết diagram →</p>
+<svg class="flow" viewBox="0 0 560 580" role="group" aria-label="Sơ đồ receiving-code-review"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 z"/></marker></defs>
+<path class="arrow" d="M300 68 V112"/>
+<path class="arrow" d="M300 166 V210"/>
+<path class="arrow" d="M300 264 V308"/>
+<path class="arrow" d="M300 362 V384 H175 V406"/>
+<path class="arrow" d="M300 362 V384 H425 V406"/>
+<path class="arrow" d="M175 460 V482 H300 V504"/>
+<path class="arrow join" d="M425 460 V482 H300"/>
+<text class="note" x="168" y="378" text-anchor="end">đúng</text>
+<text class="note" x="432" y="378">sai / không chắc</text>
+<a class="node" href="#c-pattern" aria-label="READ - Đọc hết feedback, chưa phản ứng"><rect x="150" y="14" width="300" height="54" rx="10"/><text class="name" x="164" y="37">READ</text><text class="sub" x="164" y="55">Đọc hết feedback, chưa phản ứng</text><g class="num"><circle cx="150" cy="14" r="10"/><text x="150" y="17.5">1</text></g></a>
+<a class="node" href="#c-unclear" aria-label="UNDERSTAND - Diễn đạt lại yêu cầu, hoặc hỏi"><rect x="150" y="112" width="300" height="54" rx="10"/><text class="name" x="164" y="135">UNDERSTAND</text><text class="sub" x="164" y="153">Diễn đạt lại yêu cầu, hoặc hỏi</text><g class="num"><circle cx="150" cy="112" r="10"/><text x="150" y="115.5">2</text></g></a>
+<a class="node" href="#c-source" aria-label="VERIFY - Đối chiếu với codebase thật"><rect x="150" y="210" width="300" height="54" rx="10"/><text class="name" x="164" y="233">VERIFY</text><text class="sub" x="164" y="251">Đối chiếu với codebase thật</text><g class="num"><circle cx="150" cy="210" r="10"/><text x="150" y="213.5">3</text></g></a>
+<a class="node opt" href="#c-push" aria-label="EVALUATE - Đúng cho codebase NÀY không?"><rect x="150" y="308" width="300" height="54" rx="10"/><text class="name" x="164" y="331">EVALUATE</text><text class="sub" x="164" y="349">Đúng cho codebase NÀY không?</text><g class="num"><circle cx="150" cy="308" r="10"/><text x="150" y="311.5">4</text></g></a>
+<a class="node" href="#c-ack" aria-label="RESPOND · Sửa - Ghi nhận ngắn, rồi làm"><rect x="60" y="406" width="230" height="54" rx="10"/><text class="name" x="74" y="429">RESPOND · Sửa</text><text class="sub" x="74" y="447">Ghi nhận ngắn, rồi làm</text><g class="num"><circle cx="60" cy="406" r="10"/><text x="60" y="409.5">5</text></g></a>
+<a class="node" href="#c-push" aria-label="RESPOND · Phản biện - Lý lẽ kỹ thuật, hoặc hỏi"><rect x="310" y="406" width="230" height="54" rx="10"/><text class="name" x="324" y="429">RESPOND · Phản biện</text><text class="sub" x="324" y="447">Lý lẽ kỹ thuật, hoặc hỏi</text><g class="num"><circle cx="310" cy="406" r="10"/><text x="310" y="409.5">5</text></g></a>
+<a class="node new" href="#c-order" aria-label="IMPLEMENT từng mục - Chặn → đơn giản → phức tạp, test từng cái"><rect x="150" y="504" width="300" height="54" rx="10"/><text class="name" x="164" y="527">IMPLEMENT từng mục</text><text class="sub" x="164" y="545">Chặn → đơn giản → phức tạp, test từng cái</text><g class="num"><circle cx="150" cy="504" r="10"/><text x="150" y="507.5">6</text></g></a></svg>
+        <div class="legend"><span><i></i>Bước của quy trình</span><span><i class="dash"></i>Nét đứt: bước đánh giá</span><span><i class="new"></i>Viền xanh: bước làm</span></div>
+      </div>
+
+      <aside class="pains">
+        <h3>Nó giải quyết painpoint nào?</h3>
+        <p>Những lỗi mà từng phần của skill sinh ra để chặn.</p>
+<div class="pain-item"><q>Gật đầu “You’re absolutely right!” rồi sửa mù quáng</q><div class="fix"><a class="skill-link" href="#c-forbid">Câu bị cấm</a>: nêu yêu cầu kỹ thuật, hoặc cứ làm</div></div><div class="pain-item"><q>Làm ngay trước khi kiểm chứng feedback có đúng không</q><div class="fix"><a class="skill-link" href="#c-pattern">VERIFY</a> với codebase thật trước</div></div><div class="pain-item"><q>Làm 4/6 mục rồi mới hỏi 2 mục chưa rõ</q><div class="fix"><a class="skill-link" href="#c-unclear">Chưa rõ mục nào thì dừng</a> và hỏi hết trước</div></div><div class="pain-item"><q>Thêm tính năng “cho chuyên nghiệp” mà không ai dùng</q><div class="fix"><a class="skill-link" href="#c-yagni">YAGNI check</a>: grep xem có chỗ nào gọi không</div></div><div class="pain-item"><q>Cảm ơn rườm rà thay vì sửa</q><div class="fix"><a class="skill-link" href="#c-ack">Chỉ nêu cái đã sửa</a>; code cho thấy đã nghe</div></div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section id="process">
+<div class="wrap">
+<h2><span class="secno">2</span>Quy trình và lời cấm</h2>
+<p class="lead">Nguyên tắc cốt lõi: kiểm chứng trước khi làm, hỏi trước khi giả định, đúng về kỹ thuật quan trọng hơn dễ chịu về xã giao.</p>
+<div class="cards one">
+<article class="card plain" id="c-pattern">
+<header><h4>Mẫu phản hồi: 6 bước</h4></header>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>#</th><th>Bước</th><th>Làm gì</th></tr></thead><tbody><tr><td>1</td><td>READ</td><td>Đọc trọn feedback mà không phản ứng.</td></tr><tr><td>2</td><td>UNDERSTAND</td><td>Diễn đạt lại yêu cầu bằng lời của mình (hoặc hỏi).</td></tr><tr><td>3</td><td>VERIFY</td><td>Đối chiếu với thực tế codebase.</td></tr><tr><td>4</td><td>EVALUATE</td><td>Có đúng về kỹ thuật cho codebase NÀY không?</td></tr><tr><td>5</td><td>RESPOND</td><td>Ghi nhận kỹ thuật, hoặc phản biện có lý do.</td></tr><tr><td>6</td><td>IMPLEMENT</td><td>Từng mục một, test từng mục.</td></tr></tbody></table></div>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-forbid">
+<header><h4>Câu bị cấm</h4><span class="tag">Không bao giờ</span></header>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Không bao giờ nói</th><th>Thay vào đó</th></tr></thead><tbody><tr><td>“You’re absolutely right!” (vi phạm chỉ dẫn rõ ràng)</td><td>Diễn đạt lại yêu cầu kỹ thuật.</td></tr><tr><td>“Great point!” / “Excellent feedback!” (diễn cảm)</td><td>Hỏi câu làm rõ.</td></tr><tr><td>“Let me implement that now” (trước khi kiểm chứng)</td><td>Phản biện bằng lý lẽ kỹ thuật nếu feedback sai.</td></tr><tr><td>—</td><td>Hoặc cứ bắt tay vào làm: hành động hơn lời nói.</td></tr></tbody></table></div>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-unclear">
+<header><h4>Feedback chưa rõ</h4></header>
+<p class="row"><b class="lbl">Làm gì</b>Có BẤT KỲ mục nào chưa rõ thì DỪNG: chưa làm gì cả, hỏi làm rõ các mục chưa rõ. Lý do: các mục có thể liên quan nhau, hiểu một phần thì làm sai.</p>
+<p class="row"><b class="lbl">Ví dụ</b>Bạn nói “Fix 1-6”. Agent hiểu 1, 2, 3, 6 nhưng chưa rõ 4, 5.</p>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th></th><th>Cách làm</th></tr></thead><tbody><tr><td>❌ Sai</td><td>Làm 1, 2, 3, 6 ngay, hỏi 4 và 5 sau.</td></tr><tr><td>✅ Đúng</td><td>“Tôi hiểu các mục 1, 2, 3, 6. Cần làm rõ mục 4 và 5 trước khi tiến hành.”</td></tr></tbody></table></div>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+</div>
+</div>
+</section>
+<section id="source">
+<div class="wrap">
+<h2><span class="secno">3</span>Xử lý theo nguồn feedback</h2>
+<p class="lead">Feedback từ bạn và feedback từ reviewer bên ngoài được đối xử khác nhau.</p>
+<div class="cards">
+<article class="card plain" id="c-human">
+<header><h4>Từ bạn</h4><span class="tag new">Đáng tin</span></header>
+<ul><li>Đáng tin: làm sau khi đã hiểu.</li><li>Vẫn hỏi nếu phạm vi chưa rõ.</li><li>Không đồng ý kiểu diễn cảm.</li><li>Bỏ qua lời nói, vào thẳng hành động hoặc ghi nhận kỹ thuật.</li></ul>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-source">
+<header><h4>Từ reviewer bên ngoài</h4></header>
+<p class="row"><b class="lbl">Làm gì</b>Trước khi làm, kiểm năm điều:</p>
+<ul><li>Đúng về kỹ thuật cho codebase NÀY không?</li><li>Có làm hỏng chức năng hiện có không?</li><li>Vì sao hiện đang cài như vậy?</li><li>Có chạy trên mọi nền tảng và phiên bản không?</li><li>Reviewer có hiểu toàn bộ ngữ cảnh không?</li></ul>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Tình huống</th><th>Làm gì</th></tr></thead><tbody><tr><td>Gợi ý có vẻ sai</td><td>Phản biện bằng lý lẽ kỹ thuật.</td></tr><tr><td>Không kiểm chứng dễ dàng được</td><td>Nói rõ: “Tôi không kiểm chứng được cái này nếu không có [X]. Tôi nên [điều tra / hỏi / làm tiếp]?”</td></tr><tr><td>Mâu thuẫn quyết định trước đó của bạn</td><td>Dừng và bàn với bạn trước.</td></tr></tbody></table></div>
+<p class="row">Nguyên tắc của bạn: “Feedback từ bên ngoài: hãy hoài nghi, nhưng kiểm tra cẩn thận.”</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+</div>
+</div>
+</section>
+<section id="when">
+<div class="wrap">
+<h2><span class="secno">4</span>Khi nào phản biện, YAGNI, thứ tự làm</h2>
+<p class="lead">Ba quy tắc còn lại: khi nào được nói “không”, cách loại tính năng thừa, và làm feedback nhiều mục theo thứ tự nào.</p>
+<div class="cards">
+<article class="card plain" id="c-push">
+<header><h4>Khi nào phản biện</h4></header>
+<ul><li>Gợi ý làm hỏng chức năng hiện có.</li><li>Reviewer thiếu ngữ cảnh đầy đủ.</li><li>Vi phạm YAGNI (tính năng không ai dùng).</li><li>Sai về kỹ thuật với stack này.</li><li>Có lý do legacy hoặc tương thích.</li><li>Mâu thuẫn quyết định kiến trúc của bạn.</li></ul>
+<p class="row"><b class="lbl">Cách phản biện</b>Dùng lý lẽ kỹ thuật, không phòng thủ · hỏi câu cụ thể · dẫn test hoặc code đang chạy · nếu liên quan kiến trúc thì kéo bạn vào.</p>
+<p class="row">Ngại phản biện thành lời? Gọi tên sự căng thẳng đó, rồi nói với bạn về vấn đề đã thấy. Bạn sẽ trân trọng sự thẳng thắn.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-yagni">
+<header><h4>YAGNI check cho tính năng “chuyên nghiệp”</h4></header>
+<p class="row"><b class="lbl">Làm gì</b>Reviewer đề nghị “làm cho đúng bài bản”: grep codebase xem thực tế có dùng không.</p>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Kết quả</th><th>Làm gì</th></tr></thead><tbody><tr><td>Không ai dùng</td><td>“Endpoint này không được gọi. Xóa nó (YAGNI)?”</td></tr><tr><td>Có dùng</td><td>Thì làm cho đúng bài bản.</td></tr></tbody></table></div>
+<p class="row">Nguyên tắc của bạn: “Agent và reviewer đều báo cáo cho tôi. Nếu ta không cần tính năng đó thì đừng thêm.”</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-order">
+<header><h4>Thứ tự làm với feedback nhiều mục</h4></header>
+<ul><li><b>Làm rõ mọi thứ chưa rõ TRƯỚC.</b></li><li>Rồi làm theo thứ tự: (1) vấn đề chặn (hỏng, bảo mật), (2) sửa đơn giản (typo, import), (3) sửa phức tạp (refactor, logic).</li><li>Test từng fix riêng.</li><li>Kiểm tra không có regression.</li></ul>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+</div>
+</div>
+</section>
+<section id="ack">
+<div class="wrap">
+<h2><span class="secno">5</span>Ghi nhận, sửa sai, ví dụ</h2>
+<p class="lead">Cách nói khi feedback đúng, khi chính mình phản biện sai, và các ví dụ thật trong skill.</p>
+<div class="cards">
+<article class="card plain" id="c-ack">
+<header><h4>Khi feedback ĐÚNG</h4></header>
+<p class="row"><b class="lbl">✅ Nên</b></p>
+<ul><li>“Fixed. [mô tả ngắn cái đã đổi]”</li><li>“Good catch - [vấn đề cụ thể]. Fixed in [vị trí].”</li><li>[Cứ sửa và để code nói]</li></ul>
+<p class="row"><b class="lbl">❌ Không</b></p>
+<ul><li>“You’re absolutely right!”</li><li>“Great point!”</li><li>“Thanks for catching that!”</li><li>“Thanks for [bất cứ gì]”</li><li>BẤT KỲ lời cảm ơn nào</li></ul>
+<p class="row">Vì sao không cảm ơn: hành động nói lên tất cả. Cứ sửa, chính code cho thấy đã nghe feedback. Sắp viết “Thanks”? Xóa nó, nêu bản sửa.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-wrong">
+<header><h4>Khi chính mình phản biện sai</h4></header>
+<p class="row"><b class="lbl">✅ Nên</b></p>
+<ul><li>“You were right - I checked [X] and it does [Y]. Implementing now.”</li><li>“Verified this and you’re correct. My initial understanding was wrong because [lý do]. Fixing.”</li></ul>
+<p class="row"><b class="lbl">❌ Không</b></p>
+<ul><li>Xin lỗi dài dòng.</li><li>Bào chữa vì sao mình đã phản biện.</li><li>Giải thích quá mức.</li></ul>
+<p class="row">Nêu sự điều chỉnh một cách thực tế rồi đi tiếp.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+</div>
+<div class="phase"><h3>Ví dụ thật trong skill</h3><span></span></div>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Tình huống</th><th>Cách làm</th></tr></thead><tbody><tr><td>Reviewer: “Remove legacy code”</td><td>❌ “You’re absolutely right! Let me remove that...”<br>✅ “Checking... build target is 10.15+, this API needs 13+. Need legacy for backward compat. Current impl has wrong bundle ID - fix it or drop pre-13 support?”</td></tr><tr><td>Reviewer: “Implement proper metrics tracking with database, date filters, CSV export”</td><td>✅ “Grepped codebase - nothing calls this endpoint. Remove it (YAGNI)? Or is there usage I’m missing?”</td></tr><tr><td>Bạn: “Fix items 1-6” (hiểu 1, 2, 3, 6; chưa rõ 4, 5)</td><td>✅ “Understand 1,2,3,6. Need clarification on 4 and 5 before implementing.”</td></tr></tbody></table></div>
+<div class="phase"><h3>Lỗi thường gặp</h3><span>Bảng Common Mistakes của skill</span></div>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Lỗi</th><th>Cách sửa</th></tr></thead><tbody><tr><td>Đồng ý kiểu diễn cảm</td><td>Nêu yêu cầu, hoặc cứ làm.</td></tr><tr><td>Làm mù quáng</td><td>Kiểm chứng với codebase trước.</td></tr><tr><td>Làm gộp không test</td><td>Từng mục một, test từng cái.</td></tr><tr><td>Cho là reviewer đúng</td><td>Kiểm xem có làm hỏng gì không.</td></tr><tr><td>Né phản biện</td><td>Đúng về kỹ thuật quan trọng hơn dễ chịu.</td></tr><tr><td>Làm một phần</td><td>Làm rõ mọi mục trước.</td></tr><tr><td>Không kiểm chứng được mà vẫn làm</td><td>Nói rõ giới hạn, hỏi hướng đi.</td></tr></tbody></table></div>
+<div class="cards one">
+<article class="card plain" id="c-gh">
+<header><h4>Trả lời trên GitHub</h4></header>
+<p class="row"><b class="lbl">Làm gì</b>Khi trả lời bình luận review inline trên GitHub, trả lời <b>trong thread của bình luận</b> (<code>gh api repos/{owner}/{repo}/pulls/{pr}/comments/{id}/replies</code>), không phải bình luận cấp cao nhất của PR.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+</div>
+</div>
+</section>
+
+<section>
+  <div class="wrap">
+    <footer>Nguồn: <a href="../../skills/receiving-code-review/SKILL.md"><code>skills/receiving-code-review/SKILL.md</code></a> (205 dòng).</footer>
+  </div>
+</section>
+
+</body>
+</html>

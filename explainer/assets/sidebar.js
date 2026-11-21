@@ -24,10 +24,34 @@
       ]
     },
     {
-      title: 'Chi tiết từng skill',
+      title: 'Luồng chính',
       items: [
+        { href: 'skills-detail/using-superpowers.html', label: 'using-superpowers', n: '0', mono: true },
         { href: 'skills-detail/brainstorming.html', label: 'brainstorming', n: '1', mono: true, tag: 'Nâng cấp' },
-        { href: 'skills-detail/using-git-worktrees.html', label: 'using-git-worktrees', n: '2', mono: true }
+        { href: 'skills-detail/using-git-worktrees.html', label: 'using-git-worktrees', n: '2', mono: true },
+        { href: 'skills-detail/writing-plans.html', label: 'writing-plans', n: '3', mono: true },
+        { href: 'skills-detail/subagent-driven-development.html', label: 'subagent-driven-development', n: '4', mono: true },
+        { href: 'skills-detail/executing-plans.html', label: 'executing-plans', n: '4', mono: true },
+        { href: 'skills-detail/test-driven-development.html', label: 'test-driven-development', n: '5', mono: true },
+        { href: 'skills-detail/requesting-code-review.html', label: 'requesting-code-review', n: '6', mono: true },
+        { href: 'skills-detail/verification-before-completion.html', label: 'verification-before-completion', n: '7', mono: true },
+        { href: 'skills-detail/verifying-ai-generated-code.html', label: 'verifying-ai-generated-code', n: '8', mono: true, tag: 'Mới' },
+        { href: 'skills-detail/finishing-a-development-branch.html', label: 'finishing-a-development-branch', n: '9', mono: true }
+      ]
+    },
+    {
+      title: 'Gọi khi cần',
+      items: [
+        { href: 'skills-detail/systematic-debugging.html', label: 'systematic-debugging', mono: true },
+        { href: 'skills-detail/receiving-code-review.html', label: 'receiving-code-review', mono: true },
+        { href: 'skills-detail/dispatching-parallel-agents.html', label: 'dispatching-parallel-agents', mono: true }
+      ]
+    },
+    {
+      title: 'Ngoài luồng chính',
+      items: [
+        { href: 'skills-detail/writing-skills.html', label: 'writing-skills', mono: true },
+        { href: 'skills-detail/diagnosing-superpowers.html', label: 'diagnosing-superpowers', mono: true }
       ]
     }
   ];

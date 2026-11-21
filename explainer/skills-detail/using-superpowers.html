@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>using-superpowers Explainer</title>
+<link rel="stylesheet" href="../assets/skill-detail.css">
+<link rel="stylesheet" href="../assets/sidebar.css">
+<script src="../assets/sidebar.js"></script>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="wrap">
+    <strong>using-superpowers</strong>
+    <a href="#diagram">1 · Diagram</a><a href="#rule">2 · Luật</a><a href="#flags">3 · Red Flags</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <h1>using-superpowers</h1>
+    <p>Skill nền, nạp ở đầu mọi phiên. Nó bắt agent kiểm tra xem có skill nào áp dụng <b>trước mọi phản hồi</b>, kể cả câu hỏi làm rõ, rồi mới làm gì khác.</p>
+    <div class="chips"><span class="chip">Tự động, bạn không cần gọi</span><span class="chip">Chỉ cần <b>1%</b> khả năng là phải gọi skill</span><span class="chip">Subagent thì bỏ qua</span><span class="chip">Chỉ dẫn của bạn thắng skill</span></div>
+  </div>
+</header>
+
+<!-- ============ 1. DIAGRAM ============ -->
+<section id="diagram">
+  <div class="wrap">
+    <h2><span class="secno">1</span>Diagram: quy tắc trước mọi phản hồi</h2>
+    <p class="lead">Chỉ có một vòng kiểm tra, nhưng nó chạy trước tất cả. Đường bên trái là lối thoát khi thật sự không có skill nào áp dụng.</p>
+
+    <div class="diagram-grid">
+      <div class="diagram-box">
+        <p class="swipe-hint">← Vuốt ngang để xem hết diagram →</p>
+<svg class="flow" viewBox="0 0 560 384" role="group" aria-label="Sơ đồ using-superpowers"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 z"/></marker></defs>
+<path class="arrow" d="M300 68 V112"/>
+<path class="arrow" d="M300 166 V210"/>
+<path class="arrow" d="M300 264 V308"/>
+<path class="arrow join" d="M150 139 H24"/>
+<path class="arrow" d="M24 139 V335 H150"/>
+<text class="note" x="308" y="94">luôn kiểm tra trước</text>
+<text class="note" x="308" y="192">có</text>
+<text class="note" x="87" y="133" text-anchor="middle">không áp dụng</text>
+<a class="node" href="#c-rule" aria-label="Tin nhắn mới của bạn - Câu hỏi cũng là một task"><rect x="150" y="14" width="300" height="54" rx="10"/><text class="name" x="164" y="37">Tin nhắn mới của bạn</text><text class="sub" x="164" y="55">Câu hỏi cũng là một task</text></a>
+<a class="node opt" href="#c-rule" aria-label="Có skill nào áp dụng? - Dù chỉ 1% khả năng cũng tính là có"><rect x="150" y="112" width="300" height="54" rx="10"/><text class="name" x="164" y="135">Có skill nào áp dụng?</text><text class="sub" x="164" y="153">Dù chỉ 1% khả năng cũng tính là có</text></a>
+<a class="node" href="#c-rule" aria-label="Gọi skill, thông báo, làm theo - &quot;Using [skill] to [purpose]&quot;"><rect x="150" y="210" width="300" height="54" rx="10"/><text class="name" x="164" y="233">Gọi skill, thông báo, làm theo</text><text class="sub" x="164" y="251">&quot;Using [skill] to [purpose]&quot;</text></a>
+<g class="node new" aria-label="Phản hồi hoặc hành động - Chỉ sau khi đã kiểm tra skill"><rect x="150" y="308" width="300" height="54" rx="10"/><text class="name" x="164" y="331">Phản hồi hoặc hành động</text><text class="sub" x="164" y="349">Chỉ sau khi đã kiểm tra skill</text></g></svg>
+        <div class="legend"><span><i></i>Bước trong luồng</span><span><i class="dash"></i>Nét đứt: điểm quyết định</span><span><i class="new"></i>Viền xanh: kết quả cuối</span></div>
+      </div>
+
+      <aside class="pains">
+        <h3>Nó giải quyết painpoint nào?</h3>
+        <p>Những lỗi mà từng phần của skill sinh ra để chặn.</p>
+<div class="pain-item"><q>Agent có skill nhưng quên dùng</q><div class="fix"><a class="skill-link" href="#c-rule">Quy tắc</a>: kiểm tra skill trước mọi phản hồi</div></div><div class="pain-item"><q>Tự nhủ “việc này đơn giản, khỏi cần skill”</q><div class="fix"><a class="skill-link" href="#flags">Bảng Red Flags</a> gọi tên từng lời bào chữa</div></div><div class="pain-item"><q>Lao vào khám phá code hoặc hỏi lại rồi mới nghĩ tới skill</q><div class="fix">Skill chỉ cách khám phá, nên phải kiểm tra trước</div></div><div class="pain-item"><q>Nhớ skill từ lần trước nên không đọc lại</q><div class="fix">Skill thay đổi theo thời gian: đọc bản hiện tại</div></div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section id="rule">
+<div class="wrap">
+<h2><span class="secno">2</span>Luật và thứ tự ưu tiên</h2>
+<p class="lead">Skill này rất ngắn, nhưng là thứ khiến mọi skill khác thật sự chạy.</p>
+<div class="law">IF A SKILL APPLIES TO YOUR TASK, YOU DO NOT HAVE A CHOICE. YOU MUST USE IT.<small>Chỉ cần 1% khả năng một skill áp dụng là agent phải gọi nó. Gọi rồi mà thấy không hợp với tình huống thì không cần dùng tiếp.</small></div>
+<div class="cards">
+<article class="card plain" id="c-rule">
+<header><h4>Quy tắc</h4><span class="tag">Luôn chạy</span></header>
+<p class="row pain"><b class="lbl">Vấn đề</b>Agent có skill nhưng quên dùng, hoặc tự nhủ “việc này đơn giản, khỏi cần”.</p>
+<p class="row"><b class="lbl">Làm gì</b>Gọi skill liên quan hoặc được yêu cầu <b>trước</b> mọi phản hồi hay hành động, kể cả câu hỏi làm rõ, khám phá codebase, xem file. Sau đó thông báo “Using [skill] to [purpose]”, làm theo skill đúng từng chữ, và nếu skill có checklist thì tạo một todo cho mỗi mục.</p>
+<p class="row"><b class="lbl">Dùng khi</b>Mọi cuộc hội thoại. Trước khi vào plan mode mà chưa brainstorm thì gọi <code>brainstorming</code> trước.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-priority">
+<header><h4>Thứ tự ưu tiên giữa các skill</h4></header>
+<p class="row"><b class="lbl">Làm gì</b>Khi nhiều skill cùng áp dụng, skill về <b>quy trình</b> đi trước vì chúng định ra cách tiếp cận. Skill về <b>triển khai</b> (như <code>frontend-design</code>) đi sau để thực hiện.</p>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Bạn nói</th><th>Gọi trước</th></tr></thead><tbody><tr><td>“Let’s build X”</td><td><code>brainstorming</code>, rồi skill triển khai</td></tr><tr><td>“Fix this bug”</td><td><code>systematic-debugging</code>, rồi skill của lĩnh vực</td></tr></tbody></table></div>
+<p class="row"><code>brainstorming</code> và <code>systematic-debugging</code> là hai skill quy trình hay gặp nhất, nhưng quy tắc đúng với mọi skill quy trình.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-precedence">
+<header><h4>Chỉ dẫn của bạn thắng skill</h4></header>
+<p class="row"><b class="lbl">Làm gì</b>Thứ tự: chỉ dẫn của bạn (CLAUDE.md, AGENTS.md, GEMINI.md, yêu cầu trực tiếp) → skill → hành vi mặc định của agent.</p>
+<p class="row"><b class="lbl">Dùng khi</b>Agent chỉ được bỏ qua quy trình của một skill khi bạn nói rõ là bỏ qua.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-subagent">
+<header><h4>Subagent thì bỏ qua</h4></header>
+<p class="row"><b class="lbl">Làm gì</b>Nếu agent được giao làm một task cụ thể với tư cách subagent, nó bỏ qua skill này. Skill đánh dấu điều đó bằng thẻ <code>SUBAGENT-STOP</code> ở đầu file.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-platform">
+<header><h4>Thích ứng theo nền tảng</h4></header>
+<p class="row"><b class="lbl">Làm gì</b>Mỗi harness có một file hướng dẫn riêng trong <code>references/</code>. Nếu harness của bạn có trong danh sách, agent đọc file đó để biết tên tool tương ứng:</p>
+<ul><li>Claude Code: <code>claude-code-tools.md</code></li><li>Codex: <code>codex-tools.md</code></li><li>Pi: <code>pi-tools.md</code></li><li>Antigravity: <code>antigravity-tools.md</code></li><li>Hermes Agent: <code>hermes-tools.md</code></li><li>Muse: <code>muse-tools.md</code></li></ul>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+</div>
+</div>
+</section>
+<section id="flags">
+<div class="wrap">
+<h2><span class="secno">3</span>Red Flags: những câu agent tự nhủ để bỏ qua skill</h2>
+<p class="lead">Gặp những ý nghĩ này nghĩa là agent đang tự biện hộ. Bảng này nằm ngay trong skill.</p>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Ý nghĩ</th><th>Thực tế</th></tr></thead><tbody><tr><td>“Đây chỉ là câu hỏi đơn giản”</td><td>Câu hỏi cũng là task. Kiểm tra skill.</td></tr><tr><td>“Cần thêm ngữ cảnh đã”</td><td>Kiểm tra skill đi trước câu hỏi làm rõ.</td></tr><tr><td>“Để tôi khám phá codebase trước”</td><td>Skill chỉ cách khám phá. Kiểm tra trước.</td></tr><tr><td>“Xem nhanh git/file thôi”</td><td>File không có ngữ cảnh hội thoại. Kiểm tra skill.</td></tr><tr><td>“Để tôi thu thập thông tin trước”</td><td>Skill chỉ cách thu thập thông tin.</td></tr><tr><td>“Việc này không cần skill chính thức”</td><td>Có skill thì dùng.</td></tr><tr><td>“Tôi nhớ skill này rồi”</td><td>Skill thay đổi theo thời gian. Đọc bản hiện tại.</td></tr><tr><td>“Cái này không tính là task”</td><td>Hành động là task. Kiểm tra skill.</td></tr><tr><td>“Skill này là quá tay”</td><td>Việc đơn giản rồi cũng phức tạp. Cứ dùng.</td></tr><tr><td>“Tôi làm một việc này trước đã”</td><td>Kiểm tra TRƯỚC khi làm bất cứ gì.</td></tr><tr><td>“Làm thế này thấy hiệu quả”</td><td>Hành động thiếu kỷ luật tốn thời gian. Skill ngăn điều đó.</td></tr><tr><td>“Tôi biết cái đó nghĩa là gì”</td><td>Biết khái niệm không bằng dùng skill. Gọi nó.</td></tr></tbody></table></div>
+</div>
+</section>
+
+<section>
+  <div class="wrap">
+    <footer>Nguồn: <a href="../../skills/using-superpowers/SKILL.md"><code>skills/using-superpowers/SKILL.md</code></a> (65 dòng).</footer>
+  </div>
+</section>
+
+</body>
+</html>

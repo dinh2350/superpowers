@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>test-driven-development Explainer</title>
+<link rel="stylesheet" href="../assets/skill-detail.css">
+<link rel="stylesheet" href="../assets/sidebar.css">
+<script src="../assets/sidebar.js"></script>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="wrap">
+    <strong>test-driven-development</strong>
+    <a href="#diagram">1 · Diagram</a><a href="#iron">2 · Luật sắt</a><a href="#cycle">3 · Chu trình</a><a href="#good">4 · Test tốt, ví dụ</a><a href="#flags">5 · Red Flags</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <h1>test-driven-development</h1>
+    <p>Viết test trước. Xem nó fail. Viết code tối thiểu cho nó pass. Nếu chưa từng thấy test fail thì không biết được nó có kiểm đúng thứ cần kiểm hay không.</p>
+    <div class="chips"><span class="chip">RED → GREEN → REFACTOR</span><span class="chip">Code viết trước test thì xóa, làm lại</span><span class="chip">Chạy cả suite của dự án, không chỉ file test của mình</span><span class="chip">Ngoại lệ phải hỏi bạn</span></div>
+  </div>
+</header>
+
+<!-- ============ 1. DIAGRAM ============ -->
+<section id="diagram">
+  <div class="wrap">
+    <h2><span class="secno">1</span>Diagram: chu trình Red–Green–Refactor</h2>
+    <p class="lead">Mỗi hành vi mới đi hết một vòng. Hai đường bên trái là các lần “chưa đúng thì làm lại”; đường ngoài cùng là vòng sang test tiếp theo.</p>
+
+    <div class="diagram-grid">
+      <div class="diagram-box">
+        <p class="swipe-hint">← Vuốt ngang để xem hết diagram →</p>
+<svg class="flow" viewBox="0 0 560 580" role="group" aria-label="Sơ đồ test-driven-development"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 z"/></marker></defs>
+<path class="arrow" d="M300 68 V112"/>
+<path class="arrow" d="M300 166 V210"/>
+<path class="arrow" d="M300 264 V308"/>
+<path class="arrow" d="M300 362 V406"/>
+<path class="arrow" d="M300 460 V504"/>
+<path class="arrow join" d="M150 139 H40"/>
+<path class="arrow" d="M40 139 V41 H150"/>
+<path class="arrow join" d="M150 335 H40"/>
+<path class="arrow" d="M40 335 V237 H150"/>
+<path class="arrow join" d="M150 531 H24"/>
+<path class="arrow" d="M24 531 V41 H150"/>
+<text class="note" x="308" y="192">đúng</text>
+<text class="note" x="308" y="388">pass</text>
+<text class="note" x="95" y="133" text-anchor="middle">sai lý do</text>
+<text class="note" x="95" y="329" text-anchor="middle">chưa pass</text>
+<text class="note" x="87" y="525" text-anchor="middle">lặp lại</text>
+<a class="node" href="#c-red" aria-label="RED · Viết test sẽ fail - Một hành vi, tên rõ, code thật"><rect x="150" y="14" width="300" height="54" rx="10"/><text class="name" x="164" y="37">RED · Viết test sẽ fail</text><text class="sub" x="164" y="55">Một hành vi, tên rõ, code thật</text></a>
+<a class="node opt" href="#c-vred" aria-label="Chạy: fail đúng lý do? - Fail (không phải error), do thiếu tính năng"><rect x="150" y="112" width="300" height="54" rx="10"/><text class="name" x="164" y="135">Chạy: fail đúng lý do?</text><text class="sub" x="164" y="153">Fail (không phải error), do thiếu tính năng</text></a>
+<a class="node" href="#c-green" aria-label="GREEN · Code tối thiểu - Đủ để pass, không thêm gì"><rect x="150" y="210" width="300" height="54" rx="10"/><text class="name" x="164" y="233">GREEN · Code tối thiểu</text><text class="sub" x="164" y="251">Đủ để pass, không thêm gì</text></a>
+<a class="node opt" href="#c-vgreen" aria-label="Chạy: pass, cả suite xanh? - Output sạch, không lỗi, không warning"><rect x="150" y="308" width="300" height="54" rx="10"/><text class="name" x="164" y="331">Chạy: pass, cả suite xanh?</text><text class="sub" x="164" y="349">Output sạch, không lỗi, không warning</text></a>
+<a class="node" href="#c-refactor" aria-label="REFACTOR · Dọn dẹp - Chỉ sau green, vẫn giữ xanh"><rect x="150" y="406" width="300" height="54" rx="10"/><text class="name" x="164" y="429">REFACTOR · Dọn dẹp</text><text class="sub" x="164" y="447">Chỉ sau green, vẫn giữ xanh</text></a>
+<g class="node new" aria-label="Test tiếp theo - Mỗi hành vi mới một vòng"><rect x="150" y="504" width="300" height="54" rx="10"/><text class="name" x="164" y="527">Test tiếp theo</text><text class="sub" x="164" y="545">Mỗi hành vi mới một vòng</text></g></svg>
+        <div class="legend"><span><i></i>Bước trong chu trình</span><span><i class="dash"></i>Nét đứt: kiểm tra bằng cách chạy</span><span><i class="new"></i>Viền xanh: sang vòng mới</span></div>
+      </div>
+
+      <aside class="pains">
+        <h3>Nó giải quyết painpoint nào?</h3>
+        <p>Những lỗi mà từng phần của skill sinh ra để chặn.</p>
+<div class="pain-item"><q>Test viết sau code thì luôn pass, nên chẳng chứng minh được gì</q><div class="fix"><a class="skill-link" href="#c-vred">Verify RED</a>: bắt buộc phải thấy nó fail</div></div><div class="pain-item"><q>Giữ code viết trước làm “tham khảo” rồi viết test bám theo</q><div class="fix"><a class="skill-link" href="#iron">Luật sắt</a>: xóa nghĩa là xóa</div></div><div class="pain-item"><q>Test chỉ kiểm mock, không kiểm code thật</q><div class="fix"><a class="skill-link" href="#c-good">writing-good-tests</a>: assert hành vi thật</div></div><div class="pain-item"><q>Báo “xong” khi chỉ chạy file test mình vừa viết</q><div class="fix"><a class="skill-link" href="#c-vgreen">Verify GREEN</a>: chạy cả suite của dự án</div></div><div class="pain-item"><q>Sửa bug mà không có test tái hiện</q><div class="fix"><a class="skill-link" href="#c-bug">Bug thì viết test fail trước</a></div></div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section id="iron">
+<div class="wrap">
+<h2><span class="secno">2</span>Luật sắt</h2>
+<p class="lead">“Vi phạm câu chữ của quy tắc là vi phạm tinh thần của nó.” Nghĩ “lần này bỏ TDD thôi”? Dừng lại, đó là biện hộ.</p>
+<div class="law">NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST<small>Viết code trước test? Xóa nó, làm lại. Không giữ làm “tham khảo”, không “chỉnh” nó khi viết test, không nhìn nó. Xóa nghĩa là xóa. Cài lại từ test.</small></div>
+<div class="cards">
+<article class="card plain" id="c-when">
+<header><h4>Khi nào dùng</h4></header>
+<p class="row"><b class="lbl">Làm gì</b>Luôn luôn: tính năng mới, sửa bug, refactor, đổi hành vi.</p>
+<p class="row"><b class="lbl">Ngoại lệ (phải hỏi bạn)</b>Prototype bỏ đi · code sinh tự động · file cấu hình.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-rule">
+<header><h4>Quy tắc cuối</h4></header>
+<pre class="cmd">Production code → test exists and failed first
+Otherwise → not TDD</pre>
+<p class="row">Không có ngoại lệ nếu bạn không cho phép.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+</div>
+</div>
+</section>
+<section id="cycle">
+<div class="wrap">
+<h2><span class="secno">3</span>Chu trình Red–Green–Refactor</h2>
+<p class="lead">Năm bước. Hai bước “verify” là bắt buộc, không bao giờ bỏ.</p>
+<div class="cards one">
+<article class="card plain" id="c-red">
+<header><span class="badge">1</span><h4>RED: viết test sẽ fail</h4></header>
+<p class="row"><b class="lbl">Làm gì</b>Viết một test tối thiểu cho thấy điều cần xảy ra. Một hành vi, tên rõ, dùng code thật (không mock trừ khi bất khả kháng).</p>
+<p class="row"><b class="lbl">Tốt: tên rõ, kiểm hành vi thật, một việc</b></p>
+<pre class="cmd">test('retries failed operations 3 times', async () =&gt; {
+  let attempts = 0;
+  const operation = () =&gt; {
+    attempts++;
+    if (attempts &lt; 3) throw new Error('fail');
+    return 'success';
+  };
+
+  const result = await retryOperation(operation);
+
+  expect(result).toBe('success');
+  expect(attempts).toBe(3);
+});</pre>
+<p class="row"><b class="lbl">Dở: tên mơ hồ, kiểm mock chứ không kiểm code</b></p>
+<pre class="cmd">test('retry works', async () =&gt; {
+  const mock = jest.fn()
+    .mockRejectedValueOnce(new Error())
+    .mockRejectedValueOnce(new Error())
+    .mockResolvedValueOnce('success');
+  await retryOperation(mock);
+  expect(mock).toHaveBeenCalledTimes(3);
+});</pre>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-vred">
+<header><span class="badge">2</span><h4>Verify RED: xem nó fail</h4><span class="tag new">Bắt buộc, không bao giờ bỏ</span></header>
+<pre class="cmd">npm test path/to/test.test.ts</pre>
+<p class="row"><b class="lbl">Làm gì</b>Xác nhận ba điều: test fail (không phải error), thông báo lỗi đúng như dự kiến, và nó fail vì thiếu tính năng chứ không phải vì gõ sai.</p>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Kết quả</th><th>Làm gì</th></tr></thead><tbody><tr><td>Test pass</td><td>Đang kiểm hành vi đã có. Sửa test.</td></tr><tr><td>Test error</td><td>Sửa lỗi, chạy lại tới khi nó fail đúng cách.</td></tr></tbody></table></div>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-green">
+<header><span class="badge">3</span><h4>GREEN: code tối thiểu</h4></header>
+<p class="row"><b class="lbl">Làm gì</b>Viết code đơn giản nhất cho test pass. Không thêm tính năng, không refactor code khác, không “cải thiện” quá phạm vi của test.</p>
+<p class="row"><b class="lbl">Tốt: vừa đủ để pass</b></p>
+<pre class="cmd">async function retryOperation&lt;T&gt;(fn: () =&gt; Promise&lt;T&gt;): Promise&lt;T&gt; {
+  for (let i = 0; i &lt; 3; i++) {
+    try {
+      return await fn();
+    } catch (e) {
+      if (i === 2) throw e;
+    }
+  }
+  throw new Error('unreachable');
+}</pre>
+<p class="row"><b class="lbl">Dở: làm quá tay (YAGNI)</b></p>
+<pre class="cmd">async function retryOperation&lt;T&gt;(
+  fn: () =&gt; Promise&lt;T&gt;,
+  options?: {
+    maxRetries?: number;
+    backoff?: 'linear' | 'exponential';
+    onRetry?: (attempt: number) =&gt; void;
+  }
+): Promise&lt;T&gt; {
+  // YAGNI
+}</pre>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-vgreen">
+<header><span class="badge">4</span><h4>Verify GREEN: xem nó pass</h4><span class="tag new">Bắt buộc</span></header>
+<pre class="cmd">npm test path/to/test.test.ts</pre>
+<p class="row"><b class="lbl">Làm gì</b>Xác nhận: test pass, các test khác vẫn pass, output sạch (không lỗi, không warning).</p>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Kết quả</th><th>Làm gì</th></tr></thead><tbody><tr><td>Test fail</td><td>Sửa code, không sửa test.</td></tr><tr><td>Test khác fail</td><td>Sửa ngay.</td></tr></tbody></table></div>
+<p class="row"><b class="lbl">“Các test khác” là suite của dự án</b>Test vừa viết xanh chưa phải suite xanh. Trước khi gọi là xong, chạy lệnh test của dự án (<code>pytest</code> trần, <code>npm test</code>, <code>cargo test</code>, tùy repo) ngay cả khi task chỉ nêu một file test. Phạm vi của task giới hạn sản phẩm bàn giao, không giới hạn việc kiểm chứng. Mọi lỗi lần chạy đó cho thấy, kể cả lỗi agent không gây ra, đều phải có tên trong báo cáo: một test đỏ đã thấy trôi qua mà không nhắc là báo cáo bị làm sai bằng cách bỏ sót.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-refactor">
+<header><span class="badge">5</span><h4>REFACTOR: dọn dẹp</h4></header>
+<p class="row"><b class="lbl">Làm gì</b>Chỉ sau khi green: bỏ trùng lặp, cải thiện tên, tách helper. Giữ test xanh. Không thêm hành vi. Rồi viết test fail tiếp theo cho tính năng tiếp theo.</p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+</div>
+</div>
+</section>
+<section id="good">
+<div class="wrap">
+<h2><span class="secno">4</span>Test tốt và ví dụ sửa bug</h2>
+<p class="lead">Test tốt tối thiểu, rõ, và cho thấy API mong muốn. Khi viết hay đổi bất kỳ test nào, skill còn một file riêng về cách giữ test trung thực.</p>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Tiêu chí</th><th>Tốt</th><th>Dở</th></tr></thead><tbody><tr><td>Tối thiểu</td><td>Một việc. Có “và” trong tên? Tách ra.</td><td><code>test('validates email and domain and whitespace')</code></td></tr><tr><td>Rõ</td><td>Tên mô tả hành vi</td><td><code>test('test1')</code></td></tr><tr><td>Thể hiện ý đồ</td><td>Cho thấy API mong muốn</td><td>Che khuất việc code phải làm</td></tr></tbody></table></div>
+<div class="cards">
+<article class="card plain" id="c-good">
+<header><h4>writing-good-tests.md</h4></header>
+<p class="row"><b class="lbl">Làm gì</b>Bốn quy tắc giữ test trung thực:</p>
+<ul><li>Nêu thay đổi production nào sẽ làm test fail, <b>trước khi</b> viết nó.</li><li>Assert trên hành vi thật, không bao giờ trên hành vi của mock.</li><li>Giữ code chỉ-để-test trong tiện ích test, ngoài class production.</li><li>Hiểu tác dụng phụ của một dependency trước khi mock nó.</li></ul>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-stuck">
+<header><h4>Khi bị kẹt</h4></header>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Vấn đề</th><th>Cách giải</th></tr></thead><tbody><tr><td>Không biết cách test</td><td>Viết API mong muốn. Viết assert trước. Hỏi bạn.</td></tr><tr><td>Test quá phức tạp</td><td>Thiết kế quá phức tạp. Đơn giản hóa interface.</td></tr><tr><td>Phải mock mọi thứ</td><td>Code ghép quá chặt. Dùng dependency injection.</td></tr><tr><td>Setup test khổng lồ</td><td>Tách helper. Vẫn phức tạp thì đơn giản hóa thiết kế.</td></tr></tbody></table></div>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+</div>
+<div class="cards one">
+<article class="card plain" id="c-bug">
+<header><h4>Ví dụ: sửa bug “email rỗng vẫn được chấp nhận”</h4></header>
+<p class="row"><b class="lbl">RED</b></p>
+<pre class="cmd">test('rejects empty email', async () =&gt; {
+  const result = await submitForm({ email: '' });
+  expect(result.error).toBe('Email required');
+});</pre>
+<p class="row"><b class="lbl">Verify RED</b></p>
+<pre class="cmd">$ npm test
+FAIL: expected 'Email required', got undefined</pre>
+<p class="row"><b class="lbl">GREEN</b></p>
+<pre class="cmd">function submitForm(data: FormData) {
+  if (!data.email?.trim()) {
+    return { error: 'Email required' };
+  }
+  // ...
+}</pre>
+<p class="row"><b class="lbl">Verify GREEN</b></p>
+<pre class="cmd">$ npm test
+PASS</pre>
+<p class="row"><b class="lbl">REFACTOR</b>Tách phần validate ra nếu có nhiều trường.</p>
+<p class="row">Tìm ra bug? Viết test fail tái hiện nó, rồi đi theo chu trình. Test vừa chứng minh bản sửa vừa chặn tái phát. <b>Không bao giờ sửa bug mà không có test.</b></p>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+</div>
+</div>
+</section>
+<section id="flags">
+<div class="wrap">
+<h2><span class="secno">5</span>Checklist, Red Flags và bào chữa</h2>
+<p class="lead">Không tick hết được checklist nghĩa là bạn đã bỏ TDD. Gặp bất kỳ red flag nào: xóa code, làm lại từ đầu bằng TDD.</p>
+<div class="cards">
+<article class="card plain" id="c-check">
+<header><h4>Checklist trước khi báo xong</h4></header>
+<ul><li>Mỗi hàm/phương thức mới đều có test.</li><li>Đã thấy từng test fail trước khi cài.</li><li>Mỗi test fail vì đúng lý do (thiếu tính năng, không phải gõ sai).</li><li>Đã viết code tối thiểu cho mỗi test pass.</li><li>Mọi test pass.</li><li>Output sạch (không lỗi, không warning).</li><li>Test dùng code thật (chỉ mock khi bất khả kháng).</li><li>Đã phủ các ca biên và ca lỗi.</li></ul>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+<article class="card plain" id="c-flags">
+<header><h4>Red Flags: dừng lại, làm lại từ đầu</h4></header>
+<ul><li>Code trước test.</li><li>Test viết sau khi cài.</li><li>Test pass ngay lập tức.</li><li>Không giải thích được vì sao test fail.</li><li>Test được thêm “sau”.</li><li>Tự nhủ “chỉ lần này thôi”.</li><li>“Tôi đã test tay rồi.”</li><li>“Test sau cũng đạt cùng mục đích.”</li><li>“Quan trọng là tinh thần, không phải nghi thức.”</li><li>“Giữ làm tham khảo” hoặc “chỉnh code có sẵn”.</li><li>“Đã tốn X giờ, xóa đi thì phí.”</li><li>“TDD giáo điều, tôi đang thực dụng.”</li><li>“Cái này khác vì…”</li></ul>
+<a class="back" href="#diagram">↑ Về diagram</a>
+</article>
+</div>
+<div class="phase"><h3>Những lời bào chữa hay gặp</h3><span>Bảng Common Rationalizations của skill</span></div>
+<div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Agent tự nhủ</th><th>Thực tế</th></tr></thead><tbody><tr><td>“Quá đơn giản để test”</td><td>Code đơn giản vẫn hỏng. Viết test mất 30 giây.</td></tr><tr><td>“Tôi test sau”</td><td>Test viết sau pass ngay, nên chẳng chứng minh được gì. Chúng có thể kiểm sai thứ, kiểm cách cài thay vì hành vi, hoặc bỏ sót ca biên bạn quên. Chưa từng thấy nó fail nên chưa chứng minh được nó bắt được bug. Test trước ép phải có lần fail đó.</td></tr><tr><td>“Test sau cũng đạt cùng mục đích (tinh thần, không phải nghi thức)”</td><td>Test sau trả lời “code này làm gì?”; test trước trả lời “code này NÊN làm gì?”. Test viết sau bị thiên lệch bởi code đã viết: chỉ kiểm những ca đã nhớ, không phải những ca lẽ ra sẽ khám phá. Có độ phủ mà không có bằng chứng test hoạt động.</td></tr><tr><td>“Đã test tay rồi”</td><td>Test tay là ad hoc: không có bản ghi đã phủ gì, không chạy lại được khi code đổi, dễ quên ca dưới áp lực. “Tôi thử thì chạy” không phải toàn diện. Test tự động chạy giống hệt nhau mỗi lần.</td></tr><tr><td>“Xóa X giờ làm việc thì phí”</td><td>Chi phí chìm: thời gian đó mất rồi dù thế nào. Lựa chọn thật là viết lại bằng TDD (tin cậy cao) hay giữ code rồi gắn test sau (tin cậy thấp, nhiều bug). Giữ code không tin cậy được mới là phí.</td></tr><tr><td>“Giữ làm tham khảo, viết test trước”</td><td>Rồi sẽ chỉnh nó. Đó là test sau. Xóa nghĩa là xóa.</td></tr><tr><td>“Cần khám phá trước”</td><td>Được. Bỏ đi phần khám phá, bắt đầu bằng TDD.</td></tr><tr><td>“Test khó nghĩa là thiết kế chưa rõ”</td><td>Hãy nghe test. Khó test nghĩa là khó dùng.</td></tr><tr><td>“TDD làm tôi chậm”</td><td>TDD chính là con đường thực dụng: bắt bug trước khi commit, ngăn regression, cho phép refactor không sợ. Lối tắt “thực dụng” nghĩa là debug trên production, chậm hơn.</td></tr><tr><td>“Test tay nhanh hơn”</td><td>Test tay không chứng minh được ca biên. Sẽ phải test lại mỗi lần đổi.</td></tr><tr><td>“Code có sẵn chưa có test”</td><td>Đang cải thiện nó nghĩa là thêm test cho code đang có.</td></tr></tbody></table></div>
+</div>
+</section>
+
+<section>
+  <div class="wrap">
+    <footer>Nguồn: <a href="../../skills/test-driven-development/SKILL.md"><code>skills/test-driven-development/SKILL.md</code></a> (330 dòng).</footer>
+  </div>
+</section>
+
+</body>
+</html>
