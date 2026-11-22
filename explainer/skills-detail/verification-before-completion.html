@@ -32,6 +32,7 @@
         <li>Script mới <code>scripts/verify-levels</code>: chạy 8 level, dừng ở level fail đầu tiên, ghi <code>verify.txt</code> gắn với HEAD.</li>
         <li>Mục <b>End-to-End Evidence</b>: e2e phải pass và để lại evidence mới, và evidence phải được mở ra xem.</li>
         <li>Mục <b>Quality Gates</b>: 5 gate, thứ tự chạy, gate hỏng thì sửa trong code, không tắt tiếng.</li>
+        <li>Script mới <code>scripts/changed-only</code>: pass khi không finding nào của một lệnh nằm trong file đã đổi từ BASE; dùng cho Typecheck khi baseline đã đỏ. <code>verify-levels</code> đưa nó vào <code>PATH</code>.</li>
         <li>Thêm dòng vào bảng Common Failures, Red Flags và Rationalization Prevention.</li>
       </ul>
       <p class="diffcmd">Xem diff: <code>git diff 22f0b46..HEAD -- skills/verification-before-completion</code> · <a href="../changes.html#g-tests">Nhóm 3 · Ba loại test</a> · <a href="../changes.html#g-gates">Nhóm 4 · Gate chất lượng</a></p>
@@ -123,6 +124,7 @@
 <ul><li>Thứ tự chạy, rẻ nhất trước: <b>format, lint, typecheck, build, unit, integration, e2e, sonar</b>. Sonar chạy cuối vì điều kiện coverage của gate đọc báo cáo mà test ghi ra. Build chạy trước test vì e2e thường chạy trên bản build.</li>
 <li>Lệnh thật do plan ghi (mục Quality Gates của <code>writing-plans</code>); script riêng của project được ưu tiên hơn lệnh mặc định.</li>
 <li>Scanner đọc <code>SONAR_TOKEN</code> từ môi trường. Token không bao giờ nằm trong plan; <code>verify-levels</code> từ chối plan nào ghi token ra.</li>
+<li>Repo đã đỏ sẵn ở commit gốc: plan có thể giới hạn một level theo file plan đổi (xem <code>writing-plans</code>). Với Typecheck, plan dùng <code>changed-only &lt;base-sha&gt; -- npx tsc --noEmit --pretty false</code>, vì <code>tsc</code> không nhận danh sách file. <code>changed-only</code> pass khi không lỗi nào nằm trong file đã đổi từ BASE (đọc dạng <code>path(line,col)</code> và <code>path:line:col</code>). Lệnh chết mà không in lỗi nào, BASE không phải commit, hay awk lỗi đều là fail, nên tool crash không bao giờ bị đọc là “sạch”.</li>
 </ul>
 <a class="back" href="#diagram">↑ Về diagram</a>
 </article>

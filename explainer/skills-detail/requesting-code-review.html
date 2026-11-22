@@ -31,8 +31,9 @@
       <ul>
         <li><code>code-reviewer.md</code> kiểm Test Strategy: mỗi dòng có test thật ở cả ba level, <code>verify.txt</code> đủ cho HEAD, evidence tồn tại.</li>
         <li>Kiểm Quality Gates: lý do của gate bị skip còn đúng; tìm trong diff các kiểu tắt tiếng (<code>eslint-disable</code>, <code>@ts-ignore</code>, <code>NOSONAR</code>...).</li>
+        <li>Mục mới <b>Library and framework usage</b>: đối chiếu cách dùng thư viện với docs đúng version trong lockfile (Context7 nếu có), dẫn trang docs cho mỗi phát hiện.</li>
       </ul>
-      <p class="diffcmd">Xem diff: <code>git diff 22f0b46..HEAD -- skills/requesting-code-review</code> · <a href="../changes.html#g-tests">Nhóm 3 · Ba loại test</a> · <a href="../changes.html#g-gates">Nhóm 4 · Gate chất lượng</a></p>
+      <p class="diffcmd">Xem diff: <code>git diff 22f0b46..HEAD -- skills/requesting-code-review</code> · <a href="../changes.html#g-tests">Nhóm 3 · Ba loại test</a> · <a href="../changes.html#g-gates">Nhóm 4 · Gate chất lượng</a> · <a href="../changes.html#g-docs">Nhóm 5 · Tra docs</a></p>
     </div>
   </div>
 </aside>
@@ -70,7 +71,7 @@
       <aside class="pains">
         <h3>Nó giải quyết painpoint nào?</h3>
         <p>Những lỗi mà từng phần của skill sinh ra để chặn.</p>
-<div class="pain-item"><q>Lỗi nhỏ ở task 2 âm thầm lan sang task 3, 4, 5</q><div class="fix"><a class="skill-link" href="#when">Review sớm, review thường xuyên</a></div></div><div class="pain-item"><q>Tự đọc diff của mình, đốt mất context cần để điều phối</q><div class="fix"><a class="skill-link" href="#c-how">Reviewer subagent</a>: diff và đánh giá nằm trong context của nó, chỉ phát hiện quay về</div></div><div class="pain-item"><q>Reviewer thấy cả lịch sử phiên nên bị kéo theo suy nghĩ của chính agent</q><div class="fix">Ngữ cảnh dựng riêng, không bao giờ là lịch sử phiên</div></div><div class="pain-item"><q>Bỏ review vì “nhỏ thôi”</q><div class="fix"><a class="skill-link" href="#flags">Red Flags</a>: không bao giờ bỏ</div></div><div class="pain-item"><q>Gật đầu với reviewer dù họ sai</q><div class="fix"><a class="skill-link" href="#c-act">Phản biện có lý lẽ</a>, kèm code hoặc test chứng minh</div></div>
+<div class="pain-item"><q>Lỗi nhỏ ở task 2 âm thầm lan sang task 3, 4, 5</q><div class="fix"><a class="skill-link" href="#when">Review sớm, review thường xuyên</a></div></div><div class="pain-item"><q>Tự đọc diff của mình, đốt mất context cần để điều phối</q><div class="fix"><a class="skill-link" href="#c-how">Reviewer subagent</a>: diff và đánh giá nằm trong context của nó, chỉ phát hiện quay về</div></div><div class="pain-item"><q>Reviewer thấy cả lịch sử phiên nên bị kéo theo suy nghĩ của chính agent</q><div class="fix">Ngữ cảnh dựng riêng, không bao giờ là lịch sử phiên</div></div><div class="pain-item"><q>Bỏ review vì “nhỏ thôi”</q><div class="fix"><a class="skill-link" href="#flags">Red Flags</a>: không bao giờ bỏ</div></div><div class="pain-item"><q>Reviewer phán theo trí nhớ, lệch với version thư viện đang dùng</q><div class="fix"><a class="skill-link" href="#c-how">Tra docs đúng version</a>, dẫn trang docs cho mỗi phát hiện</div></div><div class="pain-item"><q>Gật đầu với reviewer dù họ sai</q><div class="fix"><a class="skill-link" href="#c-act">Phản biện có lý lẽ</a>, kèm code hoặc test chứng minh</div></div>
       </aside>
     </div>
   </div>
@@ -108,6 +109,7 @@ HEAD_SHA=$(git rev-parse HEAD)</pre>
 <div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Placeholder</th><th>Nội dung</th></tr></thead><tbody><tr><td><code>{DESCRIPTION}</code></td><td>Tóm tắt ngắn cái bạn vừa làm.</td></tr><tr><td><code>{PLAN_OR_REQUIREMENTS}</code></td><td>Nó phải làm gì.</td></tr><tr><td><code>{BASE_SHA}</code></td><td>Commit bắt đầu.</td></tr><tr><td><code>{HEAD_SHA}</code></td><td>Commit kết thúc.</td></tr></tbody></table></div>
 <p class="row">Khi plan có Test Strategy, mục Testing của template còn bắt reviewer kiểm: mỗi dòng có test thật ở cả unit, integration và e2e (hoặc <code>none — &lt;lý do&gt;</code> mà lý do còn đúng), <code>verify.txt</code> ghi đủ ba level cho đúng HEAD, và evidence e2e tồn tại. Thiếu một level mà không ai nói là phát hiện mức Important.</p>
 <p class="row">Khi plan có Quality Gates, reviewer kiểm thêm: <code>verify.txt</code> ghi cả format, lint, typecheck, build và sonar; lý do của mỗi gate <code>SKIPPED</code> còn đúng với project (có <code>tsconfig.json</code> mà typecheck là <code>none</code>, hay có <code>sonar-project.properties</code> mà sonar là <code>none</code> là Important). Reviewer cũng tìm trong diff những gate bị làm cho qua bằng cách tắt tiếng thay vì sửa: <code>eslint-disable</code>, <code>@ts-ignore</code>, <code>@ts-expect-error</code>, <code>NOSONAR</code>, <code>prettier-ignore</code>, rule bị tắt, <code>tsconfig</code> nới lỏng, exclusion Sonar mới, ngưỡng bị hạ. Mỗi cái là Important, trừ khi plan hoặc một dòng <code>Ruling:</code> giải thích.</p>
+<p class="row">Reviewer còn kiểm cách dùng thư viện và framework: với mỗi thư viện mà diff đụng tới, nó đối chiếu với docs của đúng version trong lockfile (Context7 nếu có, không thì docs chính thức), không đối chiếu với code bên cạnh hay trí nhớ, và dẫn trang docs cho mỗi phát hiện. Không truy cập được docs thì nó ghi dưới “Declined to judge” thay vì đoán. Docs chỉ là chuẩn cho cách dùng thư viện; tên và vị trí file vẫn theo code xung quanh.</p>
 <a class="back" href="#diagram">↑ Về diagram</a>
 </article>
 <article class="card plain" id="c-act">

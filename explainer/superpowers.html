@@ -284,13 +284,13 @@
           </a>
 
           <!-- 4 -->
-          <a class="node" href="#s-subagent-driven-development" aria-label="subagent-driven-development">
+          <a class="node new" href="#s-subagent-driven-development" aria-label="subagent-driven-development">
             <rect x="14" y="370" width="250" height="54" rx="10"/>
             <text class="name" x="28" y="393">subagent-driven-development</text>
             <text class="sub" x="28" y="411">1 subagent/task · review từng task</text>
             <g class="num"><circle cx="14" cy="370" r="10"/><text x="14" y="373.5">4</text></g>
           </a>
-          <a class="node" href="#s-executing-plans" aria-label="executing-plans">
+          <a class="node new" href="#s-executing-plans" aria-label="executing-plans">
             <rect x="296" y="370" width="250" height="54" rx="10"/>
             <text class="name" x="310" y="393">executing-plans</text>
             <text class="sub" x="310" y="411">Tự làm một mạch · rẻ hơn</text>
@@ -304,7 +304,7 @@
             <text class="sub" x="42" y="531">Unit + integration · fail trước</text>
             <g class="num"><circle cx="28" cy="490" r="10"/><text x="28" y="493.5">5</text></g>
           </a>
-          <a class="node" href="#s-requesting-code-review" aria-label="requesting-code-review">
+          <a class="node new" href="#s-requesting-code-review" aria-label="requesting-code-review">
             <rect x="292" y="490" width="240" height="54" rx="10"/>
             <text class="name" x="306" y="513">requesting-code-review</text>
             <text class="sub" x="306" y="531">Review sau mỗi task</text>
@@ -320,7 +320,7 @@
           </a>
 
           <!-- 8 -->
-          <a class="node" href="#s-finishing-a-development-branch" aria-label="finishing-a-development-branch">
+          <a class="node new" href="#s-finishing-a-development-branch" aria-label="finishing-a-development-branch">
             <rect x="130" y="686" width="300" height="54" rx="10"/>
             <text class="name" x="144" y="709">finishing-a-development-branch</text>
             <text class="sub" x="144" y="727">Test + verify xanh → merge / PR / giữ nhánh</text>
@@ -507,7 +507,7 @@
     <div class="phase"><h3>3 · Thực thi</h3><span>Chọn 1 trong 2 cách chạy plan, rồi lặp TDD + review cho từng task</span></div>
     <div class="cards">
       <article class="card" id="s-subagent-driven-development">
-        <header><span class="badge">4</span><h4>subagent-driven-development</h4><span class="tag">Chọn 1 · kỹ nhất</span></header>
+        <header><span class="badge">4</span><h4>subagent-driven-development</h4><span class="tag">Chọn 1 · kỹ nhất</span><span class="tag new">Nâng cấp</span></header>
         <p class="row pain"><b>Vấn đề</b>Một agent làm hết trong một context dài: đầy context, lệch plan, tự chấm bài của mình.</p>
         <p class="row"><b>Làm gì</b>Mỗi task giao cho một subagent mới (context sạch). Sau đó review 2 lớp: đúng spec trước, chất lượng code sau. Cuối cùng chạy <code>verify-levels</code> (đủ tám level: gate chất lượng, 3 loại test, Sonar, cùng evidence) rồi review cả nhánh. Chạy liên tục, không hỏi “tiếp nhé?”.</p>
         <p class="row"><b>Dùng khi</b>Đã có plan và môi trường có subagent. Chất lượng cao nhất nhưng tốn token hơn.</p>
@@ -516,7 +516,7 @@
       </article>
 
       <article class="card" id="s-executing-plans">
-        <header><span class="badge">4</span><h4>executing-plans</h4><span class="tag">Chọn 1 · rẻ nhất</span></header>
+        <header><span class="badge">4</span><h4>executing-plans</h4><span class="tag">Chọn 1 · rẻ nhất</span><span class="tag new">Nâng cấp</span></header>
         <p class="row pain"><b>Vấn đề</b>Subagent cho từng task tốn token vì mỗi lần phải đọc lại codebase từ đầu.</p>
         <p class="row"><b>Làm gì</b>Agent tự làm tuần tự trong phiên hiện tại. TDD là cổng kiểm từng task, có sổ ghi (ledger) để không quên, và một review mới cho cả nhánh ở cuối, sau khi <code>verify-levels</code> xác nhận cả 3 loại test đã chạy và có evidence.</p>
         <p class="row"><b>Dùng khi</b>Bạn chọn chạy inline để tiết kiệm, hoặc môi trường không có subagent.</p>
@@ -534,9 +534,9 @@
       </article>
 
       <article class="card" id="s-requesting-code-review">
-        <header><span class="badge">6</span><h4>requesting-code-review</h4><span class="tag">Mỗi task</span></header>
+        <header><span class="badge">6</span><h4>requesting-code-review</h4><span class="tag">Mỗi task</span><span class="tag new">Nâng cấp</span></header>
         <p class="row pain"><b>Vấn đề</b>Lỗi nhỏ ở task 2 âm thầm lan sang task 3, 4, 5.</p>
-        <p class="row"><b>Làm gì</b>Giao một subagent reviewer (chỉ nhận mô tả và khoảng commit, không thấy lịch sử phiên) soi theo plan. Báo lỗi theo mức độ, lỗi Critical chặn tiến độ.</p>
+        <p class="row"><b>Làm gì</b>Giao một subagent reviewer (chỉ nhận mô tả và khoảng commit, không thấy lịch sử phiên) soi theo plan. Báo lỗi theo mức độ, lỗi Critical chặn tiến độ. Reviewer còn kiểm Test Strategy và Quality Gates (lý do gate bị skip, kiểu tắt tiếng như <code>eslint-disable</code>, <code>@ts-ignore</code>), và đối chiếu cách dùng thư viện với docs đúng version trong lockfile.</p>
         <p class="row"><b>Dùng khi</b>Sau mỗi task, sau tính năng lớn, trước khi merge. Cũng dùng được khi bị kẹt.</p>
         <a class="back" href="#diagram">↑ Về diagram</a>
         <a class="back" href="skills-detail/requesting-code-review.html">Xem chi tiết →</a>
@@ -561,7 +561,7 @@
     <div class="phase"><h3>5 · Kết thúc</h3><span>Đưa việc đã xong vào nhánh chính</span></div>
     <div class="cards">
       <article class="card" id="s-finishing-a-development-branch">
-        <header><span class="badge">8</span><h4>finishing-a-development-branch</h4><span class="tag">Trong luồng</span></header>
+        <header><span class="badge">8</span><h4>finishing-a-development-branch</h4><span class="tag">Trong luồng</span><span class="tag new">Nâng cấp</span></header>
         <p class="row pain"><b>Vấn đề</b>Làm xong thì nhánh và worktree bị bỏ lơ, hoặc merge khi test còn đỏ.</p>
         <p class="row"><b>Làm gì</b>Chạy full test, và nếu plan có Test Strategy thì kiểm record verify còn khớp HEAD. Nếu xanh thì đưa 3 lựa chọn: merge, mở PR hoặc giữ nhánh. Sau đó dọn worktree.</p>
         <p class="row"><b>Dùng khi</b>Implement xong và test pass.</p>

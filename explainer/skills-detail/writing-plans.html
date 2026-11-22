@@ -33,8 +33,10 @@
         <li>Task cuối luôn là e2e và phải chứng minh được nó có thể fail.</li>
         <li>Mục <b>Quality Gates</b>: năm dòng lệnh toàn project (Prettier, ESLint, tsc, build, Sonar).</li>
         <li>Self-review thêm mục 6 (test levels) và mục 7 (quality gates).</li>
+        <li>Baseline đã đỏ: chạy Format, Lint, Typecheck, Unit, Integration một lần trên commit gốc; level đỏ thì giới hạn theo file plan đổi (Typecheck qua <code>changed-only</code>).</li>
+        <li>Codebase có sẵn: tên và vị trí file theo code xung quanh, cách dùng thư viện theo docs đúng version trong lockfile.</li>
       </ul>
-      <p class="diffcmd">Xem diff: <code>git diff 22f0b46..HEAD -- skills/writing-plans</code> · <a href="../changes.html#g-tests">Nhóm 3 · Ba loại test</a> · <a href="../changes.html#g-gates">Nhóm 4 · Gate chất lượng</a></p>
+      <p class="diffcmd">Xem diff: <code>git diff 22f0b46..HEAD -- skills/writing-plans</code> · <a href="../changes.html#g-tests">Nhóm 3 · Ba loại test</a> · <a href="../changes.html#g-gates">Nhóm 4 · Gate chất lượng</a> · <a href="../changes.html#g-docs">Nhóm 5 · Tra docs</a></p>
     </div>
   </div>
 </aside>
@@ -114,7 +116,7 @@
 <article class="card plain" id="c-gates">
 <header><h4>Năm gate chất lượng</h4><span class="tag new">Nâng cấp</span></header>
 <div class="tbl-wrap"><table class="tbl wrapfirst"><thead><tr><th>Gate</th><th>Lệnh mặc định (JS/TS)</th><th>Fail khi</th></tr></thead><tbody><tr><td>Format</td><td><code>npx prettier --check .</code></td><td>có file chưa được format</td></tr><tr><td>Lint</td><td><code>npx eslint . --max-warnings 0</code></td><td>có lỗi hoặc cảnh báo</td></tr><tr><td>Typecheck</td><td><code>npx tsc --noEmit</code></td><td>có lỗi type</td></tr><tr><td>Build</td><td><code>npm run build</code></td><td>production build exit khác 0</td></tr><tr><td>Sonar</td><td><code>npx sonar-scanner -Dsonar.qualitygate.wait=true</code></td><td>quality gate fail: bug, vulnerability, code smell, coverage</td></tr></tbody></table></div>
-<ul><li>Đọc project trước khi điền: script trong <code>package.json</code>, config Prettier/ESLint/tsconfig, <code>sonar-project.properties</code>, CI. Ghi đúng thứ CI chạy; script riêng của project được ưu tiên hơn lệnh mặc định.</li><li>Stack khác dùng lệnh tương đương (<code>ruff format --check</code>, <code>go vet ./...</code>, <code>cargo clippy -- -D warnings</code>) hoặc <code>none — &lt;lý do&gt;</code>.</li><li>Chỉ bỏ gate khi nó thật sự không áp dụng (không có TypeScript, không có bước build). “Chưa cài” trong project JS/TS là một lỗ hổng, không phải lý do: task đầu của plan cài tool đó, để bạn thấy nó khi duyệt plan. Sonar là ngoại lệ vì cần server mà plan không tạo được: hỏi bạn xem repo có Sonar project không, và chỉ ghi <code>none</code> khi bạn đồng ý.</li><li>Sonar đọc coverage: điều kiện coverage của quality gate đọc báo cáo mà test ghi ra, nên lệnh Unit run phải ghi nó đúng nơi scanner tìm (mặc định <code>coverage/lcov.info</code>).</li><li>Token Sonar không bao giờ nằm trong plan (plan được commit). Scanner đọc <code>SONAR_TOKEN</code> từ môi trường, và <code>verify-levels</code> từ chối plan nào ghi token ra.</li></ul>
+<ul><li>Đọc project trước khi điền: script trong <code>package.json</code>, config Prettier/ESLint/tsconfig, <code>sonar-project.properties</code>, CI. Ghi đúng thứ CI chạy; script riêng của project được ưu tiên hơn lệnh mặc định.</li><li>Stack khác dùng lệnh tương đương (<code>ruff format --check</code>, <code>go vet ./...</code>, <code>cargo clippy -- -D warnings</code>) hoặc <code>none — &lt;lý do&gt;</code>.</li><li>Chỉ bỏ gate khi nó thật sự không áp dụng (không có TypeScript, không có bước build). “Chưa cài” trong project JS/TS là một lỗ hổng, không phải lý do: task đầu của plan cài tool đó, để bạn thấy nó khi duyệt plan. Sonar là ngoại lệ vì cần server mà plan không tạo được: hỏi bạn xem repo có Sonar project không, và chỉ ghi <code>none</code> khi bạn đồng ý.</li><li>Sonar đọc coverage: điều kiện coverage của quality gate đọc báo cáo mà test ghi ra, nên lệnh Unit run phải ghi nó đúng nơi scanner tìm (mặc định <code>coverage/lcov.info</code>).</li><li>Token Sonar không bao giờ nằm trong plan (plan được commit). Scanner đọc <code>SONAR_TOKEN</code> từ môi trường, và <code>verify-levels</code> từ chối plan nào ghi token ra.</li><li><b>Baseline đã đỏ.</b> Trước khi viết mục này, chạy Format, Lint, Typecheck và hai bộ test Unit, Integration một lần trên commit plan bắt đầu. Level xanh giữ toàn project. Level đỏ, trên project đã có tool, thì giới hạn theo file plan đổi và ghi sha của commit gốc vào dòng đó: Lint theo danh sách file (chặn danh sách rỗng, vì ESLint 9 không có file thì lint cả thư mục), Typecheck qua <code>changed-only &lt;base-sha&gt; -- npx tsc --noEmit --pretty false</code>, Unit và Integration chạy test liên quan (Jest <code>--findRelatedTests</code>, Vitest <code>related --run</code>), Format chỉ file mới thêm. Sonar không giới hạn vì quality gate chỉ xét code mới; Build và E2E luôn toàn project.</li><li>Ranh giới là file plan đụng tới: lỗi trong file đó thì sửa, kể cả lỗi có từ trước; lỗi ở file khác thì để nguyên và báo cho bạn. Dưới các dòng gate, một câu nói rõ level nào bị giới hạn và lần chạy toàn project thấy gì (“lint: 412 findings at <code>&lt;sha&gt;</code>”), để bạn thấy khi duyệt plan.</li></ul>
 <a class="back" href="#diagram">↑ Về diagram</a>
 </article>
 </div>
@@ -134,7 +136,7 @@
 <article class="card plain" id="c-files">
 <header><h4>Vạch cấu trúc file</h4></header>
 <p class="row"><b class="lbl">Làm gì</b>Trước khi chia task, liệt kê file sẽ tạo hoặc sửa và trách nhiệm của từng file. Đây là nơi chốt các quyết định phân rã.</p>
-<ul><li>Mỗi file một trách nhiệm rõ, giao diện rõ.</li><li>Ưu tiên file nhỏ, tập trung: agent giữ được trọn file trong context và sửa đáng tin hơn.</li><li>Thứ thay đổi cùng nhau thì để cùng nhau. Chia theo trách nhiệm, không theo tầng kỹ thuật.</li><li>Codebase có sẵn: theo pattern hiện tại. Nếu file đang sửa đã quá lớn thì được đưa việc tách file vào plan.</li></ul>
+<ul><li>Mỗi file một trách nhiệm rõ, giao diện rõ.</li><li>Ưu tiên file nhỏ, tập trung: agent giữ được trọn file trong context và sửa đáng tin hơn.</li><li>Thứ thay đổi cùng nhau thì để cùng nhau. Chia theo trách nhiệm, không theo tầng kỹ thuật.</li><li>Codebase có sẵn: tên và vị trí file lấy từ code xung quanh, nhưng chất lượng thì không. Cách dùng thư viện hay framework theo docs của đúng version trong lockfile (Context7 nếu có, không thì docs chính thức), không theo cách code bên cạnh làm. Nếu file đang sửa đã quá lớn thì được đưa việc tách file vào plan.</li></ul>
 <a class="back" href="#diagram">↑ Về diagram</a>
 </article>
 <article class="card plain" id="c-sizing">
@@ -180,7 +182,7 @@
 
 <section>
   <div class="wrap">
-    <footer>Nguồn: <a href="../../skills/writing-plans/SKILL.md"><code>skills/writing-plans/SKILL.md</code></a> (289 dòng).</footer>
+    <footer>Nguồn: <a href="../../skills/writing-plans/SKILL.md"><code>skills/writing-plans/SKILL.md</code></a> (330 dòng).</footer>
   </div>
 </section>
 
