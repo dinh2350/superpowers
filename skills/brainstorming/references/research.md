@@ -18,7 +18,7 @@ source exists, and don't guess what it would have said.
 |---|---|---|
 | Codebase | How the relevant parts work today, patterns to follow, existing tests, what the change would touch | Always first. It also tells you which other sources matter. |
 | Design system, UI code | Tokens, components, conventions the change must match | Usually in the codebase or a style guide. |
-| Library docs | Current API, constraints, deprecations | Read the **version in the lockfile**, not the latest. Use a docs tool (e.g. Context7) if present, else the official docs. |
+| Library docs | Current API, constraints, deprecations | Read the **version in the lockfile**, not the latest. Use a docs MCP tool if present, else the official docs. |
 | Database | Real schema, row counts, shapes of data, edge-case values | **Read-only.** See the safety rules. |
 | Logs, errors, traces | What actually happens: frequency, messages, affected paths | Scope by time window and the feature in question. |
 | Git history, issues, PRs | Why the code looks this way, what was tried before | Reverted or repeatedly-touched code is a signal. |

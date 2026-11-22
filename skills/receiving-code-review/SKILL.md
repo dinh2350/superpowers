@@ -72,6 +72,8 @@ BEFORE implementing:
   3. Check: Reason for current implementation?
   4. Check: Works on all platforms/versions?
   5. Check: Does reviewer understand full context?
+  6. Check: If it's about a library or framework API, does it hold in the docs
+     for the lockfile version (a docs MCP tool if you have one, else the official docs)?
 
 IF suggestion seems wrong:
   Push back with technical reasoning

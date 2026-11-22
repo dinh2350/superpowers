@@ -71,7 +71,7 @@ Subagent (general-purpose):
       and note it as a concern in your report
     - In existing codebases, take naming and file locations from the surrounding code,
       but not its quality. For how to use a library or framework, follow its docs for
-      the version in the lockfile (Context7 if you have it, else the official docs),
+      the version in the lockfile (a docs MCP tool if you have one, else the official docs),
       not how neighbouring code does it. Improve code you're touching the way a good
       developer would, but don't restructure things outside your task.
     - A lint, type, or test failure in a file you change is yours to fix, even one

@@ -82,7 +82,7 @@ Subagent (general-purpose):
 
     **Library and framework usage:**
     - For each library or framework the diff touches, check its usage against
-      the docs for the version in the lockfile (Context7 if you have it, else
+      the docs for the version in the lockfile (a docs MCP tool if you have one, else
       the official docs), not against neighbouring code or memory. Cite the
       doc page for any finding. If you cannot reach the docs, list that under
       "Declined to judge" instead of guessing.
