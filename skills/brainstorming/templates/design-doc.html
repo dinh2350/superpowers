@@ -33,7 +33,8 @@
   a { color: var(--human); }
   .status { color: var(--muted); font-size: 13px; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 6px; }
   .summary { font-size: 17px; max-width: 68ch; }
-  .pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; align-items: start; }
+  .pair { display: flex; flex-direction: column; gap: 14px; }
+  .pair svg { max-width: 560px; margin: 0 auto; }
   figure { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px; min-width: 0; }
   figcaption { color: var(--muted); font-size: 14px; margin-top: 8px; }
   svg { display: block; width: 100%; height: auto; color: var(--muted); }
@@ -56,6 +57,13 @@
   article h3 { margin-top: 0; }
   .src { color: var(--muted); font-size: 14px; }
   blockquote { border-left: 3px solid var(--line); padding-left: 10px; color: var(--muted); font-size: 14px; margin-top: 6px; }
+  .tree { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; margin: 0; overflow-x: auto; font: 13.5px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .tree .add, .tree .mod, .tree .del, .legend .add, .legend .mod, .legend .del { padding: 1px 5px; border-radius: 4px; }
+  .tree .add, .legend .add { background: var(--fact-bg); color: var(--fact); }
+  .tree .mod, .legend .mod { background: var(--chg-bg); color: var(--chg); }
+  .tree .del, .legend .del { background: var(--call-bg); color: var(--call); text-decoration: line-through; }
+  .tree .note { color: var(--muted); }
+  .legend { color: var(--muted); font-size: 14px; margin-top: 8px; }
 </style>
 </head>
 <body>
@@ -99,6 +107,16 @@
       <figcaption>After: {{what is added or removed}}</figcaption>
     </figure>
   </div>
+</section>
+
+<section id="structure">
+  <h2>Folder structure</h2>
+<pre class="tree">{{project-root}}/
+├── {{folder}}/
+│   ├── <span class="mod">{{existing-file.ext}}</span>   <span class="note">← {{what changes in it}}</span>
+│   └── <span class="add">{{new-file.ext}}</span>   <span class="note">← {{what it is for}}</span>
+└── <span class="del">{{removed-file.ext}}</span>   <span class="note">← {{why it goes}}</span></pre>
+  <p class="legend"><span class="add">new</span> <span class="mod">changed</span> <span class="del">removed</span> · {{Anything left untouched on purpose, if that is not obvious}}</p>
 </section>
 
 <section id="review">

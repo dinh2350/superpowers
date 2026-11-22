@@ -266,6 +266,9 @@ hand it over. In this order:
 - **Overview:** a before-and-after diagram of what changes, with labeled
   arrows. Draw only what the decision turns on. Skip it for a small
   change when a sentence says it faster.
+- **Folder structure:** a tree of only the folders and files this
+  touches, each marked new, changed, or removed, with a few words on what
+  changes in it. Skip it when nothing is added, moved, or removed.
 - **For your review:** Confirmed, My call, and what they decided. Each
   Confirmed and My call item links to its entry under Evidence.
 - **The design:**
