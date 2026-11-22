@@ -105,7 +105,11 @@ You MUST complete each phase before proceeding to the next.
 
    **This reveals:** Which layer fails (secrets → workflow ✓, workflow → build ✗)
 
-5. **Trace Data Flow**
+5. **Observe Before You Edit**
+
+   Use the observation tools you have (logs, DB queries, browser DevTools, other MCP tools) to see what actually happened before editing code to add prints. Keep it read-only. If you can't reach the evidence, ask your human partner for access instead of guessing.
+
+6. **Trace Data Flow**
 
    **WHEN error is deep in call stack:**
 
