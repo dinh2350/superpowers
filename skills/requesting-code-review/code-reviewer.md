@@ -80,6 +80,13 @@ Subagent (general-purpose):
     - Security concerns?
     - Integrates cleanly with surrounding code?
 
+    **Library and framework usage:**
+    - For each library or framework the diff touches, check its usage against
+      the docs for the version in the lockfile (Context7 if you have it, else
+      the official docs), not against neighbouring code or memory. Cite the
+      doc page for any finding. If you cannot reach the docs, list that under
+      "Declined to judge" instead of guessing.
+
     **Testing:**
     - Tests verify real behavior, not mocks?
     - Edge cases covered?
